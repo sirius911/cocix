@@ -42,10 +42,10 @@ OBJ := $(addprefix $(OBJDIR)/, $(OBJ))
 
 
 # La cible par défaut est all
-default: all
+default: $(EXEC)
  
 # La cible all construit l'exécutable
-all: $(EXEC)
+all: $(EXEC) cocixserv creer_monde
 
 # Ici, on indique les cibles qui ne génèrent pas de fichier
 # et qui, par conséquent, doivent toujours être exécutées

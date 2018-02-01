@@ -6,8 +6,8 @@
 
 #include "../constantes.h"
 
-#include "../monde.h"
-#include "../io.h"
+//#include "../monde.h"
+//#include "../io.h"
 #include "JourNuit.h"
 
 
@@ -15,13 +15,15 @@ using namespace std;
 
 JourNuit::JourNuit(){
 	lireDonnees();
-		/*marche = true;
+	/*cout << "Construction...";
+		lireDonnees();
+		marche = true;
   	  	time(&bigbang);
   	  	vitesse = 4;
 		minute = 49;
 		heure = 9;
 		jour_nuit = 1;
-		jours = 138;
+		jours = 40;
 		heure_nuit = 21;
 		heure_jour = 7;
 		time(&date);
@@ -35,12 +37,14 @@ JourNuit::JourNuit(){
 		temp_O = 22;
 		temp_NO = 23;
 		temp_C = 19.5f;
+		indexCocix = 2;
+		cout << " Terminée\n";
 		ecrireDonnees();*/
 }
 
 JourNuit::JourNuit(bool x_marche, time_t x_bigbang, short x_vitesse, short x_minute, short x_heure, short x_jour_nuit, int x_jours,
 	short x_heure_nuit, short x_heure_jour, time_t x_date, time_t x_date_temp, float x_temp_N, float x_temp_NE, float x_temp_E
-	, float x_temp_SE, float x_temp_S, float x_temp_SO, float x_temp_O, float x_temp_NO, float x_temp_C){
+	, float x_temp_SE, float x_temp_S, float x_temp_SO, float x_temp_O, float x_temp_NO, float x_temp_C, int x_index){
 
 		marche = x_marche;
   	  	bigbang = x_bigbang;
@@ -62,6 +66,7 @@ JourNuit::JourNuit(bool x_marche, time_t x_bigbang, short x_vitesse, short x_min
 		temp_O = x_temp_O;
 		temp_NO = x_temp_NO;
 		temp_C = x_temp_C;
+		indexCocix = x_index;
 		ecrireDonnees();
 	/*
   	  	marche = true;
@@ -84,6 +89,7 @@ JourNuit::JourNuit(bool x_marche, time_t x_bigbang, short x_vitesse, short x_min
 		temp_O = 22;
 		temp_NO = 23;
 		temp_C = 19.5f;
+		indexCocix = 2;
 		ecrireDonnees();
 		*/
 }
@@ -96,6 +102,7 @@ void JourNuit::lireDonnees(){
       	cout << "\nImpossible de lire dans le fichier " << FICHIER_JOUR_NUIT << "\n";
       	
     } else {
+    	
     	fichier.read((char*) this, sizeof(*this));
     	
   	 	fichier.close();
@@ -105,14 +112,37 @@ void JourNuit::lireDonnees(){
 void JourNuit::ecrireDonnees(){
 
 	ofstream f (FICHIER_JOUR_NUIT, ios::out | ios::binary);
-	maj_date();
   	if(!f.is_open())
     {
       cout << "\nImpossible d'ouvrir le fichier '" <<  FICHIER_JOUR_NUIT << "' en ecriture !" << "\n";
       f.close();
       
     } else {
-    	f.write ((char*) this, sizeof (*this));
+    	maj_date();
+    	f.write((char*) this,sizeof(JourNuit));
+    	/*
+    	f.write((char*) &marche , 1);
+  	  	f.write((char*) &bigbang, sizeof(time_t));
+  	  	f.write((char*) &vitesse, sizeof(short));
+		f.write((char*) &minute, sizeof(short));
+		f.write((char*) &heure, sizeof(short));
+		f.write((char*) &jour_nuit, sizeof(short));
+		f.write((char*) &jours, sizeof(int));
+		f.write((char*) &heure_nuit, sizeof(short));
+		f.write((char*) &heure_jour, sizeof(short));
+		f.write((char*) &date, sizeof(time_t));
+		f.write((char*) &date_temp, sizeof(time_t));
+		f.write((char*) &temp_N, sizeof(float));
+		f.write((char*) &temp_NE, sizeof(float));
+		f.write((char*) &temp_E, sizeof(float));
+		f.write((char*) &temp_SE, sizeof(float));
+		f.write((char*) &temp_S, sizeof(float));
+		f.write((char*) &temp_SO, sizeof(float));
+		f.write((char*) &temp_O, sizeof(float));
+		f.write((char*) &temp_NO, sizeof(float));
+		f.write((char*) &temp_C, sizeof(float));
+		f.write((char*) &indexCocix, sizeof(int));*/
+    
  	}
  	f.close();
 
@@ -154,7 +184,7 @@ void JourNuit::_jour_nuit(){
 }
 void JourNuit::status(){
 
-	cout << "\n\n********* SERVEUR **********\n";
+	cout << "\n\n~~~~~~~~~~ SERVEUR ~~~~~~~~~\n";
 	cout << "|                          |\n";
 	if(marche) 	cout << "|        en marche         |\n";
 	else 		cout << "|          Arrêté          |\n";
@@ -184,6 +214,8 @@ void JourNuit::status(){
 	}
 	cout << "|    Vitesse : x" << setw(4) << vitesse << " mn    |\n";
 	cout << "| Nuit à " << setw(2) << heure_nuit << "h | Jour à " << setw(2) << heure_jour << "h  |\n";
+	cout << "|--------------------------|\n";
+	cout << "| Nombre CoCiX : " << setw(9) << _indexCocix() << " |\n";
 	cout << "|--------------------------|\n";
 	cout << "|         Météo au         |\n";
 	cout << "| ";
@@ -215,9 +247,11 @@ void JourNuit::meteo(){
 
 void JourNuit::maj_date(){
 	time(&date);
+	//ecrireDonnees(); Attention recursivité
 }
 void JourNuit::maj_bigbang(){
 	time(&bigbang);
+	ecrireDonnees();
 }
 
 void JourNuit::maj_jour_nuit(){
@@ -226,18 +260,45 @@ void JourNuit::maj_jour_nuit(){
 		// couché du soleil à 21h
 		// et levé à 7h
 
-	if((heure == (heure_nuit - 2)) || (heure == (heure_nuit -1))) {
+	if((heure == (heure_nuit - 2)) || (heure == (heure_nuit -1)))
+	{
 				jour_nuit = (short) CREPUSCULE; // une heure avant le couché du soleil
 				//cout << "Il va bientôt faire nuit !\n";
-		} else {
+	}
+	else
+	{
 			
-			if(heure >= heure_nuit || heure < heure_jour) {
+		if(heure >= heure_nuit || heure < heure_jour)
+			{
 					// il fait nuit
 					jour_nuit = (short) NUIT;
 					//cout << "Il fait nuit !\n";
-			} else {					// il fait jour
+			}
+		else
+			{					// il fait jour
 					//cout << "Il fait jour !\n";
 					jour_nuit = (short) JOUR;
 			}
-		}
+	}
+	ecrireDonnees();
+}
+
+
+// IndexCocix
+int JourNuit::incremente_indexCocix()//renvoi le prochain index et sauvegarde
+{
+	indexCocix++;
+	ecrireDonnees();
+	return indexCocix;
+}		
+
+void JourNuit::set_indexCocix(int x_index)		// Initialise l'index et sauvegarde
+{
+	indexCocix = x_index;
+	ecrireDonnees();
+}
+
+int JourNuit::_indexCocix()			// renvoi l'index
+{
+	return indexCocix;
 }

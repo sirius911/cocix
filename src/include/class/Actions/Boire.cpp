@@ -49,7 +49,7 @@ void Boire::go(Cocix *cocix,bool verbal){
 		
 	// On met à jour la base de donnée du monde
 	if(verbal) cout << "En case N° " << case_boisson << " (" << xy.x << "," << xy.y << ") Il y a " << humidite(case_boisson) << "uL avant.\n";
-	quantite_prise = prend_element(case_boisson,cocix->genome[ASSIMILATION_HYDRIQUE].valeur,NOURRITURE);
+	quantite_prise = prend_element(case_boisson,cocix->genome[ASSIMILATION_HYDRIQUE].valeur,EAU);
 	cocix->Hydro.modif(quantite_prise, &cocix->balises,verbal);
 		
 	//On incrémente le temps de l'action
@@ -68,6 +68,7 @@ void Boire::go(Cocix *cocix,bool verbal){
 		
 			if(verbal) cout << "La Capacité hydrique est atteinte...\n";	
 			set_action_terminee(true);
+			cocix->balises.soif = false;
 		}
 		
 		if(! valide_Action(verbal)){

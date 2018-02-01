@@ -53,7 +53,7 @@ void Manger::go(Cocix *cocix,bool verbal)
 		
 	// On met à jour la base de donnée du monde
 	if(verbal) cout << "En case N° " << case_nourriture << " (" << xy.x << "," << xy.y << ") Il y a " << nourriture(case_nourriture) << " cal avant.\n";
-	quantite_prise = prend_element(case_nourriture,cocix->genome[ASSIMILATION_CALORIQUE].valeur,EAU);
+	quantite_prise = prend_element(case_nourriture,cocix->genome[ASSIMILATION_CALORIQUE].valeur,NOURRITURE);
 	cocix->Calorie.modif(quantite_prise, &cocix->balises,verbal);
 		
 	//On incrémente le temps de l'action
@@ -62,11 +62,15 @@ void Manger::go(Cocix *cocix,bool verbal)
 	if(verbal) cout << "Il y a maintenant "<< nourriture(case_nourriture) << " cal.\n";
 	
 
-	// on verifie la satiété pour l'eau la CoCiX n' plus soif si hydro==CH
+	// on verifie la satiété pour la nourriture 
 		seuil_satiete = (cocix->genome[SATIETE].valeur * cocix->Calorie.capacite);
 		if(verbal) cout << "Seuil de Saiété : " << seuil_satiete << " cal : ";
 		if(cocix->Calorie.valeur > seuil_satiete){
 			if(verbal) cout << " Atteint.\n";
+			{
+				set_action_terminee(true);
+				cocix->balises.faim = false;
+			}
 		}
 		else{
 			if(verbal) cout << " Non Atteint.\n";

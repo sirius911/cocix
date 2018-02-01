@@ -1,7 +1,7 @@
 #ifndef DEF_CONSTANTES
 #define DEF_CONSTANTES
 
-#define VERSION_LOGICIEL "0.1 Beta"
+#define VERSION_LOGICIEL "0.2 Beta"
 #ifndef DEBUG
 	#define DEBUG false
 #endif
@@ -36,7 +36,7 @@
 #define ETAT_BEBE 1
 #define ETAT_ADULTE 2
 #define ETAT_VIEUX 3
-#define MATURITE 4	// Age de la maturité sexuelle
+#define MATURITE 4	// Age de la maturité sexuelle en jours
 #define IMMATURE -1
 
 
@@ -70,7 +70,7 @@
 
 #define BOIRE 1
 #define CHERCHE_EAU 2
-#define CHERCHER_NOURRITURE 3
+#define CHERCHE_NOURRITURE 3
 #define DORMIR 6
 #define MANGER 8
 

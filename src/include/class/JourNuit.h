@@ -5,6 +5,9 @@
 
 class JourNuit 
 {
+	private:
+		int indexCocix;
+
 	public:
 		//string nomFichier;
 		bool marche;
@@ -37,7 +40,7 @@ class JourNuit
 		JourNuit();
 		JourNuit(bool x_marche, time_t x_bigbang, short x_vitesse, short x_minute, short x_heure, short x_jour_nuit, int x_jours,
 	short x_heure_nuit, short x_heure_jour, time_t x_date, time_t x_date_temp, float x_temp_N, float x_temp_NE, float x_temp_E
-	, float x_temp_SE, float x_temp_S, float x_temp_SO, float x_temp_O, float x_temp_NO, float x_temp_C);
+	, float x_temp_SE, float x_temp_S, float x_temp_SO, float x_temp_O, float x_temp_NO, float x_temp_C, int x_indexCocix);
 
 		void _date();
 		void _bigbang();
@@ -48,5 +51,10 @@ class JourNuit
 		void maj_bigbang();
 		void maj_jour_nuit();
 		void _jour_nuit();
+
+		//Index
+		int incremente_indexCocix();		//renvoi le prochain index et sauvegarde
+		void set_indexCocix(int);		// Initialise l'index et sauvegarde
+		int _indexCocix();			// renvoi l'index
 };
 #endif

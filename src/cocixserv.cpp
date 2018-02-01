@@ -19,6 +19,7 @@ void help(){
 		cout << "	--status                Affiche le status du serveur.\n";
 		cout << "	--version               Affiche la version du logiciel.\n";
 		cout << "	--incremente [vitesse]  Avance le cycle à la vitesse donnée.\n";	
+		cout << "	--index [XX]			Affiche ou initalise l'indexCocix\n";
 		cout << "	--heurenuit [hh]        Affiche ou initialise l'heure de tombée de la nuit [0-24].\n";
 		cout << "	--heurejour [hh]        Affiche ou initialise l'heure du lever de soleil [0-24].\n";
 		cout << "	--jour [jjj]            Affiche ou initialise le nombre de jours depuis le BigBang (jjj).\n";
@@ -109,6 +110,29 @@ int main(int nbArg, char* argv[]){
 		} else 
 			incremente(0, &Jour_Nuit);
 		
+		return 0;
+	}
+
+	if(strcmp(argv[1] , "--index") == 0 || strcmp(argv[1] , "-x") == 0 ) 
+	{
+		if(nbArg > 2)
+		{
+			int i;
+			i = atoi( argv[2] );
+			if( i >= 0)
+			{
+				Jour_Nuit.set_indexCocix(i);
+				cout << "Nouvel index = " << Jour_Nuit._indexCocix() << "\n";
+			}
+			else
+			{
+				cout << "!erreur... pas d'index correct !\n";
+			}
+		}
+		else
+		{
+			cout << "Index actuel = " << Jour_Nuit._indexCocix() << "\n";
+		}
 		return 0;
 	}
 

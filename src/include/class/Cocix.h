@@ -14,8 +14,9 @@ class Cocix
 {
 	public:
 
-		Cocix();
-		Cocix(int);	//constructeur
+		Cocix();	//Constructeur Vide
+		Cocix(const int, bool = false);	//constructeur avec numero de CoCiX
+		Cocix(const char*, bool = false);	//Constructeur avec nom du Fichier
 		~Cocix();	//destructeur
 		Cocix(int, char[10], int, int,short, bool, short, short, short, short,Gene *, Param_Etat, Param_Etat, Param_Etat, Param_Etat );
 		
@@ -55,13 +56,15 @@ class Cocix
 		// methodes
 		
 		int vie(bool = false);
-		bool cortex_Etat(bool=false);	// Fonction du Cortex d'etat
-		bool cortex_Action(bool=false); // Fonction du Cortex d'Action
-		void maj_balises(bool=false);
+		bool cortex_Etat(const bool verbal = false);	// Fonction du Cortex d'etat
+		bool cortex_Action(const bool verbal = false); // Fonction du Cortex d'Action
+
+		void raz_balises(const  bool verbal = false);
+		void maj_balises(const bool verbal = false);
 		bool alert_agressive();
-		bool alert_froid(bool=false);
-		bool alert_faim(bool=false);
-		bool alert_soif(bool=false);
+		bool alert_froid(const bool verbal = false);
+		bool alert_faim( const bool verbal = false);
+		bool alert_soif(const bool verbal = false);
 		bool agressive();
 		bool rentree();
 		bool vivant();
@@ -69,6 +72,9 @@ class Cocix
 		// methodes d'informations ou d'affichage
 		void affiche(bool genetique = false);
 		void affiche_balises();
+		void affiche_action(const bool verbal = false);
+		void affiche_desire(const bool verbal = false);
+		
 		short etape();	// renvoi l'etape bébé (OEUF,BEBE,ADULTE ou VIEUX)
 		short age();	// Age actuel ou à sa mort
 		bool coma();
@@ -89,6 +95,7 @@ class Cocix
 		
 		bool chargement(bool verbal = false);
 		void vieillissement(bool verbal = false);
+		char fichier[30];	//nom physique du fichier CoCiX .cox
 
 		float temp_exterieur;
 };

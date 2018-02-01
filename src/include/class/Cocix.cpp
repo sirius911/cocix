@@ -26,19 +26,45 @@ using namespace std;
 Cocix::Cocix(){}
 
 
-Cocix::Cocix(int x_id){
+Cocix::Cocix(const int x_id,bool verbal){
 	//constructeur 
 	id = x_id;
+	// construction du  nom du fichier
+	/*
+
+	TODO
+
+	*/
 	if(!MUET) cout << "chargement du CoCiX N° " << id << " ...";
-	if(chargement())
+	if(chargement(verbal))
 	{
 		temp_exterieur = temperature(case_presence);
-		//Desire = new Boire(case_presence);
-	} else 
+		if(verbal) cout << " Terminé\n";
+	}
+	else 
 	{
+		if(verbal) cout << " Interrompu.\n";
 		id = 0;
 	}
 	
+}
+Cocix::Cocix(const char x_fichier[30],bool verbal)
+{
+	// initialise le nomFichier
+	// XXXF
+
+	strcpy(fichier,x_fichier);
+	
+	if(chargement(verbal))
+	{
+		temp_exterieur = temperature(case_presence);
+		if(verbal) cout << " Terminé\n";
+	}
+	else
+	{
+		if(verbal) cout << " Interrompu.\n";
+		id = 0;
+	}
 }
 
 Cocix::~Cocix(){
@@ -285,6 +311,9 @@ bool Cocix::cortex_Etat(bool verbal){
 	
 	cout << "\n****     C O R T E X   E T A T     ****\n";
 
+	raz_balises(verbal);
+	
+
 		/*
 		¯|¯ |¯ |\/| |¯| |¯ |¯| /¯\ ¯|¯ | | |¯| |¯ 
  		 |  |¯ |  | |¯  |¯ |¯\ |¯|  |  |_| |¯\ |¯ 
@@ -292,9 +321,10 @@ bool Cocix::cortex_Etat(bool verbal){
 		
 				Echange avec l'extérieur
 		*/
-	cout << "Temp...";
+	
 		
 		if(verbal) cout << "Température ("<< temp_exterieur << " °C): \n";
+		else cout << "temp...";
 	// vérifie l'étape de la Fourmiz
 		if(etape() == ETAT_OEUF ) {
 			// Pas de Cortex d'état
@@ -645,6 +675,18 @@ bool Cocix::cortex_Action(bool verbal){
 		return vivant();
 }
 
+void Cocix::raz_balises( bool verbal)
+{
+	// Init balise Coma & malade
+	if(verbal) cout << "Mise à Zero des balise Coma & Malade\n";
+
+	balises.coma = false;
+	balises.malade = false;
+	balises.faim = false;
+	balises.froid = false;
+	balises.agressive = false;
+}
+
 void Cocix::maj_balises( bool verbal){
 	cout << "\n ***** MAJ des balises *****\n";
 	cout << "Agr";
@@ -671,7 +713,7 @@ bool Cocix::alert_froid(bool verbal){
 		float temp_froid = Temperature.valeur - (Temperature.valeur * genome[FROID].valeur); // à revoir *******************************************
 		
 		if(verbal)
-			cout << "Temp Ext = " << temp_exterieur << "°C, J'ai froid si la temp descend en dessous de " << temp_froid << "°C !\n";
+			cout << "\n - Temp Ext = " << temp_exterieur << "°C, J'ai froid si la temp descend en dessous de " << temp_froid << "°C !\n";
 		else
 			cout << "- temp";
 		if(rentree()){
@@ -852,7 +894,15 @@ void Cocix::affiche_balises(){
 	cout << "-------------------------------------------------------\n";
 }
 
+void Cocix::affiche_action(const bool verbal)
+{
+	Action->affiche_action(verbal);
+}
 
+void Cocix::affiche_desire(const bool verbal)
+{
+	Desire->affiche_desire(verbal);
+}
 /********************************************************************************************************************
 										FICHIERS
 */
@@ -860,19 +910,19 @@ void Cocix::affiche_balises(){
 bool Cocix::sauvegarde(bool verbal){
 
 	char nomFichier[30] = "";
-	sprintf(nomFichier, "%s%d.cox", REPERTOIRE_NID, id);
-	if(verbal) cout << "Sauvegarde de " << nomFichier << " ...\n";
+	sprintf(nomFichier, "%s%s", REPERTOIRE_NID, fichier);
+	if(verbal) cout << "Sauvegarde de " << nomFichier << " ...";
 	ofstream f (nomFichier, ios::out | ios::binary);
 
   	if(!f.is_open())
     {
-      cout << "\nImpossible d'ouvrir le fichier '" <<  nomFichier << "' en ecriture !" << "\n";
+      cout << " Impossible d'ouvrir le fichier '" <<  nomFichier << "' en ecriture !... Interrompue";
       f.close();
       return false;
       
     } else {
     	// Paramètre d'identité
-    	//f.write ((char*) &id, sizeof (int));
+    	f.write ((char*) &id, sizeof (int));
     	f.write ((char*) &nom, sizeof (char[10]));
     	f.write ((char*) &idPere, sizeof (int));
     	f.write ((char*) &idMere, sizeof (int));
@@ -900,7 +950,7 @@ bool Cocix::sauvegarde(bool verbal){
     	Temperature.sauvegarde(&f);
     	
     	// Sauvegarde Genome
-    	if(verbal) cout << "taille du genome : " << sizeof(Gene) << " Oc x " << MAX_GEN << " Gènes = " << (sizeof(Gene)+MAX_GEN) << " Oc\n";
+    	if(verbal) cout << " taille du genome : " << sizeof(Gene) << " Oc x " << MAX_GEN << " Gènes = " << (sizeof(Gene)+MAX_GEN) << " Oc\n";
     	f.write ((char*) &genome, (sizeof(Gene) * MAX_GEN ));
 
     	// Sauvegarde Action 
@@ -917,19 +967,19 @@ bool Cocix::sauvegarde(bool verbal){
 }
 
 bool Cocix::chargement(bool verbal){
-	//char etiquetteParamEtat[20];
 	
 	// lecture dans fichier 
     char nomFichier[30] = "";
-	sprintf(nomFichier, "%s%d.cox", REPERTOIRE_NID, id);
-	if(verbal) cout << "Chargement de " << nomFichier << " ...\n";
+	sprintf(nomFichier, "%s%s", REPERTOIRE_NID, fichier);
+	if(verbal) cout << "Chargement de " << nomFichier << " ... ";
     ifstream f(nomFichier, std::ios::binary);
   	if (!f){
-      	cout << "\nImpossible de lire dans le fichier " << nomFichier << "\n";
+      	cout << "Impossible de lire dans le fichier :'" << nomFichier << "'";
       	return false;
       	
     } else {
-    	// Paramètre d'état
+    	// Paramètres d'identité
+    	f.read((char*) &id, sizeof(int));
     	f.read((char*) &nom, sizeof(char[10]));
     	f.read((char*) &idPere, sizeof(int));
     	f.read((char*) &idMere, sizeof(int));
@@ -972,7 +1022,7 @@ bool Cocix::chargement(bool verbal){
 				Action = new Dormir();
 				break;
 			case MANGER:
-				Action = new Manger();
+				Action = new Manger(case_presence);
 				break;
 			case BOIRE:
 				Action = new Boire(case_presence);
@@ -981,7 +1031,8 @@ bool Cocix::chargement(bool verbal){
 				Action = new Cherche_Eau(case_presence);
 				break;
 			default:
-				cout << "ERREUR: Je n'ai pas trouvé l'Action : " << numAction << "\n";
+				cout << "ERREUR: Je n'ai pas trouvé l'Action : " << numAction << "->Action init à Dormir()...";
+				Action = new Dormir();
 		}
 		// il faudra charger les infos sur l'action en cours
 		Action->set_action_terminee( x_action_terminee );
@@ -997,7 +1048,7 @@ bool Cocix::chargement(bool verbal){
 				Desire = new Dormir();
 				break;
 			case MANGER:
-				Desire = new Manger();
+				Desire = new Manger(case_presence);
 				break;
 			case BOIRE:
 				Desire = new Boire(case_presence);
@@ -1006,11 +1057,11 @@ bool Cocix::chargement(bool verbal){
 				Desire = new Cherche_Eau(case_presence);
 				break;
 			default:
-				cout << "ERREUR: Je n'ai pas trouvé le Desire : " << numDesire << "\n";
+				cout << "ERREUR: Je n'ai pas trouvé le Desire : " << numDesire << "->Desire init à Dormir()...";
+				Desire = new Dormir();
 		}
 
   	 	f.close();
-  	 	if(verbal) cout << " ok\n";
   	 	return true;
 	}
 }

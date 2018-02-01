@@ -22,8 +22,9 @@ void Dormir::faire(){
 	le_temps_s_ecoule();
 }
 
-bool Dormir::valide_Action(){
+bool Dormir::valide_Action(bool verbal){
 	// peut toujours dormir
+	cout << " Peut toujours dormir !";
 	return true;
 }
 
@@ -31,9 +32,10 @@ void Dormir::go(Cocix*,bool verbal){
 	cout <<  "...................................................\n";
 	if(verbal) Actions::index();
 	cout << "ACTION => DORT ....\n";
+	if(verbal) cout << " ~~~~~~~~ RONFLEMENT ~~~~~~~~\n";
 
 	//On incrémente le temps de l'action
 	le_temps_s_ecoule(verbal);
-
-	cout << "...................................................\n";
+	cout << " ~~~~~~~~ RONFLEMENT ~~~~~~~~\n";
+	if(verbal) cout << "...................................................\n";
 }

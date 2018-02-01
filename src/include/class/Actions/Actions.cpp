@@ -57,7 +57,7 @@ void Actions::go(Cocix*,bool){
 }
 bool Actions::valide_Action(const bool){
 	cout << "valide_action() NON IMPLÉMENTÉE !\n";
-	return false;
+	return true;
 }
 
 bool Actions::terminee(){

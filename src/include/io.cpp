@@ -40,7 +40,7 @@ ligneCase lirecase (short const num_case)
 	numLigne = num_case - 1;	// num_case =[1;10000] mais lecture des lignes de 0 à 9999
     if(numLigne < 0 || numLigne >= MAX_CASE)
     {
-    	cout << "ERREUR : Essais de lire une ligne dans '" << FICHIER_MONDE << "' en dehors des limites : " << numLigne << " !\n";
+    	cout << "ERREUR : Essais de lire une ligne dans '" << FICHIER_MONDE << "' en dehors des limites : " << numLigne << " case : " << num_case << "\n";
     	return ligneSortie;
     }
 

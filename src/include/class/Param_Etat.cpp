@@ -101,14 +101,12 @@ Param_Etat::Param_Etat(const char x_nom[20], const char x_unite[3], float x_capa
 			valeur = capacite;
 		}
 		if(verbal) cout << " nouvelle valeur = " << valeur << unite <<"\n";
-		maj_balises(balises);
+		maj_balises(balises, verbal);
 
 	}
 
 	void Param_Etat::maj_balises(struct_balises *balises, bool verbal){
 		// On met à jours les balises en fonction des limites
-		// Question peut on mettre un float dans une valeur comme null ou vide afin d'indiquer qu'on 
-		// ne veut pas de limite (actuellement c'est -1 ce qui nous interdit d'avoir des valeurs négatives)
 		if(verbal) cout << "		** Controle des limites **\n";
 		//cout << "Avant maj_balises() : Malade -> " << ((balises->malade)?"Oui":"Non") << " -- Coma -> " << ((balises->coma)?"Oui":"Non") << "\n";
 		if(verbal) cout << "Maladie -->\n";
