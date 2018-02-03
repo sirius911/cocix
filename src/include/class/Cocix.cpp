@@ -17,7 +17,7 @@
 #include "Actions/Manger.h"
 //#include "Actions/Pondre.h"
 //#include "Actions/Recolter.h"
-//#include "Actions/Se_Rechauffer.h"
+#include "Actions/Se_Rechauffer.h"
 //#include "Actions/Se_Reproduire.h"
 //#include "Actions/Se_Soigner.h"
 
@@ -110,12 +110,13 @@ Cocix::Cocix(int x_id, char x_nom[10], int x_idPere, int x_idMere,short x_date_n
 /* Création de Cocix exemple pour le debugage ******************************************************************
 			A EFFACER ensuite
 			*/
-void Cocix::creation_Toto(int x_id){
+void Cocix::creation_Toto(int x_id, const bool verbal){
 
 	cout << "\n Création de Toto ...";
 	// Paramètre d'identité
 	id = x_id;
 	strcpy(nom, "Toto");
+	strcpy(fichier,"[1]M_Toto.cox");
 	idPere = 0;
 	idMere = 0;
 	date_naissance = 31;
@@ -156,24 +157,24 @@ void Cocix::creation_Toto(int x_id){
 		genome[SEUIL_MALADE].valeur*genome[SANTE].valeur, (float)NULL,
 		genome[SEUIL_COMA].valeur*genome[SANTE].valeur, (float)NULL,
 		genome[SEUIL_MALADE].valeur*genome[SANTE].valeur,(float)NULL,
-		(float) SOUFFRANCE_MALADIE);
+		(float) SOUFFRANCE_MALADIE, 0.0f,100.0f);
 
 	Calorie = Param_Etat("Calorie","Cal",120.0,80.3578f,
 		(float)NULL,(float) NULL,	
 		genome[CALORIE].valeur * (float) COMA_CALORIE,	(float)NULL,
 		genome[SOUFFRE_FAIM].valeur * genome[CALORIE].valeur,(float)NULL,
-		(float) SOUFFRANCE_CALORIQUE);
+		(float) SOUFFRANCE_CALORIQUE, 0.0f, 120.0f);
 
 	Hydro = Param_Etat("Hydro","muL",100.0f,60.222f,
 		(float)NULL,(float) NULL,	
 		genome[HYDRO].valeur * (float)COMA_HYDRO, (float)NULL,	
 		genome[SOUFFRE_SOIF].valeur * genome[HYDRO].valeur, (float)NULL,		
-		(float) SOUFFRANCE_HYDRIQUE);
+		(float) SOUFFRANCE_HYDRIQUE, 0.0f, 100.0f);
 	Temperature = Param_Etat("Temp.","°",37.5f,(float)NULL,
 		(float)NULL, 40.0f,
 		36.0f,42.0f,
 		36.0f,40.0f,
-		(float) SOUFFRANCE_THERMIQUE);	
+		(float) SOUFFRANCE_THERMIQUE, 35.5f, 42.5f);	
 		
 	// balises etat
 	balises.fecondee = false;
@@ -187,19 +188,20 @@ void Cocix::creation_Toto(int x_id){
 	balises.soif = false;
 
 	cout << " Terminée !\n";
-	Desire =  new Manger();
+	Desire =  new Manger(case_presence);
 	Action =  new Dormir();
-	sauvegarde();
+	sauvegarde(verbal);
 	temp_exterieur = temperature(case_presence);
 	
 }
 
-void Cocix::creation_Titi(int x_id){
+void Cocix::creation_Titi(int x_id, bool verbal){
 
 	cout << "\n Création de Titi ...";
 	// Paramètre d'identité
 	id = x_id;
 	strcpy(nom, "Titi");
+	strcpy(fichier,"[2]F_Titi.cox");
 	idPere = 0;
 	idMere = 0;
 	date_naissance = 35;
@@ -222,7 +224,7 @@ void Cocix::creation_Titi(int x_id){
 	genome[SANTE] = Gene("Sante",SANTE,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f);
 	genome[SATIETE] = Gene("Satiété",SATIETE,0.58f,0.58f,0.60f,0.65f,0.65f,0.65f,0.65f);
 	genome[SOIF] = Gene("Soif",SOIF,0.50f,0.60f,0.50f,0.50f,0.50f,0.50f,0.50f);
-	genome[TEMP] = Gene("Temp",TEMP,0.1f,0.1f,0.1f,0.1f,0.1f,0.1f,0.1f);
+	genome[TEMP] = Gene("Temp",TEMP,0.1f,0.1f,0.1f,0.1f,0.1f,0.1f,0.1f);	// en °C valeur d'échange avec l'extérieur: proportionnelle à la "carapace" du CoCiX
 	genome[VIEUX] = Gene("Vieux",VIEUX,20.0f,20.0f,20.0f,20.0f,20.0f,20.0f,20.0f);
 	genome[SOUFFRE_FAIM] = Gene("Souffre_Faim",SOUFFRE_FAIM,0.50f,0.30f,0.5f,0.3f,0.3f,0.3f,0.3f);
 	genome[SOUFFRE_SOIF] = Gene("Souffre_Soif",SOUFFRE_SOIF,0.8f,0.8f,0.4f,0.5f,0.8f,0.4f,0.3f);
@@ -236,7 +238,7 @@ void Cocix::creation_Titi(int x_id){
 	genome[VIEILLISSEMENT] = Gene("Vieillissement",VIEILLISSEMENT,0.00007f,0.00007f,0.00007f,0.00007f,0.00007f,0.00007f,0.00007f);
 
 	//Param_Etat(nom,unite,capacite, valeur, limite_basse_malade,limite_haute_malade,  limite_basse_coma,limite_haute_coma,
-	//			limite_basse_souffrance, limite_haute_souffrance, correction)
+	//			limite_basse_souffrance, limite_haute_souffrance, correction, plancher, plafond)
 	//Param Sante
 	//Calories
 	//Param Hydro
@@ -245,24 +247,24 @@ void Cocix::creation_Titi(int x_id){
 		genome[SEUIL_MALADE].valeur*genome[SANTE].valeur, (float)NULL,
 		genome[SEUIL_COMA].valeur*genome[SANTE].valeur, (float)NULL,
 		genome[SEUIL_MALADE].valeur*genome[SANTE].valeur,(float)NULL,
-		(float) SOUFFRANCE_MALADIE);
+		(float) SOUFFRANCE_MALADIE,0.0f,100.0f);	// plafond est Capacite
 
 	Calorie = Param_Etat("Calories","Cal",120.0,80.3578f,
 		(float)NULL,(float) NULL,	
 		genome[CALORIE].valeur * (float) COMA_CALORIE,	(float)NULL,
 		genome[SOUFFRE_FAIM].valeur * genome[CALORIE].valeur,(float)NULL,
-		(float) SOUFFRANCE_CALORIQUE);
+		(float) SOUFFRANCE_CALORIQUE,0.0f,120.0f);
 
 	Hydro = Param_Etat("Param Hydro","muL",100.0f,60.222f,
 		(float)NULL,(float) NULL,	
 		genome[HYDRO].valeur * (float)COMA_HYDRO, (float)NULL,	
 		genome[SOUFFRE_SOIF].valeur * genome[HYDRO].valeur, (float)NULL,		
-		(float) SOUFFRANCE_HYDRIQUE);
+		(float) SOUFFRANCE_HYDRIQUE,0.0f,100.0f);
 	Temperature = Param_Etat("Température","°C",37.5f,37.0f,
 		(float)NULL, 40.0f,
 		36.0f,42.0f,
 		36.0f,40.0f,
-		(float) SOUFFRANCE_THERMIQUE);	
+		(float) SOUFFRANCE_THERMIQUE, 35.5f, 43.5f);	
 	// balises etat
 	balises.fecondee = false;
 	balises.vivant = true;
@@ -276,7 +278,7 @@ void Cocix::creation_Titi(int x_id){
 	Desire = new Dormir();
 	Action = new Boire(case_presence);
 	cout << " Terminée !\n";
-	sauvegarde();
+	sauvegarde(verbal);
 	temp_exterieur = temperature(case_presence);
 	
 }
@@ -339,7 +341,9 @@ bool Cocix::cortex_Etat(bool verbal){
 			if(verbal) cout << "Je suis un bébé ! </br>";
 			// TO DO
 		}
-		if(Temperature.valeur < temp_exterieur){
+
+
+		if(temp_exterieur > Temperature.get_valeur() ){
 			// si la température exterieur ext supérieur au augmente la température interne de Genes['temp']->valeur
 			if(verbal) cout << " Temp ext > Temp corporel => \n"; 
 			Temperature.modif(genome[TEMP].valeur, &balises,verbal);
@@ -348,26 +352,37 @@ bool Cocix::cortex_Etat(bool verbal){
 			if(verbal) cout << " Temp ext <= temp corporel -> aucune modif\n";
 		}
 
+
 		// verification de la température extérieur < à 10°C
 		if(temp_exterieur < 10.0f) {
 			
 			if(verbal) cout << " Temp ext < 10°C<\n";
 			Temperature.modif(-genome[TEMP].valeur, &balises,verbal); // on diminue la température de Genes.temp.valeur
-			if(Temperature._valeur() < 35) Temperature._valeur(35.0f, &balises); // ne peut descendre en dessous de 35°C
+			
 		}
 
 
 		//variation de température en fonction de l'action
 		// la température ne descend pas en dessous de 36.5 quand elle Mange Dort ou BOIT
-				
-		if((Temperature.valeur > 36.5f)|| (!Action->equal(Dormir()) && !Action->equal(Manger()) && !Action->equal(Boire()) )) {
-		
-			Temperature.modif(Action->chaleur, &balises,verbal);
+
+		// si je dort ou si je mange ou si bois et que ma température est inf à 36.5°C mon action ne bouge pas ma température
+		if(Action->get_chaleur() <= 0 && Temperature.get_valeur() < 36.5f)
+		{
+			if(verbal)
+			{
+				cout << Action->get_action() << " ne me fait pas perdre de température car ma température < 36°C\n";
+			}
 		}
-		if(verbal) cout << Action->action << " -> +" << Action->chaleur << "°C = " << Temperature.valeur << "°C\n";
+		else
+		{
+			Temperature.modif(Action->chaleur, &balises,verbal);
+			if(verbal) cout << Action->get_action() << " -> +" << Action->chaleur << "°C = " << Temperature.get_valeur() << "°C\n";
+
+		}
+
 		
 		// Calcul du facteur de correction de température
-		correction = (Temperature.valeur - 37.5f) * (Temperature.valeur - 37.5f) * sqrt(Temperature.valeur);
+		correction = (Temperature.get_valeur() - 37.5f) * (Temperature.get_valeur() - 37.5f) * sqrt(Temperature.get_valeur());
 
 		if(verbal) cout << "Facteur de correction  de Temperature = " << correction << "%\n";
 	cout << "ok\n";
@@ -379,10 +394,13 @@ bool Cocix::cortex_Etat(bool verbal){
 		*/
 		// depense en eau en fonction de l'action:
 		depense_eau = Action->eau + (Action->eau * correction / 100);
-		if(fecondee()) depense_eau += ( depense_eau * 0.1f ); //si fécondée 10% en plus
+		if(fecondee()) 
+		{
+			depense_eau += ( depense_eau * 0.1f ); //si fécondée 10% en plus
+			if(verbal) cout << "fécondée : + 10% ";
+		}
 		Hydro.modif(-depense_eau, &balises,verbal);
-		if(Hydro.valeur < 0) Hydro.valeur = 0;
-		if(verbal) cout << Action->action << " -> -" << depense_eau << " muL = " << Hydro.valeur << " muL\n";
+		if(verbal) cout << Action->get_action() << " -> -" << depense_eau << " muL = " << Hydro.get_valeur() << " muL\n";
 	
 	cout << "ok\n";
 	cout << "Cal...";
@@ -393,10 +411,13 @@ bool Cocix::cortex_Etat(bool verbal){
 		*/
 		// depense en Calorie en fonction de l'action:
 		depense_calorie = Action->calorie;
-		if(fecondee()) depense_calorie += (depense_calorie * 0.1f);	// si fécondée 10% en plus
+		if(fecondee())
+		{
+			depense_calorie += (depense_calorie * 0.1f);	// si fécondée 10% en plus
+			if(verbal) cout << "fécondée : + 10% ";
+		} 
 		Calorie.modif(-depense_calorie, &balises);
-		if(Calorie.valeur < 0) Calorie.valeur = 0;
-		if(verbal) cout << Action->action << " -> -" << depense_calorie <<" Cal = " << Calorie.valeur << "Cal\n";
+		if(verbal) cout << Action->get_action() << " -> -" << depense_calorie <<" Cal = " << Hydro.get_valeur() << "Cal\n";
 
 	cout << "ok\n";
 	cout << "SA...";
@@ -426,8 +447,8 @@ bool Cocix::cortex_Etat(bool verbal){
 		if(Action->equal(Dormir())) {
 			// La CoCix Dort
 			cout << "Sommeil...";
-			Sante.modif(Sante.valeur * genome[RECUP_SOMMEIL].valeur, &balises,verbal);	
-			if(verbal) cout << "Action = DORMIR ==> Santé + " << genome[RECUP_SOMMEIL].valeur << "% = " << Sante.valeur << "\n";
+			Sante.modif(Sante.get_valeur() * genome[RECUP_SOMMEIL].valeur, &balises,verbal);	
+			if(verbal) cout << "Action = DORMIR ==> Santé + " << genome[RECUP_SOMMEIL].valeur << "% = " << Sante.get_valeur() << "\n";
 			cout << "ok\n";
 		}
 
@@ -439,7 +460,7 @@ bool Cocix::cortex_Etat(bool verbal){
         maj_balises(verbal);
 
         //MORT
-        if(Sante.valeur < 1 || Sante.capacite < 1){
+        if(Sante.get_valeur() < 1 || Sante.get_capacite() < 1){
         	if(verbal)cout << "\n\t JE MEURT !! =============> TODO \n";
         	// meurt();	 TODO
         	return false;
@@ -473,8 +494,9 @@ bool Cocix::cortex_Etat(bool verbal){
         	else if(faim())
         		Desire = new Manger();
         	else if(froid())
-        		cout << "Se_Rechauffer() ...non implémenté...";
-        		//Desire = new Se_Rechauffer();
+        	{
+        		Desire = new Se_Rechauffer(case_naissance,case_presence);
+        	}
         	else
         	{
         	// besoins non-vitaux
@@ -596,7 +618,7 @@ bool Cocix::cortex_Action(bool verbal){
 				
 		cout << "\tDésire => " << Action->desire << "\n";
 				
-		cout << "\tAction en cours => " << Action->action << "\n";
+		cout << "\tAction en cours => " << Action->get_action() << "\n";
 	}
 
 	// verifi l'etape de la CoCiX
@@ -620,7 +642,7 @@ bool Cocix::cortex_Action(bool verbal){
 					
 				cout << "L'action est-elle faisable ? : ";
 					
-				cout << "Fonction de validation interne à l'Action (" << Action->action << ") ...";
+				cout << "Fonction de validation interne à l'Action (" << Action->get_action() << ") ...";
 			}
 			if(Action->valide_Action(verbal)){
 				//faisable
@@ -634,7 +656,7 @@ bool Cocix::cortex_Action(bool verbal){
 							//non
 						if(verbal) 
 						{
-							cout << " Mais je fait autre chose : " << Action->action <<"\n";
+							cout << " Mais je fait autre chose : " << Action->get_action() <<"\n";
 							
 							cout << "Peut-on arreter l'action en cours ou est-elle terminée ? : ";
 						}
@@ -654,7 +676,7 @@ bool Cocix::cortex_Action(bool verbal){
 				if(verbal) cout << " NON \nPeut-on arrêter l'action en cours ou est-elle terminée ? : ";
 				if(Action->terminee()) {
 					//oui
-					if(verbal) cout <<"OUI ! \n\t ==> On va prendre l'action alternative : "<< Action->Action_alternative->action << "\n";
+					if(verbal) cout <<"OUI ! \n\t ==> On va prendre l'action alternative : "<< Action->Action_alternative->get_action() << "\n";
 						// on va prendre l'alternative
 					Action = Action->Action_alternative;
 
@@ -710,7 +732,7 @@ bool Cocix::alert_agressive(){
 
 bool Cocix::alert_froid(bool verbal){
 		
-		float temp_froid = Temperature.valeur - (Temperature.valeur * genome[FROID].valeur); // à revoir *******************************************
+		float temp_froid = Temperature.get_valeur() - (Temperature.get_valeur() * genome[FROID].valeur); // à revoir *******************************************
 		
 		if(verbal)
 			cout << "\n - Temp Ext = " << temp_exterieur << "°C, J'ai froid si la temp descend en dessous de " << temp_froid << "°C !\n";
@@ -727,10 +749,10 @@ bool Cocix::alert_froid(bool verbal){
 bool Cocix::alert_faim(bool verbal){
 	// renvoi vrai si le seuil de ressenti de la faim est dépassé
 	bool faim;
-	faim = (Calorie._valeur(true) < genome[FAIM].valeur);
+	faim = (Calorie.get_valeur(true) < genome[FAIM].valeur);
 		
 	// vérifie que le seuil des COMA_CALORIE% n'est pas atteint si oui -> coma
-	if(Calorie._valeur(true) < COMA_CALORIE) {
+	if(Calorie.get_valeur(true) < COMA_CALORIE) {
 			balises.coma = true;
 			if(verbal) cout << "Calorie < " << (COMA_CALORIE * 100) << "% de cc => COMA !\n";
 			else cout << " - faim=>coma";
@@ -751,10 +773,10 @@ bool Cocix::alert_soif(bool verbal)
 		return true;
 	}
 
-	soif = (Hydro._valeur(true) < genome[SOIF].valeur);
+	soif = (Hydro.get_valeur(true) < genome[SOIF].valeur);
 	
 	// vérifie que le seuil  COMA_HYDRO% n'est pas atteint si oui -> coma	
-	if(Hydro._valeur(true) < COMA_HYDRO)
+	if(Hydro.get_valeur(true) < COMA_HYDRO)
 	{
 		balises.coma = true;
 		if(verbal) cout << "Hydro < " << (COMA_HYDRO * 100) << "% de ch => COMA ! \n";
@@ -767,19 +789,19 @@ bool Cocix::alert_soif(bool verbal)
 
 void Cocix::vieillissement(bool verbal){
 			// Alors on diminue le Capital Santé CS de  genome[VIEILLISSEMENT].valeur % par cycle
-			if(Sante.capacite >= 10)
+			if(Sante.get_capacite() >= 10)
 			{
-				Sante.capacite -= (Sante.capacite * genome[VIEILLISSEMENT].valeur);
-				if(verbal) cout << "VIEILLESSE ===> Capital Santé - " << (genome[VIEILLISSEMENT].valeur * 100) << "% = " << Sante.capacite << "\n";
+				Sante.set_capacite(Sante.get_capacite() - (Sante.get_capacite() * genome[VIEILLISSEMENT].valeur));
+				if(verbal) cout << "VIEILLESSE ===> Capital Santé - " << (genome[VIEILLISSEMENT].valeur * 100) << "% = " << Sante.get_capacite() << "\n";
 			}
 			else 
 			{
-				Sante.capacite -= genome[VIEILLISSEMENT].valeur;
-				if(verbal) cout << "VIEILLESSE ===> Capital Santé - "<< genome[VIEILLISSEMENT].valeur << " = " << Sante.capacite << "\n";
+				Sante.set_capacite(Sante.get_capacite() - genome[VIEILLISSEMENT].valeur );
+				if(verbal) cout << "VIEILLESSE ===> Capital Santé - "<< genome[VIEILLISSEMENT].valeur << " = " << Sante.get_capacite() << "\n";
 			}
 
-			if(Sante.capacite < 1) Sante.capacite = 0; // mort
-			if(Sante.valeur > Sante.capacite) Sante.valeur = Sante.capacite; 
+			if(Sante.get_capacite() < 1) Sante.set_capacite(0.0f); // mort
+			if(Sante.get_valeur() > Sante.get_capacite()) Sante.set_valeur(Sante.get_capacite(), &balises , false); 
 }
 
 
@@ -787,13 +809,13 @@ void Cocix::vieillissement(bool verbal){
 			| |\| |¯ |¯| |¯| |\/| /¯\ ¯|¯ | |¯| |\| 
 			| | | |¯ |_| |¯\ |  | |¯|  |  | |_| | | 
 */
-void Cocix::affiche(bool genetique){
+void Cocix::affiche(const bool genetique,const bool verbal){
 	cout<<"\nCocix n° "<< id << " : " << nom << " en " << case_presence << "\n";
 	
-	Sante.affiche(true,MUET);
-	Hydro.affiche(false, MUET);
-	Calorie.affiche(false, MUET);
-	Temperature.affiche(false, MUET);
+	Sante.affiche(true,verbal);
+	Hydro.affiche(false, verbal);
+	Calorie.affiche(false, verbal);
+	Temperature.affiche(false, verbal);
 	affiche_balises();
 	if(genetique){
 		int i;

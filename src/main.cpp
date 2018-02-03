@@ -90,6 +90,7 @@ int main(int nbArg, char* argv[])
 					cout << "\taction\t\tAffiche l'Action en cours du CoCiX chargé.\n";
 					cout << "\taffiche\t\tAffiche les infos du CoCiX chargé.\n";
 					cout << "\taffichecase\t\tAffiche les infos d'une case.\n";
+					cout << "\tbalises\t\tAffiche les balises du CoCiX chargé.\n";
 					cout << "\tcortexetat\t\tLance la méthode cortex_etat() du CoCiX chargé.\n";
 					cout << "\tcorteaction\t\tLance la méthode cortex_action() du CoCiX chargé.\n";
 					cout << "\tdesire\t\tAffiche le désire en cours du CoCiX chargé.\n";
@@ -129,11 +130,19 @@ int main(int nbArg, char* argv[])
 			{
 					affiche_nid();
 
+			} else if((strcmp(commande,"balises")==0))
+			{
+					if( ! (CoCiX == (void*) NULL ))
+					{
+						CoCiX->affiche_balises();
+					} else {
+						cout << "Aucune CoCix chargée ... (load)\n";
+					}
 			} else if((strcmp(commande,"affiche")==0))
 			{
 					if( ! (CoCiX == (void*) NULL ))
 					{
-						CoCiX->affiche(false);
+						CoCiX->affiche(false,verbal);
 					} else {
 						cout << "Aucune CoCix chargée ... (load)\n";
 					}
@@ -387,6 +396,26 @@ int main(int nbArg, char* argv[])
 				} else {
 						cout << "Aucune CoCix chargée ... (load)\n";
 				}
+
+			} else if((strcmp(commande,"creerToto")==0))
+			{
+					if( ! (CoCiX == (void*) NULL ))
+						delete CoCiX;
+
+					cout << "Création du CoCiX Toto :";
+					CoCiX = new Cocix();
+					CoCiX->creation_Toto( 1 , verbal);
+					delete CoCiX;
+					cout << " Création du CoCiX Titi : ";
+					CoCiX = new Cocix();
+					CoCiX->creation_Titi( 2 , verbal);
+					cout << "Fin\n";
+					delete CoCiX;
+					strcpy(nomCocix,"Aucun CoCiX");
+					strcpy(prompt,"<");
+					strcat(prompt, nomCocix);
+					strcat(prompt, (sauvegarde)?" [Sav]":" [noSav]");
+					strcat(prompt, (verbal)?"[verbal]>":"[muet]>");
 
 			} else {
 				cout << commande << " Non compris !\n";

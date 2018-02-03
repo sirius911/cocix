@@ -13,7 +13,7 @@ Param_Etat::Param_Etat(const char x_nom[20], const char x_unite[3], float x_capa
 	float x_limite_basse_malade, float x_limite_haute_malade, 
 	float x_limite_basse_coma, float x_limite_haute_coma,  
 	float x_limite_basse_souffrance,float x_limite_haute_souffrance,  
-	float x_correction_souffrance){
+	float x_correction_souffrance, float x_plancher, float x_plafond){
 	strcpy(nom, x_nom);
 	strcpy(unite, x_unite);
 	capacite = x_capacite;
@@ -30,6 +30,10 @@ Param_Etat::Param_Etat(const char x_nom[20], const char x_unite[3], float x_capa
 	limite_haute_souffrance = x_limite_haute_souffrance;
 	limite_basse_souffrance = x_limite_basse_souffrance;
 	correction_souffrance = x_correction_souffrance;
+
+	// plafond & plancher
+	plafond = x_plafond;
+	plancher = x_plancher;
 }
 
 //méthodes
@@ -38,11 +42,13 @@ Param_Etat::Param_Etat(const char x_nom[20], const char x_unite[3], float x_capa
 		bool tab1=false,tab2 = false;
 		cout << "<" << fixed <<  setw(7) << nom << ">\t => " << setprecision(2)<< setw(9);
 		if(pourcentage)
-			cout << _valeur(pourcentage)*100 << "\%\t\t";
+			cout << get_valeur(pourcentage)*100 << "\%";
 		else
 			cout << valeur << unite << " / " << capacite << unite;
 		if(limite){
-			cout << "\t\t\t*** LIMITES ***\n";
+
+			cout << "\t BORNES : [ " << plancher << unite << " , " << plafond << unite << " ]\n";
+			cout << "\t****************** LIMITES ******************\n";
 			cout << "\t Mal [";
 			if(limite_basse_malade == (float) NULL){
 				cout << "*";
@@ -78,37 +84,90 @@ Param_Etat::Param_Etat(const char x_nom[20], const char x_unite[3], float x_capa
 				cout <<  "*";
 			else
 				cout <<limite_haute_souffrance;
-			cout << "]\t corr : " << correction_souffrance * 100 << "%\n";
+			cout << "]\t corr souf : " << correction_souffrance * 100 << "%\n";
 		} else
-			cout << "\n";
+			cout << "\n\n";
 	}
 
-	float Param_Etat::_valeur( bool pourcentage){
-		if(pourcentage)	return ((capacite == 0.0f)? 0:valeur/capacite) ;
-		else return valeur;
-	}
+// *********************************************************************************
+//							GETTERS
+// **********************************************************************************
 
-	void Param_Etat::_valeur(float x_valeur, struct_balises *balises){
-		valeur = x_valeur;
-		maj_balises(balises);
-	}
+float Param_Etat::get_valeur( bool pourcentage){
+	if(pourcentage)	return ((get_capacite() == 0.0f)? 0:valeur/get_capacite()) ;
+	else return valeur;
+}
 
-	void Param_Etat::modif(float modificateur, struct_balises * balises, bool verbal){
+float Param_Etat::get_capacite()
+{
+	return capacite;
+}
+
+char* Param_Etat::get_nom()
+{
+	return nom;
+}
+
+
+// *******************************************************************************************
+//						SETTERS
+// ********************************************************************************************
+void Param_Etat::set_valeur(float x_valeur, struct_balises *balises, bool control){
+	valeur = x_valeur;
+	if (control) maj_balises(balises);
+}
+
+void Param_Etat::set_capacite(float x_capacite)
+{
+	capacite = x_capacite;
+}
+
+void Param_Etat::modif(float modificateur, struct_balises * balises, const bool verbal){
 		if(verbal) cout << "Modif : " << nom << " -> " << modificateur << unite;
 		valeur = valeur + modificateur;
-		if(capacite != (float) NULL  && valeur > capacite){
+		if(get_capacite() != (float) NULL  && valeur > get_capacite()){
 			// la valeur du paramètre ne peut dépacer sa capacité sauf si la capacité est NULL (Température)
-			valeur = capacite;
+			valeur = get_capacite();
 		}
-		if(verbal) cout << " nouvelle valeur = " << valeur << unite <<"\n";
+		verif_bornes(verbal);
 		maj_balises(balises, verbal);
-
+		//if(verbal) cout << " nouvelle valeur = " << valeur << unite <<"\n";
+		
 	}
 
-	void Param_Etat::maj_balises(struct_balises *balises, bool verbal){
+void Param_Etat::verif_bornes(const bool verbal)
+{
+
+		// On controle les plafonds
+		if(verbal) cout << "		***** Controle du plancher & plafond pour [" << get_nom() << "] *****\n";
+
+		if(valeur < plancher) 
+		{
+				valeur = plancher;
+				if(verbal) cout << "Plancher (" << plancher << unite << ") atteint !\n";
+		}
+		else
+		{
+				if(verbal) cout << "Plancher ... ok\n";
+		}
+
+		if(valeur > plafond)
+		{
+				valeur = plafond;
+				if(verbal) cout << "Plafond (" << plafond << unite << ") atteint !\n";
+		}
+		else
+		{
+				if(verbal) cout << "Plafond ... ok\n";
+		}
+		if(verbal) cout << "		**********************************************************************\n";
+
+}
+
+void Param_Etat::maj_balises(struct_balises *balises, bool verbal){
 		// On met à jours les balises en fonction des limites
-		if(verbal) cout << "		** Controle des limites **\n";
-		//cout << "Avant maj_balises() : Malade -> " << ((balises->malade)?"Oui":"Non") << " -- Coma -> " << ((balises->coma)?"Oui":"Non") << "\n";
+		if(verbal) cout << "		***** Controle des limites pour [" << get_nom() << "] *****\n";
+
 		if(verbal) cout << "Maladie -->\n";
 		if(limite_haute_malade == (float) NULL )
 		{
@@ -167,7 +226,7 @@ Param_Etat::Param_Etat(const char x_nom[20], const char x_unite[3], float x_capa
 		}
 		if(verbal) cout << " (" << valeur << unite << " )\n";
 		if(verbal) cout << "\nAprès maj_balises() : Malade -> " << ((balises->malade)?"Oui":"Non") << " \t Coma -> " << ((balises->coma)?"Oui":"Non") << "\n"; 
-		if(verbal) cout << "**********************\n";
+		if(verbal) cout << "****************************************************\n";
 	}
 
 	void Param_Etat::souffrance(Param_Etat *XSante, const bool coma)
@@ -219,10 +278,13 @@ Param_Etat::Param_Etat(const char x_nom[20], const char x_unite[3], float x_capa
 		f->write ((char*) &limite_haute_souffrance, sizeof(float));
 		f->write ((char*) &limite_basse_souffrance, sizeof(float));
 		f->write ((char*) &correction_souffrance, sizeof(float));
+		f->write ((char*) &plafond, sizeof(float));
+		f->write ((char*) &plancher, sizeof(float));
 		return 0;
 	}
 
 	int Param_Etat::charge(ifstream *f){
+		//float x_capacite;
 		f->read((char*) &nom, sizeof(char[20]));
 		f->read((char*) &unite, sizeof(char[4]));
 		f->read((char*) &capacite, sizeof(float));
@@ -234,5 +296,7 @@ Param_Etat::Param_Etat(const char x_nom[20], const char x_unite[3], float x_capa
 		f->read ((char*) &limite_haute_souffrance, sizeof(float));
 		f->read ((char*) &limite_basse_souffrance, sizeof(float));
 		f->read ((char*) &correction_souffrance, sizeof(float));
+		f->read ((char*) &plafond, sizeof(float));
+		f->read ((char*) &plancher, sizeof(float));
 		return 0;
 	}

@@ -22,8 +22,8 @@ class Cocix
 		
 		
 
-		void creation_Toto(int);	// pour le debug
-		void creation_Titi(int);	// pour le debug
+		void creation_Toto(int, const bool = true);	// pour le debug
+		void creation_Titi(int, const bool = true);	// pour le debug
 
 		int id;				// Id unique
 		char nom[10];	
@@ -70,7 +70,7 @@ class Cocix
 		bool vivant();
 
 		// methodes d'informations ou d'affichage
-		void affiche(bool genetique = false);
+		void affiche(const bool genetique = false , const bool verbal = false);
 		void affiche_balises();
 		void affiche_action(const bool verbal = false);
 		void affiche_desire(const bool verbal = false);

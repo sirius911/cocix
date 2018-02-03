@@ -63,9 +63,9 @@ void Manger::go(Cocix *cocix,bool verbal)
 	
 
 	// on verifie la satiété pour la nourriture 
-		seuil_satiete = (cocix->genome[SATIETE].valeur * cocix->Calorie.capacite);
+		seuil_satiete = (cocix->genome[SATIETE].valeur * cocix->Calorie.get_capacite());
 		if(verbal) cout << "Seuil de Saiété : " << seuil_satiete << " cal : ";
-		if(cocix->Calorie.valeur > seuil_satiete){
+		if(cocix->Calorie.get_valeur() > seuil_satiete){
 			if(verbal) cout << " Atteint.\n";
 			{
 				set_action_terminee(true);

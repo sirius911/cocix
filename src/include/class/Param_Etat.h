@@ -10,11 +10,19 @@
 
 class Param_Etat{
 
-	public:
-		char nom[20];
-		char unite[4];
-		float capacite;
+	private:
 		float valeur;
+		char nom[20];
+		float capacite;
+		float plafond;
+		float plancher;
+
+		void verif_bornes(const bool = false);
+
+	public:
+		char unite[4];
+		
+		
 		float limite_haute_malade;
 		float limite_basse_malade;
 		float limite_haute_coma;
@@ -28,10 +36,19 @@ class Param_Etat{
 		void souffrance(Param_Etat*, const bool);
 	
 		Param_Etat();
-		Param_Etat(const char[20], const char[3], float , float , float, float, float, float, float, float, float );
+		Param_Etat(const char[20], const char[3], float , float , float, float, float, float, float, float, float, float, float );
 
-		float _valeur(bool pourcentage=false);	//getter
-		void _valeur(float,struct_balises*);	//setter
+
+		// Getters
+		float get_valeur(bool pourcentage=false);
+		float get_capacite();
+		char* get_nom();
+
+		// Setters
+		void set_valeur(float,struct_balises*, bool control = true); // met une valeur avec controle et mise à jours des balises ou pas
+		void set_capacite(float);
+
+		
 		void affiche(bool pourcentage=false, bool limite = false);
 
 		void modif(float modificateur, struct_balises*, const bool=false );

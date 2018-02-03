@@ -49,6 +49,9 @@ class Actions{
 		void set_duree(short);
 		short get_duree();
 
+		float get_chaleur();
+
+		char* get_action();
 
 		// Méthodes des Actions
 		virtual void faire();	//inutile 

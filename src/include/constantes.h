@@ -73,6 +73,7 @@
 #define CHERCHE_NOURRITURE 3
 #define DORMIR 6
 #define MANGER 8
+#define SE_RECHAUFFER 10
 
 struct struct_balises
 		{

@@ -60,11 +60,11 @@ void Boire::go(Cocix *cocix,bool verbal){
 	cocix->Temperature.modif(-dim_temp, &cocix->balises,verbal);
 	
 	if(verbal) cout << "Il y a maintenant "<< humidite(case_boisson) << "uL.\n";
-	if(verbal) cout << "Diminution de " << dim_temp << "°C => température = " << cocix->Temperature.valeur << "°C \n";
+	if(verbal) cout << "Diminution de " << dim_temp << "°C => température = " << cocix->Temperature.get_valeur() << "°C \n";
 	
 
 	// on verifie la satiété pour l'eau la CoCiX n' plus soif si hydro==CH
-		if(cocix->Hydro.valeur == cocix->Hydro.capacite) {
+		if(cocix->Hydro.get_valeur() == cocix->Hydro.get_capacite()) {
 		
 			if(verbal) cout << "La Capacité hydrique est atteinte...\n";	
 			set_action_terminee(true);
