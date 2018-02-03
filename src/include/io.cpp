@@ -7,6 +7,8 @@
 #include <fstream>
 #include <dirent.h>
 #include <cstring>
+#include <vector>
+#include <algorithm>
 
 #ifndef WIN32
     #include <sys/types.h>
@@ -91,44 +93,84 @@ void ecrireligne(short x_case, ligneCase * x_donnee){
 
 }
 
-bool isCocix(char* s)
+int take_int(const char* str)
 {
-    return(! strstr(s, ".cox") == 0);
+  // fonction renvoyant le numero entre crochet d'un fichier [XXX]AAA
+  int i = 0;
+  char tmp[]= "";
+
+  while(str[i] != '\0' && str[i] != '[')
+    i++;
+  i++;
+  int j=0;
+  while(str[i] != '\0' && str[i] != ']')
+  {
+    tmp[j] = str[i];
+    i++;
+    j++;
+  }
+  tmp[j] = '\0';
+  return (atoi(tmp));
 }
 
-void lireDossier(const char* s, DIR* rep)
+
+vector<char*> affiche_nid(const bool num)
 {
+
+    DIR* rep = NULL;
     struct dirent* ent = NULL;
     char * nom_fichier_cocix;
+    vector<char*> listeFichiers;
+    int nbFichiers = 1;
 
-    cout << " -- Lecture du Nid '" << s << "' -- \n";
-
-    while ((ent = readdir(rep)) != NULL)
-    {/* Lecture du dossier. */
-        nom_fichier_cocix = ent->d_name;
-        if(isCocix(nom_fichier_cocix))
-           cout << " --> " << ent->d_name << "\n";
+    struct SortByString 
+    { 
+       bool operator ()(const char* a1, const char* a2) const 
+    { 
+     return (take_int(a1) < take_int(a2));
     } 
-}
+}; 
 
-void affiche_nid()
-{
-    DIR* rep = NULL;
+
     rep = opendir(REPERTOIRE_NID); /* Ouverture d'un dossier */
 
     if (rep == NULL)
      { /* Si le dossier n'a pas pu être ouvert */
          cout << "Le dossier "<< REPERTOIRE_NID << " n'a pas pu être ouvert !!\n";
-     	 return;
+     	 //return NULL;
      }
 	//cout << "Dossier ouvert\n";
-	lireDossier(REPERTOIRE_NID,rep);
+
+  cout << " -- Lecture du Nid '" << REPERTOIRE_NID << "' -- \n";
+  while ((ent = readdir(rep)) != NULL)
+    {/* Lecture du dossier. */
+        nom_fichier_cocix = ent->d_name;
+        if(strstr(nom_fichier_cocix, ".cox") != 0)
+        {
+          //cout << "* " << nom_fichier_cocix <<"\n";
+          nbFichiers++;
+          listeFichiers.insert(listeFichiers.end(), nom_fichier_cocix);
+         }
+    }
+  
+    //trie
+    sort (listeFichiers.begin() , listeFichiers.end(), SortByString());
+
+    // affiche
+    for(int i = 0; i < (int) listeFichiers.size(); i++)
+    {
+        if(num) cout << i+1 << " --> " << listeFichiers[i] << "\n";
+          else cout << listeFichiers[i] << "\n";
+    }
+    
+          
 
     if (closedir(rep) == -1)
     { /* S'il y a eu un souci avec la fermeture */
     	cout << "il y a eu un souci avec la fermeture\n";
+      //return NULL;
 	}
-    return ;
+    return listeFichiers;
 }
 
 

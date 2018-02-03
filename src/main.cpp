@@ -26,6 +26,7 @@ int main(int nbArg, char* argv[])
 	srand(time(NULL));
 
 	char commande[20] = "";
+	char choix[] = "";
 	Cocix *CoCiX = NULL;
 	int i;
 	bool sortie = false;
@@ -33,7 +34,6 @@ int main(int nbArg, char* argv[])
 	bool sauvegarde = false;
 	char prompt[30] = "<Aucun CoCiX [noSav][muet]>";
 	char nomCocix[15] = "Aucun CoCiX";
-	char fichierCoCiX[30]="";
 
 	cout << "\f";
 	cout << " _____   _____   _____   _  __    __ \n";
@@ -60,11 +60,15 @@ int main(int nbArg, char* argv[])
 			if(strcmp(commande,"load") == 0)
 			{
 				// on charge une CoCiX
-				cout << "Entrez le Nom du CoCiX : ";
-				cin >> fichierCoCiX;
-				CoCiX = new Cocix(fichierCoCiX,verbal);
+				vector<char*> listeFichiers = affiche_nid(true);
+				cout << "Entrez le Num du CoCiX : ";
+				cin >> choix;
+				int i = atoi(choix);
+				if(i > 0 && i <= (int) listeFichiers.size())
+				{
+					CoCiX = new Cocix(listeFichiers[i-1],verbal);
 
-				if(CoCiX->set_id() > 0 )
+					if(CoCiX->set_id() > 0 )
 					{ 
 						strcpy(nomCocix,CoCiX->nom);
 						CoCiX->affiche(false);
@@ -73,7 +77,7 @@ int main(int nbArg, char* argv[])
 						strcat(prompt, (sauvegarde)?" [Sav]":" [noSav]");
 						strcat(prompt, (verbal)?"[verbal]>":"[muet]>");
 					}
-				else
+					else
 					{
 						cout << "CoCiX non trouvé !\n";
 						strcpy(nomCocix,"Aucun CoCiX");
@@ -82,6 +86,11 @@ int main(int nbArg, char* argv[])
 						strcat(prompt, (sauvegarde)?" [Sav]":" [noSav]");
 						strcat(prompt, (verbal)?"[verbal]>":"[muet]>");
 					}
+				}
+				else
+				{
+					cout << "Mauvais numéro !\n";
+				}
 				
 			} else if((strcmp(commande,"help")==0) || (strcmp(commande,"h") == 0))
 			{
@@ -128,7 +137,7 @@ int main(int nbArg, char* argv[])
 			
 			} else if((strcmp(commande,"nid")==0))
 			{
-					affiche_nid();
+					affiche_nid(false);
 
 			} else if((strcmp(commande,"balises")==0))
 			{
