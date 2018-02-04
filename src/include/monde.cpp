@@ -178,7 +178,7 @@ int nbCocix( short num_Case){
 			#    # #      #      #      #    # #    # #      #    # #      #   ##   #   
 			#####  ###### #      ###### #    #  ####  ###### #    # ###### #    #   #   					*/
 
-bool bouge(int numCocix, short depart, short arrivee, bool verbal ){
+bool bouge(const int numCocix, const short depart, const short arrivee, const bool verbal ){
 	struct ligneCase caseDepart,caseArrivee;
 	int i = 0;
 	bool trouveDepart = false, trouverArrivee = false;
@@ -601,9 +601,74 @@ void affiche_grille(short numCase){
 	cout << "|r : "<<setw(3)<<setprecision(0)<<radioactivite(case21)<<"        |r : "<<setw(3)<<setprecision(0)<<radioactivite(case22)<<"        |r : "<<setw(3)<<setprecision(0)<<radioactivite(case23)<<"        |r : "<<setw(3)<<setprecision(0)<<radioactivite(case24)<<"        |r : "<<setw(3)<<setprecision(0)<<radioactivite(case25)<<"        |\n";
 	cout << "|  "<<nbCocixGraph(case21)<<"   |  "<<nbCocixGraph(case22)<<"   |  "<<nbCocixGraph(case23)<<"   |  "<<nbCocixGraph(case24)<<"   |  "<<nbCocixGraph(case25)<<"   |\n";
 	cout << "|---------------|---------------|---------------|---------------|---------------|\n";
+}
 
+struct_xy operator -( struct_xy &a ,  struct_xy &b)
+{
+		struct_xy result;
+		result.x = (a.x - b.x);
+		result.y = (a.y - b.y);
+		return (result);
+}
 
+struct_xy operator +( struct_xy &a ,  struct_xy &b)
+{
+		struct_xy result;
+		result.x = (a.x + b.x);
+		result.y = (a.y + b.y);
+		return (result);
+}
 
+short aller(const short depart, const short arrivee, const bool verbal)
+{	// renvoi la case intermédière pour bouger départ à arrivée danz un monde fermé
+	short case_aller = 0;
+	struct_xy aller;
+	struct_xy Dep = case_to_xy(depart);
+	struct_xy Arr = case_to_xy(arrivee);
+	if(verbal)
+	{
+		cout << "Je dois aller de ";
+		affiche_case(depart, false);
+		cout << " à ";
+		affiche_case(arrivee, false);
+		cout << "\n";
+	}
+
+	struct_xy Delta = Arr - Dep;
+
+	//cout << "\t Deltat = (" << Delta.x<<","<<Delta.y<<") -Control Monde fermé => ";
+
+	if( Delta.x >= -50 && Delta.x <= 50 && Delta.x !=0)
+	{
+		Delta.x = (Delta.x / abs(Delta.x)); // on ne change pas de signe de delta
+	}
+	else if(Delta.x !=0)
+	{
+		Delta.x = (Delta.x / abs(Delta.x)) * -1;	// on change le signe de delta
+	} else {
+		Delta.x = 0;
+	}
+
+	if( Delta.y >= -50 && Delta.y <= 50 && Delta.y !=0)
+	{
+		Delta.y = (Delta.y / abs(Delta.y)); // on ne change pas de signe de delta
+	}
+	else if(Delta.y != 0)
+	{
+		Delta.y = (Delta.y / abs(Delta.y)) * -1; // on change le signe de delta
+	} else {
+		Delta.y = 0;
+	}
+	//cout << "\tDeltat = (" << Delta.x<<","<<Delta.y<<")\n";
+
+	aller = Dep + Delta;
+
+	if(verbal) cout << "\t\tCase interm : ("<< aller.x << ","<<aller.y<<") => case n° ";
+
+	case_aller = xy_to_case(aller);
+
+	if(verbal) cout << case_aller << "\n";
+	return case_aller;
 }
 
 const char* nbCocixGraph(const short numCase){			   
@@ -612,3 +677,4 @@ const char* nbCocixGraph(const short numCase){
 	
 	return ( chaine[ nombreCocix ] );
 }
+

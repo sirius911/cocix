@@ -8,6 +8,7 @@
 #include "constantes.h"
 #include "io.h"
 
+
 using namespace std;
 
 struct struct_xy
@@ -32,7 +33,8 @@ bool libre(short const numCase);	// renvoi vrai si le Nb de Cocix sur numCase < 
 
 
 // deplacements
-bool bouge(int numCocix, short depart, short arrivee, bool verbal= false );
+bool bouge(const int numCocix, const short depart, const short arrivee, const bool verbal= false );	// bouge de case départ à case d'arrivée
+short aller(const short depart, const short arrivee, const bool= false ); // renvoi la case intermédière pour bouger départ à arrivée danz un monde fermé
 short monte_gauche(short);
 short monte_droite(short);
 short descend_gauche(short);

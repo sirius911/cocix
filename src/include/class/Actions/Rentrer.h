@@ -1,14 +1,14 @@
-#ifndef DEF_CLASS_SE_RECHAUFFER
-#define DEF_CLASS_SE_RECHAUFFER
+#ifndef DEF_CLASS_RENTRER
+#define DEF_CLASS_RENTRER
 #include "Actions.h"
 
 #include "../Cocix.h"
 
-class Se_Rechauffer : public Actions
+class Rentrer : public Actions
 {
 	public:
-		Se_Rechauffer();
-		Se_Rechauffer(const short, const short);
+		Rentrer();
+		Rentrer(const short, const short);
 		
 
 		void go(Cocix*,bool=false);

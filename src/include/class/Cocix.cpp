@@ -17,7 +17,7 @@
 #include "Actions/Manger.h"
 //#include "Actions/Pondre.h"
 //#include "Actions/Recolter.h"
-#include "Actions/Se_Rechauffer.h"
+#include "Actions/Rentrer.h"
 //#include "Actions/Se_Reproduire.h"
 //#include "Actions/Se_Soigner.h"
 
@@ -495,7 +495,8 @@ bool Cocix::cortex_Etat(bool verbal){
         		Desire = new Manger();
         	else if(froid())
         	{
-        		Desire = new Se_Rechauffer(case_naissance,case_presence);
+        		// si le CoCiX a froid elle désire rentrer car chez elle elle n'a plus froid
+        		Desire = new Rentrer(case_naissance,case_presence);
         	}
         	else
         	{
@@ -1052,6 +1053,9 @@ bool Cocix::chargement(bool verbal){
 			case CHERCHE_EAU:
 				Action = new Cherche_Eau(case_presence);
 				break;
+			case RENTRER:
+				Action = new Rentrer(case_presence,case_naissance);
+				break;
 			default:
 				cout << "ERREUR: Je n'ai pas trouvé l'Action : " << numAction << "->Action init à Dormir()...";
 				Action = new Dormir();
@@ -1077,6 +1081,9 @@ bool Cocix::chargement(bool verbal){
 				break;
 			case CHERCHE_EAU:
 				Desire = new Cherche_Eau(case_presence);
+				break;
+			case RENTRER:
+				Desire = new Rentrer(case_presence,case_naissance);
 				break;
 			default:
 				cout << "ERREUR: Je n'ai pas trouvé le Desire : " << numDesire << "->Desire init à Dormir()...";

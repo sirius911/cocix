@@ -92,7 +92,13 @@ int main(int nbArg, char* argv[])
 					cout << "Mauvais numéro !\n";
 				}
 				
-			} else if((strcmp(commande,"help")==0) || (strcmp(commande,"h") == 0))
+			} else if((strcmp(commande,"aller")==0))
+			{
+				cout << "Case où le CoCiX veut aller ? : ";
+				cin >> i;
+				aller (CoCiX->case_presence,i,verbal);
+			}
+			else if((strcmp(commande,"help")==0) || (strcmp(commande,"h") == 0))
 			{
 
 					cout << "Commandes : \n";
