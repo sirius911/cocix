@@ -74,6 +74,7 @@
 #define DORMIR 6
 #define MANGER 8
 #define RENTRER 11
+#define SE_SOIGNER 14
 
 struct struct_balises
 		{

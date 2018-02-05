@@ -7,6 +7,7 @@
 #include "JourNuit.h"
 #include "Param_Etat.h"
 #include "../monde.h"
+#include <iomanip>
 
 #include "Actions/Actions.h"
 //#include "Actions/Agresser.h"
@@ -19,7 +20,7 @@
 //#include "Actions/Recolter.h"
 #include "Actions/Rentrer.h"
 //#include "Actions/Se_Reproduire.h"
-//#include "Actions/Se_Soigner.h"
+#include "Actions/Se_Soigner.h"
 
 using namespace std;
 
@@ -188,7 +189,7 @@ void Cocix::creation_Toto(int x_id, const bool verbal){
 	balises.soif = false;
 
 	cout << " Terminée !\n";
-	Desire =  new Manger(case_presence);
+	Desire =  new Manger();
 	Action =  new Dormir();
 	sauvegarde(verbal);
 	temp_exterieur = temperature(case_presence);
@@ -276,17 +277,56 @@ void Cocix::creation_Titi(int x_id, bool verbal){
 	balises.faim = false;
 	balises.soif = false;
 	Desire = new Dormir();
-	Action = new Boire(case_presence);
+	Action = new Boire();
 	cout << " Terminée !\n";
 	sauvegarde(verbal);
 	temp_exterieur = temperature(case_presence);
 	
 }
 
-int Cocix::set_id()
+
+//******************************************************************************************************************
+//                                 G E T T E R S
+//*******************************************************************************************************************
+
+int Cocix::get_id()
 {
 	return id;
 }
+
+
+//******************************************************************************************************************
+//                                 S E T T E R S
+//*******************************************************************************************************************
+
+void Cocix::set_case_presence(short x_case_presence)
+{
+	case_presence = x_case_presence;
+}
+
+void Cocix::marque_presence(const bool verbal)
+{
+	marque_trace(case_presence,id,verbal);
+}
+
+void Cocix::deplace(const short arrivee, const bool verbal)
+{
+	if(bouge(id, case_presence,valide_case(arrivee),verbal),verbal)
+	{
+		set_case_presence(arrivee);
+		sauvegarde();
+	}
+	else
+	{
+		cout << "Problème de déplacement... je ne sauvegarde par " << nom << "\n";
+	}
+}
+
+//******************************************************************************************************************
+//                                V I V R E
+//*******************************************************************************************************************
+
+
 
 int Cocix::vie(bool verbal){
 	//fait vivre la CoCiX
@@ -434,21 +474,21 @@ bool Cocix::cortex_Etat(bool verbal){
 		// Souffrances des Etats
 	cout << "ok\n";
 	cout << "Souffrances :\nHydro...";	
-		Hydro.souffrance(&Sante,  balises.coma);
-	cout << "ok\nCal...";
-		Calorie.souffrance(&Sante,  balises.coma);
-	cout << "ok\nTemp...";
-		Temperature.souffrance(&Sante,  balises.coma);
-	cout << "ok\nSant...";
-		Sante.souffrance(&Sante,  balises.coma);
-	cout << "ok\n";
+		Hydro.souffrance(&Sante,  balises.coma, verbal);
+	cout << "\nCal...";
+		Calorie.souffrance(&Sante,  balises.coma, verbal);
+	cout << "\nTemp...";
+		Temperature.souffrance(&Sante,  balises.coma, verbal);
+	cout << "\nSant...";
+		Sante.souffrance(&Sante,  balises.coma, verbal);
+	cout << "\n";
 
 		// GESTION DU SOMMEIL
 		if(Action->equal(Dormir())) {
 			// La CoCix Dort
 			cout << "Sommeil...";
 			Sante.modif(Sante.get_valeur() * genome[RECUP_SOMMEIL].valeur, &balises,verbal);	
-			if(verbal) cout << "Action = DORMIR ==> Santé + " << genome[RECUP_SOMMEIL].valeur << "% = " << Sante.get_valeur() << "\n";
+			if(verbal) cout << "Action = DORMIR ==> Santé + " << setprecision(3) << ( Sante.get_valeur() * genome[RECUP_SOMMEIL].valeur )<< setprecision(2) <<  "% = " << Sante.get_valeur() << "\n";
 			cout << "ok\n";
 		}
 
@@ -484,19 +524,18 @@ bool Cocix::cortex_Etat(bool verbal){
         		Desire = new Dormir();
         		Action = new Dormir();
         	} else if(malade())
-        		cout << "Se soigner ...non implémenté...";
-        		//Desire = new Se_Soigner();
+        		Desire = new Se_Soigner();
         	else if(fecondee())
         		cout << "Pondre() ...non implémenté...";
         		//Desire = new Pondre();
         	else if(soif())
-        		Desire = new Boire(case_presence);
+        		Desire = new Boire();
         	else if(faim())
         		Desire = new Manger();
         	else if(froid())
         	{
         		// si le CoCiX a froid elle désire rentrer car chez elle elle n'a plus froid
-        		Desire = new Rentrer(case_naissance,case_presence);
+        		Desire = new Rentrer();
         	}
         	else
         	{
@@ -568,7 +607,7 @@ bool Cocix::cortex_Etat(bool verbal){
         		cout << "Se_Soigner  ...non implémenté...";
         		//Desire = new Se_Soigner();
         	else if(soif())
-        		Desire = new Boire(case_presence);
+        		Desire = new Boire();
         	else if(faim())
         		Desire = new Manger();
         	else
@@ -617,7 +656,7 @@ bool Cocix::cortex_Action(bool verbal){
 
 		cout << "\t(" << Jour_Nuit.heure << ":" << Jour_Nuit.minute << ")\n";
 				
-		cout << "\tDésire => " << Action->desire << "\n";
+		cout << "\tDésire => " << Desire->desire << "\n";
 				
 		cout << "\tAction en cours => " << Action->get_action() << "\n";
 	}
@@ -641,11 +680,11 @@ bool Cocix::cortex_Action(bool verbal){
 			// il fait jour
 			if(verbal) {
 					
-				cout << "L'action est-elle faisable ? : ";
+				cout << "L'action <" << Desire->get_desire() << "> est-elle faisable ? : ";
 					
-				cout << "Fonction de validation interne à l'Action (" << Action->get_action() << ") ...";
+				cout << "Fonction de validation interne à l'Action (" << Desire->get_desire() << ") ...";
 			}
-			if(Action->valide_Action(verbal)){
+			if(Desire->valide_Action(this ,verbal)){
 				//faisable
 				if(verbal) cout << " OUI ! ";
 					// est-on déjà en train de faire cette action ?
@@ -666,6 +705,7 @@ bool Cocix::cortex_Action(bool verbal){
 							if(verbal) cout << "OUI ! \n\t ==> On va commencer l'action demandée.\n";
 								 	
 							Action = Desire;
+							Action->set_temps_ecoule(0);
 								
 						} else {
 								//non
@@ -677,18 +717,17 @@ bool Cocix::cortex_Action(bool verbal){
 				if(verbal) cout << " NON \nPeut-on arrêter l'action en cours ou est-elle terminée ? : ";
 				if(Action->terminee()) {
 					//oui
-					if(verbal) cout <<"OUI ! \n\t ==> On va prendre l'action alternative : "<< Action->Action_alternative->get_action() << "\n";
+					if(verbal) cout <<"OUI ! \n\t ==> On va prendre l'action alternative : "<< Desire->Action_alternative->get_action() << "\n";
 						// on va prendre l'alternative
-					Action = Action->Action_alternative;
+					
+					Action = Desire->Action_alternative;
+					Action->set_temps_ecoule(0);
 
 				} else {
 					//non
 					if(verbal) cout << "NON ! \n\t ==> Je continue ce que je fais alors!! \n";
 				}
 			}
-			// Force l'Action
-			//cout << "On me force l'action Cherche_Eau()\n";
-			//Action = new Cherche_Eau(case_presence);			
 			Action->go(this,verbal);
 			return vivant();	
 
@@ -811,8 +850,8 @@ void Cocix::vieillissement(bool verbal){
 			| | | |¯ |_| |¯\ |  | |¯|  |  | |_| | | 
 */
 void Cocix::affiche(const bool genetique,const bool verbal){
-	cout<<"\nCocix n° "<< id << " : " << nom << " en " << case_presence << "\n";
-	
+	cout<<"\nCocix n° "<< id << " : " << nom << " en " << case_presence << (rentree()?" rentré(e)\n":"\n");
+
 	Sante.affiche(true,verbal);
 	Hydro.affiche(false, verbal);
 	Calorie.affiche(false, verbal);
@@ -829,8 +868,9 @@ void Cocix::affiche(const bool genetique,const bool verbal){
 	Action->affiche_action();
 
 }
-bool Cocix::rentree(){
-// fonction qui renvoie vrai si la fourmiz est rentrée
+bool Cocix::rentree() const
+{
+// fonction qui renvoie vrai si la fourmiz est rentrée chez elle
 		return (case_presence == case_naissance);
 }
 
@@ -981,6 +1021,7 @@ bool Cocix::sauvegarde(bool verbal){
     	//sauvegarde le numero Id de l 'Action' Désirée
     	short numDesire;
     	numDesire = Desire->get_id();
+    	//cout << "je sauvegarde désire N° " << numDesire;
     	f.write ((char*) &numDesire, sizeof(short));
     	    	
     	if(verbal) cout << " Terminée (taille : " << sizeof(*this) << " o)\n";
@@ -1045,16 +1086,19 @@ bool Cocix::chargement(bool verbal){
 				Action = new Dormir();
 				break;
 			case MANGER:
-				Action = new Manger(case_presence);
+				Action = new Manger();
 				break;
 			case BOIRE:
-				Action = new Boire(case_presence);
+				Action = new Boire();
 				break;
 			case CHERCHE_EAU:
-				Action = new Cherche_Eau(case_presence);
+				Action = new Cherche_Eau();
 				break;
 			case RENTRER:
-				Action = new Rentrer(case_presence,case_naissance);
+				Action = new Rentrer();
+				break;
+			case SE_SOIGNER:
+				Action = new Se_Soigner();
 				break;
 			default:
 				cout << "ERREUR: Je n'ai pas trouvé l'Action : " << numAction << "->Action init à Dormir()...";
@@ -1074,16 +1118,19 @@ bool Cocix::chargement(bool verbal){
 				Desire = new Dormir();
 				break;
 			case MANGER:
-				Desire = new Manger(case_presence);
+				Desire = new Manger();
 				break;
 			case BOIRE:
-				Desire = new Boire(case_presence);
+				Desire = new Boire();
 				break;
 			case CHERCHE_EAU:
-				Desire = new Cherche_Eau(case_presence);
+				Desire = new Cherche_Eau();
 				break;
 			case RENTRER:
-				Desire = new Rentrer(case_presence,case_naissance);
+				Desire = new Rentrer();
+				break;
+			case SE_SOIGNER:
+				Desire = new Se_Soigner();
 				break;
 			default:
 				cout << "ERREUR: Je n'ai pas trouvé le Desire : " << numDesire << "->Desire init à Dormir()...";

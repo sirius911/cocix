@@ -9,16 +9,12 @@ using namespace std;
 
 Boire::Boire(){
 	charge();
-}
-Boire::Boire(short x_case_boisson){
-	charge();
-	case_boisson = x_case_boisson;
-	Action_alternative = new Cherche_Eau(case_boisson);
+	Action_alternative = new Cherche_Eau();
 }
 
-bool Boire::valide_Action(bool verbal){
+bool Boire::valide_Action(const Cocix* cocix , bool verbal){
 	if(verbal) cout << " Y-a-t-il de l'eau sur ma case ?... ";
-	return(humidite(case_boisson) > 0);
+	return(humidite(cocix->case_presence) > 0);
 }
 
 void Boire::charge(){
@@ -71,7 +67,7 @@ void Boire::go(Cocix *cocix,bool verbal){
 			cocix->balises.soif = false;
 		}
 		
-		if(! valide_Action(verbal)){
+		if(! valide_Action(cocix , verbal)){
 			if(verbal) cout << "NON ! \n";
 			set_action_terminee(true);
 		} else {

@@ -6,14 +6,12 @@ class Manger : public Actions
 {
 	public:
 		Manger();
-		Manger(short);
 
 		void go(Cocix*,bool=false);
-		bool valide_Action(const bool = false);
+		bool valide_Action(const Cocix* , const bool = false);
 
 	private:
 		void charge();
-		short case_nourriture;
 };
 
 #endif

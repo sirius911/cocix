@@ -52,10 +52,10 @@ void Actions::affiche_desire(bool verbal){
 void Actions::faire(){
 	cout << "Action NON IMPLÉMENTÉE !!\n";
 }
-void Actions::go(Cocix*,bool){
+void Actions::go(Cocix*,const bool){
 	cout << "Action NON IMPLÉMENTÉE !!\n";
 }
-bool Actions::valide_Action(const bool){
+bool Actions::valide_Action(const Cocix*, const bool){
 	cout << "valide_action() NON IMPLÉMENTÉE !\n";
 	return true;
 }
@@ -121,6 +121,11 @@ float Actions::get_chaleur()
 char* Actions::get_action()
 {
 	return action;
+}
+
+char* Actions::get_desire()
+{
+	return desire;
 }
 /********************************************************************************************************************
 					FICHIER

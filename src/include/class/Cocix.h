@@ -53,8 +53,9 @@ class Cocix
 		// Actions & désires
 		Actions *Desire;
 		Actions *Action;
-		// methodes
-		
+
+
+		// methodes de "vie"
 		int vie(bool = false);
 		bool cortex_Etat(const bool verbal = false);	// Fonction du Cortex d'etat
 		bool cortex_Action(const bool verbal = false); // Fonction du Cortex d'Action
@@ -66,7 +67,7 @@ class Cocix
 		bool alert_faim( const bool verbal = false);
 		bool alert_soif(const bool verbal = false);
 		bool agressive();
-		bool rentree();
+		bool rentree() const;
 		bool vivant();
 
 		// methodes d'informations ou d'affichage
@@ -87,8 +88,16 @@ class Cocix
 		bool male();
 		short cycle_sexuel();
 
+		void deplace(const short arrivee, const bool = false);
+
 		// SETTER
-		int set_id();
+		void set_case_presence(short);
+		void marque_presence(const bool = false);
+
+		// GETTER
+		int get_id();
+
+
 
 		bool sauvegarde(bool verbal = false);
 	private:

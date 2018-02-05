@@ -8,13 +8,11 @@ class Cherche_Nourriture : public Actions
 	public:
 
 		Cherche_Nourriture();
-		Cherche_Nourriture(short);
-		void go(Cocix *cocix, const bool=false);
-		bool valide_Action(const bool = false) ;
+		void go(Cocix*, const bool=false);
+		bool valide_Action(const Cocix* , const bool = false) ;
 
 	private:
 		void charge();
-		short case_nourriture;
 };
 
 #endif

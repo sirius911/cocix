@@ -8,16 +8,13 @@ class Rentrer : public Actions
 {
 	public:
 		Rentrer();
-		Rentrer(const short, const short);
 		
 
 		void go(Cocix*,bool=false);
-		bool valide_Action(const bool = false);
+		bool valide_Action(const Cocix* , const bool = false);
 
 	private:
 		void charge();
-		short case_presence;
-		short case_naissance;
 };
 
 #endif

@@ -17,14 +17,9 @@ Dormir::Dormir(){
 	peut_etre_stoppee = true;
 }
 
-void Dormir::faire(){
-	cout << "Je dort\n";
-	le_temps_s_ecoule();
-}
-
-bool Dormir::valide_Action(bool verbal){
-	// peut toujours dormir
-	cout << " Peut toujours dormir !";
+bool Dormir::valide_Action(const Cocix* , bool verbal){
+	
+	if(verbal) cout << " Peut toujours dormir !";
 	return true;
 }
 

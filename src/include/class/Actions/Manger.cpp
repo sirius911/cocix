@@ -9,19 +9,13 @@ using namespace std;
 Manger::Manger()
 {
 	charge();
+	Action_alternative = new Cherche_Nourriture();
 }
 
-Manger::Manger(short x_case_nourriture)
-{
-	charge();
-	case_nourriture = x_case_nourriture;
-	Action_alternative = new Cherche_Nourriture(case_nourriture);
-}
-
-bool Manger::valide_Action(const bool verbal)
+bool Manger::valide_Action(const Cocix* cocix , const bool verbal)
 {
 	if(verbal) cout << " Y-a-t-il de la nourriture sur ma case ?... ";
-	return((nourriture(case_nourriture) > 0));
+	return((nourriture(cocix->case_presence) > 0));
 }
 
 
@@ -44,7 +38,7 @@ void Manger::go(Cocix *cocix,bool verbal)
 	float quantite_prise, seuil_satiete;
 	struct struct_xy xy;
 
-	case_nourriture = cocix->case_presence;
+	float case_nourriture = cocix->case_presence;
 	xy  = case_to_xy(case_nourriture);
 
 	cout <<  "...................................................\n";
@@ -76,7 +70,7 @@ void Manger::go(Cocix *cocix,bool verbal)
 			if(verbal) cout << " Non Atteint.\n";
 		}
 
-		if(! valide_Action(verbal)){
+		if(! valide_Action(cocix , verbal)){
 			if(verbal) cout << "NON ! \n";
 			set_action_terminee(true);
 		} else {

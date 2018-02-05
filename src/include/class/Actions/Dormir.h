@@ -6,8 +6,7 @@ class Dormir : public Actions
 {
 	public:
 		Dormir();
-		void faire();
-		bool valide_Action(const bool verbal = false);
+		bool valide_Action(const Cocix*,const bool verbal = false);
 		void go(Cocix*,bool=false);
 };
 

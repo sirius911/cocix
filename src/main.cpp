@@ -13,6 +13,9 @@
 #include "include/class/Actions/Boire.h"
 #include "include/class/Actions/Cherche_Eau.h"
 #include "include/class/Actions/Cherche_Nourriture.h"
+#include "include/class/Actions/Rentrer.h"
+#include "include/class/Actions/Se_Soigner.h"
+
 #include "include/constantes.h"
 #include "include/io.h"
 #include "include/monde.h"
@@ -68,7 +71,7 @@ int main(int nbArg, char* argv[])
 				{
 					CoCiX = new Cocix(listeFichiers[i-1],verbal);
 
-					if(CoCiX->set_id() > 0 )
+					if(CoCiX->get_id() > 0 )
 					{ 
 						strcpy(nomCocix,CoCiX->nom);
 						CoCiX->affiche(false);
@@ -94,9 +97,15 @@ int main(int nbArg, char* argv[])
 				
 			} else if((strcmp(commande,"aller")==0))
 			{
-				cout << "Case où le CoCiX veut aller ? : ";
-				cin >> i;
-				aller (CoCiX->case_presence,i,verbal);
+				if( ! (CoCiX == (void*) NULL ))
+					{
+						cout << "Case où le CoCiX veut aller ? : ";
+						cin >> i;
+						CoCiX->deplace( aller (CoCiX->case_presence,i,verbal),verbal);
+					} else {
+						cout << "Aucune CoCix chargée ... (load)\n";
+					}
+				
 			}
 			else if((strcmp(commande,"help")==0) || (strcmp(commande,"h") == 0))
 			{
@@ -104,18 +113,21 @@ int main(int nbArg, char* argv[])
 					cout << "Commandes : \n";
 					cout << "\taction\t\tAffiche l'Action en cours du CoCiX chargé.\n";
 					cout << "\taffiche\t\tAffiche les infos du CoCiX chargé.\n";
-					cout << "\taffichecase\t\tAffiche les infos d'une case.\n";
+					cout << "\tafficheCase\t\tAffiche les infos d'une case.\n";
 					cout << "\tbalises\t\tAffiche les balises du CoCiX chargé.\n";
-					cout << "\tcortexetat\t\tLance la méthode cortex_etat() du CoCiX chargé.\n";
-					cout << "\tcorteaction\t\tLance la méthode cortex_action() du CoCiX chargé.\n";
+					cout << "\tcortexEtat\t\tLance la méthode cortex_etat() du CoCiX chargé.\n";
+					cout << "\tcorteAction\t\tLance la méthode cortex_action() du CoCiX chargé.\n";
+					cout << "\tdeplace\t\tDéplace le CoCiX sur une case.\n";
 					cout << "\tdesire\t\tAffiche le désire en cours du CoCiX chargé.\n";
 					cout << "\teau\t\tAffiche la quantité d'eau sur une case.\n";
+					cout << "\teffacePresence\t\tEfface les présences sur une case.\n";
 					cout << "\tforceAction\t\tForce une action pour le CoCiX chargé.\n";
 					cout << "\tforceDesire\t\tForce un Désire pour le CoCiX chargé.\n";
 					cout << "\tgenetique\t\tAffiche le genome du CoCiX chargé.\n";
 					cout << "\tgo\t\tLance la methode go() du CoCiX chargé.\n";
 					cout << "\tgrille\t\tAffiche les 25 cases (5x5) autour du CoCiX.\n";
-					cout << "\tmodesauvegarde\t\tPermute le mode de sauvegarde automatique.\n";
+					cout << "\tmarquePresence\t\tMarque la présence du Cocix sur sa case dans Monde\n";
+					cout << "\tmodeSauvegarde\t\tPermute le mode de sauvegarde automatique.\n";
 					cout << "\tmuet\t\tPermute en mode 'MUET'.\n";
 					cout << "\tnid\t\tAffiche le nid.\n";
 					cout << "\tnouriture\t\tAffiche la quantité de nourriture sur une case.\n";
@@ -128,6 +140,8 @@ int main(int nbArg, char* argv[])
 
 			} else if((strcmp(commande,"quit")==0) || (strcmp(commande,"QUIT") == 0) || (strcmp(commande,"q") == 0)){
 					sortie = true;
+					//if( ! (CoCiX == (void*) NULL ))
+					//	delete CoCiX;
 			
 			} else if((strcmp(commande,"version")==0) ){
 					cout << "\f";
@@ -141,6 +155,29 @@ int main(int nbArg, char* argv[])
 					cout << "   ******************************\n";
 					
 			
+			} else if((strcmp(commande,"effacePresence")==0))
+			{
+					cout << "Entrez le numéro de la case : ";
+					cin >> choix;
+					int i = atoi(choix);
+					if(i > 0 && i <= MAX_CASE)
+					{
+						efface_trace(valide_case(i),0,verbal);
+					}
+					else
+					{
+						cout << "Erreur de n° de case ![1-10000]\n";
+					}
+
+			}else if((strcmp(commande,"marquePresence")==0))
+			{
+					if( ! (CoCiX == (void*) NULL ))
+					{
+						CoCiX->marque_presence(verbal);
+					} else {
+						cout << "Aucune CoCix chargée ... (load)\n";
+					}
+
 			} else if((strcmp(commande,"nid")==0))
 			{
 					affiche_nid(false);
@@ -213,6 +250,8 @@ int main(int nbArg, char* argv[])
 					if( ! (CoCiX == (void*) NULL ))
 					{
 						CoCiX->cortex_Etat(verbal);
+						if(sauvegarde)
+							CoCiX->sauvegarde(verbal);
 					} else {
 						cout << "Aucune CoCix chargée ... (load)\n";
 					}
@@ -221,6 +260,8 @@ int main(int nbArg, char* argv[])
 					if( ! (CoCiX == (void*) NULL ))
 					{
 						CoCiX->cortex_Action(verbal);
+						if(sauvegarde)
+							CoCiX->sauvegarde(verbal);
 					} else {
 						cout << "Aucune CoCix chargée ... (load)\n";
 					}
@@ -297,25 +338,20 @@ int main(int nbArg, char* argv[])
 					if( ! (CoCiX == (void*) NULL )){
 						CoCiX->vie(verbal);
 						cout << "\n";
+						if(sauvegarde)
+							CoCiX->sauvegarde(verbal);
 					} else {
 						cout << "Aucune CoCix chargée ... (load)\n";
 					}
-			} else if((strcmp(commande,"bouge")==0))
+			} else if((strcmp(commande,"deplace")==0))
 			{
 					if( ! (CoCiX == (void*) NULL ))
 					{
 						int arrivee;
 						cout << "Numero case d'arrivée : ";
 						cin >> arrivee;
-						if(bouge(CoCiX->id, CoCiX->case_presence,valide_case(arrivee)))
-						{
-							CoCiX->case_presence = arrivee;
-							CoCiX->sauvegarde();
-						}
-						else
-						{
-							cout << "Problème de déplacement... je ne sauvegarde par " << CoCiX->nom << "\n";
-						}
+						CoCiX->deplace(valide_case(arrivee),verbal);
+						
 					} else {
 						cout << "Aucune CoCix chargée ... (load)\n";
 					}
@@ -325,7 +361,7 @@ int main(int nbArg, char* argv[])
 			{
 					if( ! (CoCiX == (void*) NULL )){
 						cout << "Action => ";
-						CoCiX->Desire->affiche_action(verbal);
+						CoCiX->Action->affiche_action(verbal);
 						cout << "\n";
 					} else {
 						cout << "Aucune CoCix chargée ... (load)\n";
@@ -336,78 +372,79 @@ int main(int nbArg, char* argv[])
 				if( ! (CoCiX == (void*) NULL )){
 						CoCiX->Desire->go(CoCiX, verbal);
 						CoCiX->affiche(false);
+						if(sauvegarde)
+							CoCiX->sauvegarde(verbal);
 						
 				} else {
 						cout << "Aucune CoCix chargée ... (load)\n";
 				}
 
-			} else if((strcmp(commande,"forceAction")==0))
+			} else if((strcmp(commande,"forceAction")==0) || (strcmp(commande,"forceDesire")==0))
 			{
 				if( ! (CoCiX == (void*) NULL )){
-						cout << "Choisissez l'Action : \n";
+						cout << "Choisissez : \n";
 						cout << BOIRE << " -> Boire()\n";
 						cout << CHERCHE_EAU << " -> Cherche_Eau()\n";
 						cout << CHERCHE_NOURRITURE << " -> Cherche_Nourriture()\n";
 						cout << DORMIR << " -> Dormir()\n";
 						cout << MANGER << " -> Manger()\n";
+						cout << RENTRER << " -> Rentrer()\n";
+						cout << SE_SOIGNER << " ->Se_Soigner()\n";
 						cout << "\t votre choix : ";
 						cin >> i;
 						switch(i){
 							case DORMIR:
-								CoCiX->Action = new Dormir();
+								if((strcmp(commande,"forceAction")==0))
+									CoCiX->Action = new Dormir();
+								else
+									CoCiX->Desire = new Dormir();
 								break;
 							case MANGER:
-								CoCiX->Action = new Manger(CoCiX->case_presence);
+								if((strcmp(commande,"forceAction")==0))
+									CoCiX->Action = new Manger();
+								else
+									CoCiX->Desire = new Manger();
 								break;
 							case BOIRE:
-								CoCiX->Action = new Boire(CoCiX->case_presence);
+								if((strcmp(commande,"forceAction")==0))
+									CoCiX->Action = new Boire();
+								else
+									CoCiX->Desire = new Boire();
 								break;
 							case CHERCHE_EAU:
-								CoCiX->Action = new Cherche_Eau(CoCiX->case_presence);
+								if((strcmp(commande,"forceAction")==0))
+									CoCiX->Action = new Cherche_Eau();
+								else
+									CoCiX->Desire = new Cherche_Eau();
 								break;
 							case CHERCHE_NOURRITURE:
-								CoCiX->Action = new Cherche_Nourriture(CoCiX->case_presence);
+								if((strcmp(commande,"forceAction")==0))
+									CoCiX->Action = new Cherche_Nourriture();
+								else
+									CoCiX->Desire = new Cherche_Nourriture();
+								break;
+							case RENTRER:
+								if((strcmp(commande,"forceAction")==0))
+									CoCiX->Action = new Rentrer();
+								else
+									CoCiX->Desire = new Rentrer();
+								break;
+							case SE_SOIGNER:
+								if((strcmp(commande,"forceAction")==0))
+									CoCiX->Action = new Se_Soigner();
+								else
+									CoCiX->Desire = new Se_Soigner();
 								break;
 							default:
-								cout << "ERREUR: de numero d'Action.\n";		
+								cout << "ERREUR: de numero.\n";		
 						}
-						CoCiX->affiche_action();
-				} else {
-						cout << "Aucune CoCix chargée ... (load)\n";
-				}
-
-			} else if((strcmp(commande,"forceDesire")==0))
-			{
-				if( ! (CoCiX == (void*) NULL )){
-						cout << "Choisissez le désire : \n";
-						cout << BOIRE << " -> Boire()\n";
-						cout << CHERCHE_EAU << " -> Cherche_Eau()\n";
-						cout << CHERCHE_NOURRITURE << " -> Cherche_Nourriture()\n";
-						cout << DORMIR << " -> Dormir()\n";
-						cout << MANGER << " -> Manger()\n";
-						cout << "\t votre choix : ";
-						cin >> i;
-						switch(i){
-							case BOIRE:
-								CoCiX->Desire = new Boire(CoCiX->case_presence);
-								break;
-							case CHERCHE_EAU:
-								CoCiX->Desire = new Cherche_Eau(CoCiX->case_presence);
-								break;
-							case CHERCHE_NOURRITURE:
-								CoCiX->Action = new Cherche_Nourriture(CoCiX->case_presence);
-								break;
-							case DORMIR:
-								CoCiX->Desire = new Dormir();
-								break;
-							case MANGER:
-								CoCiX->Desire = new Manger(CoCiX->case_presence);
-								break;
-							
-							default:
-								cout << "ERREUR: de numero d'Action.\n";		
-						}
+						cout << "Je désire ";
 						CoCiX->affiche_desire();
+						cout << ".\t - Actuellement ";
+						CoCiX->affiche_action();
+						cout << ".\n";
+						if(sauvegarde)
+							CoCiX->sauvegarde(verbal);
 				} else {
 						cout << "Aucune CoCix chargée ... (load)\n";
 				}

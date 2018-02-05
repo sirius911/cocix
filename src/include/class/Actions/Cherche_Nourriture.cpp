@@ -11,20 +11,16 @@ using namespace std;
 Cherche_Nourriture::Cherche_Nourriture(){
 	charge();
 }
-Cherche_Nourriture::Cherche_Nourriture(short x_case_nourriture){
-	charge();
-	//Action_alternative = new Dormir();
-	case_nourriture = x_case_nourriture;
-}
 
-bool Cherche_Nourriture::valide_Action(const bool verbal){
+bool Cherche_Nourriture::valide_Action(const Cocix* , const bool verbal){
 	// on peut toujours chercher !
 	return true;
 }
 
 void Cherche_Nourriture::charge(){
 	set_id( 3 );
-	strcpy(action, "Chercher de la nourriture");
+	strcpy(action, "je cherche de la nourriture");
+	strcpy(desire, "Chercher de la nourriture");
 	chaleur = 0.02f;
 	eau = 1.0f;
 	calorie = 1.0f;
@@ -57,6 +53,7 @@ void Cherche_Nourriture::go(Cocix *cocix, const bool verbal){
 	{
 		// je bouge au hasard
 		if(verbal) cout << "Je cherche au hasard...\n"; 
+		cout << "\n\t\t******A FAIRE !! HASARD !! ****** \n";
 	}
 	if(bouge(cocix->id, cocix->case_presence, case_arrivee, verbal)) 
 	{

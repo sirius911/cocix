@@ -52,11 +52,12 @@ class Actions{
 		float get_chaleur();
 
 		char* get_action();
+		char* get_desire();
 
 		// Méthodes des Actions
 		virtual void faire();	//inutile 
-		virtual void go(Cocix*,bool=false);
-		virtual bool valide_Action(const bool=false);
+		virtual void go(Cocix*, const bool=false);
+		virtual bool valide_Action(const Cocix*, const bool=false);
 		void le_temps_s_ecoule(bool=false);
 		int sauvegarde(std::ofstream*);
 

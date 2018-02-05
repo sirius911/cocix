@@ -10,26 +10,26 @@
 
 using namespace std;
 
-float temperature(short num_case){
+float temperature(const short num_case){
 
 	struct ligneCase caseMonde;
 	caseMonde = lirecase(num_case);
 	return caseMonde.temperature;
 }
 
-float nourriture(short num_case){
+float nourriture(const short num_case){
 	struct ligneCase caseMonde;
 	caseMonde = lirecase(num_case);
 	return caseMonde.nourriture;
 }
 
-float humidite(short num_case){
+float humidite(const short num_case){
 	struct ligneCase caseMonde;
 	caseMonde = lirecase(num_case);
 	return caseMonde.humidite;
 }
 
-float radioactivite(short num_case){
+float radioactivite(const short num_case){
 	struct ligneCase caseMonde;
 	caseMonde = lirecase(num_case);
 	return caseMonde.radioactivite;
@@ -51,7 +51,7 @@ void affiche_case(short num_case, bool info){
 	cout << "\n";
 }
 
-float prend_element(short num_case, float quantite, int type){
+float prend_element(const short num_case, float quantite, int type){
 	// fonction renvoyant la quantité prise réelle et mettant à jour la base monde
 	struct ligneCase _case;
 	float ancienne_quantite, nouvelle_quantite;
@@ -103,7 +103,7 @@ float prend_element(short num_case, float quantite, int type){
 }
 
 
-struct_xy case_to_xy(short num_case) {
+struct_xy case_to_xy(const short num_case) {
 	// transforme un numero de case en structure (x,y)
 	struct struct_xy xy;
 	xy.x = 0;
@@ -125,15 +125,15 @@ struct_xy case_to_xy(short num_case) {
 
 }
 
-short xy_to_case(short x,short y){
+short xy_to_case(const short x,const short y){
 	return(((y-1)*100)+x);	
 }
 
-short xy_to_case(struct_xy xy){
+short xy_to_case(const struct_xy xy){
 	return(((xy.y-1)*100)+xy.x);
 }
 
-short valide_case( short numCase ){
+short valide_case( const short numCase ){
 	if(numCase <= 0 ) return(numCase+10000);
 	if(numCase > 10000) return(numCase-10000);
 	return numCase;
@@ -154,7 +154,7 @@ bool libre(short numCase) {
 	}
 }
 
-int nbCocix( short num_Case){
+int nbCocix( const short num_Case){
 	//renvoi le nombre de Cocix sur num_Case
 	struct ligneCase caseMonde;
 	//cout << " J'envoi lirecase("<<num_Case<<")\n";
@@ -169,6 +169,86 @@ int nbCocix( short num_Case){
 	return total;
 }
 
+void efface_trace(const short num_case, const int id , const bool verbal)
+{
+	struct ligneCase caseMonde;
+	caseMonde = lirecase(num_case);
+	bool trouve = false;
+
+	if(verbal) cout << "Effacement trace sur " << num_case;
+	if(id == 0) 
+		cout << " -> ";
+	else
+		cout << " du CoCiX N° " << id << " -> ";
+	int i = 0;
+	do
+	{
+		if(id == 0)
+		{
+			caseMonde.cocix[i] = 0;
+			if(verbal) cout <<"x";
+		}
+		else
+		{
+			if(caseMonde.cocix[i] == id)
+			{
+				caseMonde.cocix[i] = 0;
+				if(verbal) cout <<"x";
+				trouve = true;
+			}
+			
+		}
+		
+	} while( ++i < MAX_PAR_CASE);
+	if( (id==0 && verbal) || (id !=0 && verbal && trouve) ) cout << "\n";
+	if( id!=0 && verbal && !trouve) cout << " pas trouvé(e)!\n";
+	ecrireligne(num_case, &caseMonde);
+}
+bool marque_trace(const short num_case, const int id, const bool verbal)
+{
+	struct ligneCase caseMonde;
+	caseMonde= lirecase(num_case);
+	int i = 0;
+	i = existe(num_case, id,verbal);
+	if( i >=0 )
+	{
+		if(verbal) cout << "Déjà sur la case en position " << i << " !\n";
+		return true;
+	}
+	i = 0;
+	
+	do
+	{
+		if(caseMonde.cocix[i] == 0)
+		{
+			caseMonde.cocix[i] = id;
+			ecrireligne(num_case, & caseMonde);
+			if(verbal) cout << "Je marque le CoCiX en position " << i+1 << "\n";
+			return true;
+		}
+	} while( ++i < MAX_PAR_CASE);
+	cout << "Il n'y a plus de place !\n";
+	return false;
+}
+
+int existe(const short num_case, const int id, const bool verbal)
+{
+	struct ligneCase caseMonde;
+	caseMonde= lirecase(num_case);
+	int i = 0;
+	if(verbal) cout << "Je cherche CoCiX N° " << id << " sur la case " << num_case << " => ";
+	do
+	{
+		if(caseMonde.cocix[i] == id)
+		{
+			if(verbal) cout << "Trouvé en position : " << i+1 << "\n";
+			return i;
+		} 
+	}while(++i < MAX_PAR_CASE);
+	if(verbal) cout << "NON Trouvé(e) !\n";
+	return(-1);
+}
+
 /***********************************************************************************************************************
                                                                             
 			#####  ###### #####  #        ##    ####  ###### #    # ###### #    # ##### 
@@ -180,8 +260,7 @@ int nbCocix( short num_Case){
 
 bool bouge(const int numCocix, const short depart, const short arrivee, const bool verbal ){
 	struct ligneCase caseDepart,caseArrivee;
-	int i = 0;
-	bool trouveDepart = false, trouverArrivee = false;
+	
 	if(depart == arrivee)
 	{
 		return true;
@@ -192,42 +271,18 @@ bool bouge(const int numCocix, const short depart, const short arrivee, const bo
 		caseArrivee = lirecase(arrivee);
 
 		// je recherche la présence de numCocix parmis caseDepart.cocix[] et l'efface
-		do
+		
+		if( existe( depart , numCocix , verbal) >= 0)
 		{
-			if(caseDepart.cocix[i] == numCocix)
-			{
-				// trouvé
-				caseDepart.cocix[i] = 0;
-				trouveDepart = true;
-			}
-		} while( ++i < MAX_PAR_CASE && !trouveDepart);
-		if(!trouveDepart)
-		{
-			cout << "ATTENTION, je n'ai pas trouvé le CoCiX n°" << numCocix << " sur la case N°" << depart << " !\n";
-			//return false;
+			efface_trace(depart , numCocix, verbal);
 		}
-
+		else
+		{
+			if(verbal) cout << "ATTENTION, je n'ai pas trouvé le CoCiX n°" << numCocix << " sur la case N°" << depart << " !\n";
+		}
+		
 		// j'inscrit la présence du CoCiX sur la caseDepart.cocix[].
-		i = 0;
-		do
-		{
-			if(caseArrivee.cocix[i] == 0)
-			{
-				caseArrivee.cocix[i] = numCocix;
-				trouverArrivee = true;
-			}
-		} while( ++i < MAX_PAR_CASE && !trouverArrivee);
-			
-		if(!trouverArrivee)
-		{
-				cout << "ATTENTION, je n'ai pas trouvé de case libre en " << arrivee <<" !\n";
-				return false;
-		}
-
-		// on enregistre les deux cases:
-		ecrireligne(depart, &caseDepart);
-		ecrireligne(arrivee,&caseArrivee);
-		return true;
+		return marque_trace(arrivee,numCocix,verbal);
 	}
 	else
 	{
@@ -633,6 +688,11 @@ short aller(const short depart, const short arrivee, const bool verbal)
 		affiche_case(arrivee, false);
 		cout << "\n";
 	}
+	if(depart == arrivee)
+	{
+		cout << "J'y suis !\n";
+		return arrivee;
+	}
 
 	struct_xy Delta = Arr - Dep;
 
@@ -665,7 +725,7 @@ short aller(const short depart, const short arrivee, const bool verbal)
 
 	if(verbal) cout << "\t\tCase interm : ("<< aller.x << ","<<aller.y<<") => case n° ";
 
-	case_aller = xy_to_case(aller);
+	case_aller =valide_case( xy_to_case(aller));
 
 	if(verbal) cout << case_aller << "\n";
 	return case_aller;

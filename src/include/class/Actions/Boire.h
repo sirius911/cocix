@@ -8,9 +8,8 @@ class Boire : public Actions
 	public:
 
 		Boire();
-		Boire(short);
 		void go(Cocix*,bool=false);
-		bool valide_Action(const bool = false);
+		bool valide_Action(const Cocix* , const bool = false);
 
 	private:
 		void charge();

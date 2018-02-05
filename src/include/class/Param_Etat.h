@@ -16,13 +16,6 @@ class Param_Etat{
 		float capacite;
 		float plafond;
 		float plancher;
-
-		void verif_bornes(const bool = false);
-
-	public:
-		char unite[4];
-		
-		
 		float limite_haute_malade;
 		float limite_basse_malade;
 		float limite_haute_coma;
@@ -31,9 +24,14 @@ class Param_Etat{
 		float limite_haute_souffrance;
 		float correction_souffrance;
 
+		void verif_bornes(const bool = false);
+
+	public:
+		char unite[4];
+		
 		//methodes
 		void maj_balises(struct_balises*,const bool = false);
-		void souffrance(Param_Etat*, const bool);
+		void souffrance(Param_Etat*, const bool, const bool = false);
 	
 		Param_Etat();
 		Param_Etat(const char[20], const char[3], float , float , float, float, float, float, float, float, float, float, float );

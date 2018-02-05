@@ -4,21 +4,15 @@
 
 #include "../../monde.h"
 
+//#include "../Cocix.h"
+
 using namespace std;
 
 Rentrer::Rentrer(){
 	charge();
 }
 
-Rentrer::Rentrer(const short x_case_presence, const short x_case_naissance)
-{
-	charge();
-	case_presence = x_case_presence;
-	case_naissance = x_case_naissance;
-	//Action_Alternative = new Rentre(case_presence, case_naissance);
-}
-
-bool Rentrer::valide_Action(const bool verbal){
+bool Rentrer::valide_Action(const Cocix* , const bool verbal){
 	if(verbal) cout << "Peut toutjours rentrer !\n";
 
 	return true;
@@ -27,7 +21,8 @@ bool Rentrer::valide_Action(const bool verbal){
 void Rentrer::charge()
 {
 	set_id(11);
-	strcpy(action, "Rentrer");;
+	strcpy(action, "Je rentre");;
+	strcpy(desire, "Rentrer");
 	chaleur = 0.02f;
 	eau = 1.0f;
 	calorie = 1.0f;
@@ -43,17 +38,41 @@ void Rentrer::go(Cocix *cocix,bool verbal)
 	if(verbal) Actions::index();
 	cout << "ACTION => Rentre....\n";
 		
-	// verifi qu'on est pas déjà arrivé
-	if(case_presence == case_naissance){
-		if(verbal) cout << "Je suis déjà arrivé(e) !\n";
-		set_action_terminee(true);
-	} else
-	{
-		case_arrivee = aller(case_presence , case_naissance, verbal);
-	}
-
 	//On incrémente le temps de l'action
 	le_temps_s_ecoule(verbal);
+
+	// verifi qu'on est pas déjà arrivé
+	if(cocix->case_presence == cocix->case_naissance){
+		if(verbal) cout << "Je suis déjà arrivé(e) !\n";
+		set_action_terminee(true);
+		//case_arrivee = case_naissance;
+		return;
+	}
+		
+	case_arrivee = aller(cocix->case_presence , cocix->case_naissance, verbal);
+	if(bouge(cocix->get_id(),cocix->case_presence, case_arrivee, verbal))
+	{
+			if( cocix->rentree() )
+			{
+				set_action_terminee(true);
+				if(verbal) cout << "Je suis rentré(e).\n";
+			}
+			else
+			{
+				set_action_terminee(false);
+				if(verbal) cout << "Je suis en chemin.\n";
+			}
+	}
+	
+	if(case_arrivee != 0)
+	{
+		cocix->set_case_presence(case_arrivee);
+	}
+	else
+	{
+		cout << "Je n'ai pas bougé !\n";
+	}
+	
 		
 	cout << "...................................................\n";
 }

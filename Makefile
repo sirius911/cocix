@@ -162,4 +162,5 @@ obj/Boire.o: src/include/class/Actions/Cherche_Eau.h
 obj/Dormir.o: src/include/class/Actions/Dormir.h
 obj/Dormir.o: src/include/class/Actions/Actions.h
 
-obj/Manger.o: src/include/monde.h
+
+	

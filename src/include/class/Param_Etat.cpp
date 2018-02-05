@@ -229,7 +229,7 @@ void Param_Etat::maj_balises(struct_balises *balises, bool verbal){
 		if(verbal) cout << "****************************************************\n";
 	}
 
-	void Param_Etat::souffrance(Param_Etat *XSante, const bool coma)
+	void Param_Etat::souffrance(Param_Etat *XSante, const bool coma, const bool verbal)
 	{
 		// mise à jour de la Santé en fonction des dépacements de limite du Paramètre
 		bool je_souffre = false;
@@ -259,9 +259,16 @@ void Param_Etat::maj_balises(struct_balises *balises, bool verbal){
 				}
 			}
 			if(coma)
+			{
+				if(verbal) cout << "Souffrance avec correction 'coma' = -" << SOUFFRANCE_COMA*100 <<  "%\n";
 				XSante->valeur -= (XSante->valeur * SOUFFRANCE_COMA);	// On utilise la correction coma
+			}
 			else if(je_souffre)
+			{		
+				if(verbal) cout << "Souffrance => correction_souffrance = -"  << correction_souffrance*100  << "%\n";
 					XSante->valeur -= (XSante->valeur * correction_souffrance);
+			} else
+				cout << "ok";
 
 		}
 	}

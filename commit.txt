@@ -1,0 +1,17 @@
+pour le commit du 2 février
+
+Mise en privé de pas mal de paramètres 
+	*dans Param_Etat():
+		-non
+		-valeur
+		-capacite
+
+	*dans Actions():
+		-rajout des Getters/Setters pour nom et chaleur ( ---> a mettre prochainement en privé)
+
+chaques Parametres mis en privés à normalement un Getter sous la forme get_[nom de la variable]
+et un Setter sous la forme de set[nom de la variable]
+
+Rajout de Plafond_haut & plafond_bas dans les paramètre des états:
+	Pour que les valeurs ne puissent pas les dépasser
+	C'est à la modification de la valeur que le contrôle des plafons planchers se fait et plus dans le cortex Etat.
