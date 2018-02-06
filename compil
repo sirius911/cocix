@@ -1,1 +1,0 @@
-g++ -g main.cpp include/class/Actions/*.cpp include/class/*.cpp include/*.cpp -std=c++11 -o CoCiX

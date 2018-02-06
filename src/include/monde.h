@@ -47,9 +47,10 @@ short gauche(short);
 short droite(short);
 
 float prend_element(short case_a_prendre, float quantite, int type); // prend sur la case short, un element type, d'une quantite float
+void ajoute_element(short case_depose, float quantite, int type);	// rajoute sue la case hort un elemet type, d'une quantite float
 
 //fonctions diverses
 void affiche_map(const multimap <float, short, greater<float> > &);
-short meilleur_case(short , int , bool, bool=false);	 // fonction revoyant la case avec la meilleur infos
-
+short meilleur_case(short case_centrale , int info , bool libre, short recole = 0, bool=false);	 // fonction revoyant la case avec la meilleur infos
+short case_hasard(const short case_centrale); // renvoi une des 8 cases entourant case_centrale au hazard
 #endif

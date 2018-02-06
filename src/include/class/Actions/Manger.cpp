@@ -23,7 +23,7 @@ void Manger::charge()
 {
 	set_id( 8 );
 	strcpy(action, "Je mange");
-	strcpy(desire, "manger");
+	strcpy(desire, "Manger");
 	chaleur = -0.05f;
 	eau = 0.5f;
 	calorie = 0.5f;

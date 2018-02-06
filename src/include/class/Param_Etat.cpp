@@ -229,7 +229,7 @@ void Param_Etat::maj_balises(struct_balises *balises, bool verbal){
 		if(verbal) cout << "****************************************************\n";
 	}
 
-	void Param_Etat::souffrance(Param_Etat *XSante, const bool coma, const bool verbal)
+	bool Param_Etat::souffrance(Param_Etat *XSante, const bool coma, const bool modif, const bool verbal)
 	{
 		// mise à jour de la Santé en fonction des dépacements de limite du Paramètre
 		bool je_souffre = false;
@@ -258,19 +258,43 @@ void Param_Etat::maj_balises(struct_balises *balises, bool verbal){
 					je_souffre = ( valeur >= limite_haute_souffrance || valeur <= limite_basse_souffrance);
 				}
 			}
-			if(coma)
+			if(je_souffre)
 			{
-				if(verbal) cout << "Souffrance avec correction 'coma' = -" << SOUFFRANCE_COMA*100 <<  "%\n";
-				XSante->valeur -= (XSante->valeur * SOUFFRANCE_COMA);	// On utilise la correction coma
+				if(coma)
+				{
+					if(modif)
+					{
+						if(verbal) cout << "Souffrance avec correction 'coma' = -" << SOUFFRANCE_COMA*100 <<  "%\n";
+						
+						XSante->valeur -= (XSante->valeur * SOUFFRANCE_COMA);	// On utilise la correction coma
+					} else {
+						if(verbal) cout << " Oui (coma) ";
+					}
+				}
+				else
+				{
+					if(modif)
+					{
+						if(verbal) cout << "Souffrance => correction_souffrance = -"  << correction_souffrance*100  << "%\n";
+						
+						XSante->valeur -= (XSante->valeur * correction_souffrance);
+					}
+					else
+					{
+						if(verbal) cout << " Oui ";
+					}
+				}
+				
+				return true;
 			}
-			else if(je_souffre)
+			else 
 			{		
-				if(verbal) cout << "Souffrance => correction_souffrance = -"  << correction_souffrance*100  << "%\n";
-					XSante->valeur -= (XSante->valeur * correction_souffrance);
-			} else
-				cout << "ok";
-
+				if(modif) cout << "ok";
+				else if(verbal) cout << " Non ";
+				return false;
+			} 				
 		}
+		return true;
 	}
 
 	int Param_Etat::sauvegarde(ofstream *f){

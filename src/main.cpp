@@ -15,6 +15,9 @@
 #include "include/class/Actions/Cherche_Nourriture.h"
 #include "include/class/Actions/Rentrer.h"
 #include "include/class/Actions/Se_Soigner.h"
+#include "include/class/Actions/Recolter.h"
+#include "include/class/Actions/Cherche_Recolte.h"
+#include "include/class/Actions/Deposer.h"
 
 #include "include/constantes.h"
 #include "include/io.h"
@@ -116,7 +119,7 @@ int main(int nbArg, char* argv[])
 					cout << "\tafficheCase\t\tAffiche les infos d'une case.\n";
 					cout << "\tbalises\t\tAffiche les balises du CoCiX chargé.\n";
 					cout << "\tcortexEtat\t\tLance la méthode cortex_etat() du CoCiX chargé.\n";
-					cout << "\tcorteAction\t\tLance la méthode cortex_action() du CoCiX chargé.\n";
+					cout << "\tcortexAction\t\tLance la méthode cortex_action() du CoCiX chargé.\n";
 					cout << "\tdeplace\t\tDéplace le CoCiX sur une case.\n";
 					cout << "\tdesire\t\tAffiche le désire en cours du CoCiX chargé.\n";
 					cout << "\teau\t\tAffiche la quantité d'eau sur une case.\n";
@@ -245,7 +248,7 @@ int main(int nbArg, char* argv[])
 					} else {
 						cout << "Aucune CoCix chargée ... (load)\n";
 					}
-			}  else if((strcmp(commande,"cortexetat")==0))
+			}  else if((strcmp(commande,"cortexEtat")==0))
 			{
 					if( ! (CoCiX == (void*) NULL ))
 					{
@@ -255,7 +258,7 @@ int main(int nbArg, char* argv[])
 					} else {
 						cout << "Aucune CoCix chargée ... (load)\n";
 					}
-			} else if((strcmp(commande,"cortexaction")==0))
+			} else if((strcmp(commande,"cortexAction")==0))
 			{
 					if( ! (CoCiX == (void*) NULL ))
 					{
@@ -383,15 +386,19 @@ int main(int nbArg, char* argv[])
 			{
 				if( ! (CoCiX == (void*) NULL )){
 						cout << "Choisissez : \n";
-						cout << BOIRE << " -> Boire()\n";
-						cout << CHERCHE_EAU << " -> Cherche_Eau()\n";
-						cout << CHERCHE_NOURRITURE << " -> Cherche_Nourriture()\n";
-						cout << DORMIR << " -> Dormir()\n";
-						cout << MANGER << " -> Manger()\n";
-						cout << RENTRER << " -> Rentrer()\n";
-						cout << SE_SOIGNER << " ->Se_Soigner()\n";
+						cout << "Boire() -> " << BOIRE << "\n";
+						cout << "Cherche_Eau() -> " << CHERCHE_EAU << "\n";
+						cout << "Cherche_Nourriture() -> " << CHERCHE_NOURRITURE << "\n";
+						cout << "Cherche_Recolte() -> " << CHERCHE_RECOLTE << "\n" ;
+						cout << "Deposer() -> " << DEPOSER << "\n";
+						cout << "Dormir() -> " << DORMIR << "\n";
+						cout << "Manger() -> " << MANGER << "\n";
+						cout << "Recolter() -> " << RECOLTER << "\n";
+						cout << "Rentrer() -> " << RENTRER << "\n";
+						cout << "Se_Soigner() -> " << SE_SOIGNER << "\n";
 						cout << "\t votre choix : ";
-						cin >> i;
+						cin >> choix;
+						i = atoi(choix);
 						switch(i){
 							case DORMIR:
 								if((strcmp(commande,"forceAction")==0))
@@ -434,6 +441,24 @@ int main(int nbArg, char* argv[])
 									CoCiX->Action = new Se_Soigner();
 								else
 									CoCiX->Desire = new Se_Soigner();
+								break;
+							case RECOLTER:
+								if((strcmp(commande,"forceAction")==0))
+									CoCiX->Action = new Recolter();
+								else
+									CoCiX->Desire = new Recolter();
+								break;
+							case CHERCHE_RECOLTE:
+								if((strcmp(commande,"forceAction")==0))
+									CoCiX->Action = new Cherche_Recolte();
+								else
+									CoCiX->Desire = new Cherche_Recolte();
+								break;
+							case DEPOSER:
+								if((strcmp(commande,"forceAction")==0))
+									CoCiX->Action = new Deposer();
+								else
+									CoCiX->Desire = new Deposer();
 								break;
 							default:
 								cout << "ERREUR: de numero.\n";		

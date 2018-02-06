@@ -62,18 +62,8 @@ void Rentrer::go(Cocix *cocix,bool verbal)
 				set_action_terminee(false);
 				if(verbal) cout << "Je suis en chemin.\n";
 			}
-	}
-	
-	if(case_arrivee != 0)
-	{
-		cocix->set_case_presence(case_arrivee);
-	}
-	else
-	{
-		cout << "Je n'ai pas bougé !\n";
-	}
-	
-		
+			cocix->set_case_presence(case_arrivee);
+	}	
 	cout << "...................................................\n";
 }
 

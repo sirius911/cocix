@@ -35,7 +35,7 @@ class Cocix
 		short case_presence;
 		short case_naissance;
 		short vieux;
-		short recolte;
+		
 		
 		// parmetres genetiques
 	
@@ -84,7 +84,7 @@ class Cocix
 		bool soif();
 		bool froid();
 		bool faim();
-		bool pleine();
+		bool pleine() const;
 		bool male();
 		short cycle_sexuel();
 
@@ -93,15 +93,18 @@ class Cocix
 		// SETTER
 		void set_case_presence(short);
 		void marque_presence(const bool = false);
+		void set_recolte(short);
 
 		// GETTER
 		int get_id();
-
+		short get_recolte();
 
 
 		bool sauvegarde(bool verbal = false);
 	private:
 		
+		short recolte;
+
 		bool chargement(bool verbal = false);
 		void vieillissement(bool verbal = false);
 		char fichier[30];	//nom physique du fichier CoCiX .cox

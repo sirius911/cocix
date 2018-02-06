@@ -45,6 +45,27 @@ void Se_Soigner::go(Cocix *cocix,bool verbal)
 	quantite_soins = cocix->genome[SOINS].valeur;
 	if(verbal) cout << "Quantité de soins appliquée : " << setprecision(3) << quantite_soins << setprecision(2)<<" pdv\n";
 	cocix->Sante.modif(quantite_soins, &cocix->balises, verbal);
+
+	// baisser ou monter la température si souffrance 
+	if(cocix->Temperature.souffrance(&cocix->Sante , &cocix->balises.coma, false, verbal))
+	{
+		//il y a souffrance 
+		if( cocix->Temperature.get_valeur() < cocix->Temperature.get_capacite())
+		{
+			//on rechauffe si temp < capacite 
+			cocix->Temperature.modif(cocix->genome[TEMP].valeur , &cocix->balises, verbal);
+			if(verbal) cout << "\nJe me rechauffe de " << cocix->genome[TEMP].valeur << "°C.\n";
+		} else if(cocix->Temperature.get_valeur() > cocix->Temperature.get_capacite())
+		{
+			// je refroidi
+			cocix->Temperature.modif(- cocix->genome[TEMP].valeur , &cocix->balises, verbal);
+			if(verbal) cout << "\nJe me refroidi de -" << cocix->genome[TEMP].valeur << "°C.\n";
+		} else
+		{
+			// ???
+			cout << "\nIl semble qu'il y ai un soucis avec la température mais je ne sais pas quoi !\n";
+		}
+	}
 	le_temps_s_ecoule(verbal);
 		
 	cout << "...................................................\n";

@@ -13,11 +13,12 @@
 //#include "Actions/Agresser.h"
 #include "Actions/Boire.h"
 #include "Actions/Cherche_Eau.h"
-//#include "Actions/Deposer.h"
+#include "Actions/Deposer.h"
 #include "Actions/Dormir.h"
 #include "Actions/Manger.h"
 //#include "Actions/Pondre.h"
-//#include "Actions/Recolter.h"
+#include "Actions/Recolter.h"
+#include "Actions/Cherche_Recolte.h"
 #include "Actions/Rentrer.h"
 //#include "Actions/Se_Reproduire.h"
 #include "Actions/Se_Soigner.h"
@@ -294,6 +295,11 @@ int Cocix::get_id()
 	return id;
 }
 
+short Cocix::get_recolte()
+{
+	return recolte;
+}
+
 
 //******************************************************************************************************************
 //                                 S E T T E R S
@@ -320,6 +326,11 @@ void Cocix::deplace(const short arrivee, const bool verbal)
 	{
 		cout << "Problème de déplacement... je ne sauvegarde par " << nom << "\n";
 	}
+}
+
+void Cocix::set_recolte(short x_recolte)
+{
+	recolte = x_recolte;
 }
 
 //******************************************************************************************************************
@@ -415,7 +426,7 @@ bool Cocix::cortex_Etat(bool verbal){
 		}
 		else
 		{
-			Temperature.modif(Action->chaleur, &balises,verbal);
+			Temperature.modif(Action->get_chaleur(), &balises,verbal);
 			if(verbal) cout << Action->get_action() << " -> +" << Action->chaleur << "°C = " << Temperature.get_valeur() << "°C\n";
 
 		}
@@ -474,13 +485,13 @@ bool Cocix::cortex_Etat(bool verbal){
 		// Souffrances des Etats
 	cout << "ok\n";
 	cout << "Souffrances :\nHydro...";	
-		Hydro.souffrance(&Sante,  balises.coma, verbal);
+		Hydro.souffrance(&Sante,  balises.coma, true, verbal);
 	cout << "\nCal...";
-		Calorie.souffrance(&Sante,  balises.coma, verbal);
+		Calorie.souffrance(&Sante,  balises.coma, true, verbal);
 	cout << "\nTemp...";
-		Temperature.souffrance(&Sante,  balises.coma, verbal);
+		Temperature.souffrance(&Sante,  balises.coma, true, verbal);
 	cout << "\nSant...";
-		Sante.souffrance(&Sante,  balises.coma, verbal);
+		Sante.souffrance(&Sante,  balises.coma, true, verbal);
 	cout << "\n";
 
 		// GESTION DU SOMMEIL
@@ -563,8 +574,7 @@ bool Cocix::cortex_Etat(bool verbal){
         						cout << "Deposer()  ...non implémenté...";
         						//Desire = new Deposer();	//déposer sa récolte
         					else
-        						cout << "Recolter()  ...non implémenté...";
-        						//Desire = new Recolter();
+        						Desire = new Recolter();
         				} else {
         					// femelle non fécondée
         					if(cycle_sexuel() >=0  && cycle_sexuel() < 3 ){
@@ -586,8 +596,7 @@ bool Cocix::cortex_Etat(bool verbal){
         								cout << "Deposer()  ...non implémenté...";
         								//Desire = new Deposer();
         							else
-        								cout << "Recolter()  ...non implémenté...";
-        								//Desire = new Recolter();
+        								Desire = new Recolter();
         						}
         					}
         				}
@@ -852,6 +861,8 @@ void Cocix::vieillissement(bool verbal){
 void Cocix::affiche(const bool genetique,const bool verbal){
 	cout<<"\nCocix n° "<< id << " : " << nom << " en " << case_presence << (rentree()?" rentré(e)\n":"\n");
 
+	cout << ((sexe == MALE)?"Mâle de ":"Femelle de ");
+	cout << age() << " jour(s)\n";
 	Sante.affiche(true,verbal);
 	Hydro.affiche(false, verbal);
 	Calorie.affiche(false, verbal);
@@ -912,8 +923,9 @@ bool Cocix::froid(){
 	return balises.froid;
 }
 
-bool Cocix::pleine(){
+bool Cocix::pleine() const{
 	// fonction qui renvoi vrai si la CoCiX ne peut plus récolter
+	// la récolte peut dépasser la quantité maximal sur une prise 
 		return(recolte >= genome[RECOLTE].valeur);
 }
 
@@ -1100,6 +1112,15 @@ bool Cocix::chargement(bool verbal){
 			case SE_SOIGNER:
 				Action = new Se_Soigner();
 				break;
+			case RECOLTER:
+				Action = new Recolter();
+				break;
+			case CHERCHE_RECOLTE:
+				Action = new Cherche_Recolte();
+				break;
+			case DEPOSER:
+				Action = new Deposer();
+				break;
 			default:
 				cout << "ERREUR: Je n'ai pas trouvé l'Action : " << numAction << "->Action init à Dormir()...";
 				Action = new Dormir();
@@ -1131,6 +1152,15 @@ bool Cocix::chargement(bool verbal){
 				break;
 			case SE_SOIGNER:
 				Desire = new Se_Soigner();
+				break;
+			case RECOLTER:
+				Desire = new Recolter();
+				break;
+			case CHERCHE_RECOLTE:
+				Desire = new Cherche_Recolte();
+				break;
+			case DEPOSER:
+				Desire = new Deposer();
 				break;
 			default:
 				cout << "ERREUR: Je n'ai pas trouvé le Desire : " << numDesire << "->Desire init à Dormir()...";

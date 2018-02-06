@@ -51,7 +51,53 @@ void affiche_case(short num_case, bool info){
 	cout << "\n";
 }
 
-float prend_element(const short num_case, float quantite, int type){
+void ajoute_element(short num_case, float quantite, int type)
+{
+	// fonction rajoutant une quantité sur une case
+	struct ligneCase _case;
+	float ancienne_quantite, nouvelle_quantite;
+	if(num_case > 0 && num_case <= 10000) {
+		_case = lirecase(num_case);
+		switch(type){
+			case EAU:
+				ancienne_quantite = _case.humidite;
+				break;
+			case NOURRITURE:
+				ancienne_quantite = _case.nourriture;
+				break;
+			default:
+				cout << "ERREUR le type dans prend_element() de monde.cpp est mauvais : " << type << "!\n";
+				return;
+				break;
+		}
+		nouvelle_quantite = ancienne_quantite + quantite;
+
+		switch(type){
+				case EAU:
+					_case.humidite = nouvelle_quantite;
+					break;
+				case NOURRITURE:
+					_case.nourriture = nouvelle_quantite;
+					break;
+				default:
+					cout << "ERREUR le type dans prend_element() de monde.cpp est mauvais : " << type << "!\n";
+					return;
+					break;
+		}
+
+					// Sauvegarde
+			
+		ecrireligne(num_case , &_case);
+
+	}
+	else
+	{
+		cout << "Erreur dans ajoute_element(case_depose = " << num_case << ", quantite = " << quantite << ", type = " << type << ").\n";
+	}
+}
+
+float prend_element(const short num_case, float quantite, int type)
+{
 	// fonction renvoyant la quantité prise réelle et mettant à jour la base monde
 	struct ligneCase _case;
 	float ancienne_quantite, nouvelle_quantite;
@@ -259,7 +305,6 @@ int existe(const short num_case, const int id, const bool verbal)
 			#####  ###### #      ###### #    #  ####  ###### #    # ###### #    #   #   					*/
 
 bool bouge(const int numCocix, const short depart, const short arrivee, const bool verbal ){
-	struct ligneCase caseDepart,caseArrivee;
 	
 	if(depart == arrivee)
 	{
@@ -267,22 +312,22 @@ bool bouge(const int numCocix, const short depart, const short arrivee, const bo
 	}
 	if(depart > 0 && depart <= MAX_CASE && arrivee > 0 && arrivee <= MAX_CASE)
 	{
-		caseDepart = lirecase(depart);
-		caseArrivee = lirecase(arrivee);
+		// je regarde d'abord si je peux inscrire le CoCiX sur la case d'arrivée
 
-		// je recherche la présence de numCocix parmis caseDepart.cocix[] et l'efface
-		
-		if( existe( depart , numCocix , verbal) >= 0)
+		if(marque_trace(arrivee,numCocix,verbal))
 		{
+			//elle est inscrit
+			//je peux l'effacer de l'ancienne
 			efface_trace(depart , numCocix, verbal);
+			return true;
 		}
 		else
 		{
-			if(verbal) cout << "ATTENTION, je n'ai pas trouvé le CoCiX n°" << numCocix << " sur la case N°" << depart << " !\n";
+			// elle n'est pas inscrit
+			cout << "Impossible de marquer le CoCiX N°" << numCocix << " sur la case arrivee !\n";
+			cout << "Déplacement annulé !\n";
+			return false;
 		}
-		
-		// j'inscrit la présence du CoCiX sur la caseDepart.cocix[].
-		return marque_trace(arrivee,numCocix,verbal);
 	}
 	else
 	{
@@ -365,10 +410,12 @@ void affiche_map(const multimap< float, short, greater<float> > &m )
 
 }
 
-short meilleur_case(short case_centrale, int info, bool doit_etre_libre, bool verbal){
+short meilleur_case(short case_centrale, int info, bool doit_etre_libre ,short recolte, bool verbal){
 	/* Fonction renvoyant le num case de la meilleur info (float)
 		EAU NOURRITURE ETC
 		libre indique si il peut y doit y avoir une place libre
+		recolte est la case naissance si c'est pour une récolte et on ne doit pas la choisir
+		si = 0 c'est qu'on mange 
 	*/
 	short case_haut_gauche,case_haut,case_haut_droite,case_droite,case_gauche,case_bas_droite,case_bas,case_bas_gauche;
 	
@@ -404,7 +451,7 @@ short meilleur_case(short case_centrale, int info, bool doit_etre_libre, bool ve
 
 	if(doit_etre_libre){
 		// les places doivent être libres
-		if((*adr_fonction)(case_haut_gauche) > 0 && libre(case_haut_gauche)) {
+		if((*adr_fonction)(case_haut_gauche) > 0 && libre(case_haut_gauche) && case_haut_gauche != recolte) {
 
 		/*		x..
 				.o.
@@ -415,7 +462,7 @@ short meilleur_case(short case_centrale, int info, bool doit_etre_libre, bool ve
 			trouve = true;
 
 		}
-		if((*adr_fonction)(case_haut) > 0 && libre(case_haut)) {
+		if((*adr_fonction)(case_haut) > 0 && libre(case_haut) && case_haut != recolte) {
 
 		/*		.x.
 				.o.
@@ -426,7 +473,7 @@ short meilleur_case(short case_centrale, int info, bool doit_etre_libre, bool ve
 			trouve = true;
 
 		}	
-		if((*adr_fonction)(case_haut_droite) > 0 && libre(case_haut_droite)) {
+		if((*adr_fonction)(case_haut_droite) > 0 && libre(case_haut_droite) && case_haut_droite != recolte) {
 
 		/*		..x
 				.o.
@@ -437,7 +484,7 @@ short meilleur_case(short case_centrale, int info, bool doit_etre_libre, bool ve
 			trouve = true;
 
 		}
-		if((*adr_fonction)(case_droite) > 0 && (*adr_fonction)(case_droite)) {
+		if((*adr_fonction)(case_droite) > 0 && (*adr_fonction)(case_droite) && case_droite != recolte) {
 
 		/*		...
 				.ox
@@ -448,7 +495,7 @@ short meilleur_case(short case_centrale, int info, bool doit_etre_libre, bool ve
 			trouve = true;
 
 		}
-		if((*adr_fonction)(case_gauche) > 0 && libre(case_gauche)) {
+		if((*adr_fonction)(case_gauche) > 0 && libre(case_gauche) && case_gauche != recolte) {
 
 		/*		...
 				xo.
@@ -458,7 +505,7 @@ short meilleur_case(short case_centrale, int info, bool doit_etre_libre, bool ve
 			trouve = true;
 
 		} 
-		if((*adr_fonction)(case_bas_droite) > 0 && libre(case_bas_droite)) {
+		if((*adr_fonction)(case_bas_droite) > 0 && libre(case_bas_droite) && case_bas_droite != recolte) {
 		/*		...
 				.o.
 				..x			*/	
@@ -468,7 +515,7 @@ short meilleur_case(short case_centrale, int info, bool doit_etre_libre, bool ve
 			trouve = true;
 
 		} 
-		if((*adr_fonction)(case_bas) > 0 && libre(case_bas)){
+		if((*adr_fonction)(case_bas) > 0 && libre(case_bas) && case_bas != recolte){
 		/*		...
 				.o.
 				.x.			*/		
@@ -478,7 +525,7 @@ short meilleur_case(short case_centrale, int info, bool doit_etre_libre, bool ve
 			trouve = true;
 
 		}
-		if((*adr_fonction)(case_bas_gauche) > 0 && libre(case_bas_gauche)) {
+		if((*adr_fonction)(case_bas_gauche) > 0 && libre(case_bas_gauche) && case_bas_gauche != recolte) {
 		/*		...
 				.o.
 				x..			*/
@@ -490,6 +537,7 @@ short meilleur_case(short case_centrale, int info, bool doit_etre_libre, bool ve
 
 	} else {
 		//on a pas besoins de d'avoir une place libre
+		// a priori on ne teste pas la case récolte 
 		if(libre(case_haut_gauche)) {
 
 		/*		x..
@@ -738,3 +786,18 @@ const char* nbCocixGraph(const short numCase){
 	return ( chaine[ nombreCocix ] );
 }
 
+short case_hasard(const short case_centrale)
+{
+	short tableau_case[8];
+	
+	tableau_case[0] = monte_gauche(case_centrale);
+	tableau_case[1] = monte(case_centrale);
+	tableau_case[2] = monte_droite(case_centrale);
+	tableau_case[3] = droite(case_centrale);
+	tableau_case[4] = descend_droite(case_centrale);
+	tableau_case[5] = descend(case_centrale);
+	tableau_case[6] = descend_gauche(case_centrale);
+	tableau_case[7] = gauche(case_centrale);
+
+	return (short) tableau_case[aleatoire(0,7)];
+}

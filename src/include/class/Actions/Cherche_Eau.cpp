@@ -35,7 +35,7 @@ void Cherche_Eau::go(Cocix *cocix, const bool verbal){
 	cout << "CHERCHE de L'eau ....\n";
 
 	short case_arrivee;
-	case_arrivee = meilleur_case( cocix->case_presence, EAU, true);
+	case_arrivee = meilleur_case( cocix->case_presence, EAU, true, 0, verbal);
 
 	if(case_arrivee > 0){
 		if(verbal)
@@ -50,22 +50,22 @@ void Cherche_Eau::go(Cocix *cocix, const bool verbal){
 	else
 	{
 		// je bouge au hasard
-		if(verbal) cout << "Je cherche au hasard\n"; 
+		if(verbal) cout << "... au hasard \n"; 
 
-		cout << "\n\t\t******A FAIRE !! HASARD !! ****** \n";
+		case_arrivee = case_hasard(cocix->case_presence);
 	}
 	if(bouge(cocix->id,cocix->case_presence,case_arrivee)) 
 	{
 				cocix->case_presence = case_arrivee;
 				if(verbal) cout << " en " << case_arrivee << "...\n";
+				set_action_terminee(true);
 	}
-	else 
+	else
 	{
-				if(verbal) cout << " impossible !	\n";
+				le_temps_s_ecoule();
+				set_action_terminee(false);
 	}
-
-
-	le_temps_s_ecoule();
+	
 	
 	cout << "\n";
 	Actions::affiche_action(false);

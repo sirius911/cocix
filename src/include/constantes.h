@@ -75,6 +75,9 @@
 #define MANGER 8
 #define RENTRER 11
 #define SE_SOIGNER 14
+#define RECOLTER 15
+#define DEPOSER 16
+#define CHERCHE_RECOLTE 17
 
 struct struct_balises
 		{

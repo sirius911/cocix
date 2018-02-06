@@ -1,4 +1,4 @@
-#include "Cherche_Nourriture.h"
+#include "Cherche_Recolte.h"
 #include <cstring>
 #include <iostream>
 #include <iomanip>
@@ -8,19 +8,19 @@
 
 using namespace std;
 
-Cherche_Nourriture::Cherche_Nourriture(){
+Cherche_Recolte::Cherche_Recolte(){
 	charge();
 }
 
-bool Cherche_Nourriture::valide_Action(const Cocix* , const bool verbal){
+bool Cherche_Recolte::valide_Action(const Cocix* , const bool verbal){
 	// on peut toujours chercher !
 	return true;
 }
 
-void Cherche_Nourriture::charge(){
-	set_id( 3 );
-	strcpy(action, "je cherche de la nourriture");
-	strcpy(desire, "Chercher de la nourriture");
+void Cherche_Recolte::charge(){
+	set_id( 17 );
+	strcpy(action, "je cherche de la nourriture à récolter");
+	strcpy(desire, "Chercher récolte");
 	chaleur = 0.02f;
 	eau = 1.0f;
 	calorie = 1.0f;
@@ -28,14 +28,14 @@ void Cherche_Nourriture::charge(){
 	deplacement = true;
 	peut_etre_stoppee = true;
 }
-void Cherche_Nourriture::go(Cocix *cocix, const bool verbal){
+void Cherche_Recolte::go(Cocix *cocix, const bool verbal){
 	
 	cout << ".........................................................................\n";
 	if(verbal) Actions::index();
-	cout << "CHERCHE de La nourriture ....\n";
+	cout << "CHERCHE de La nourriture à récolter....\n";
 
 	short case_arrivee;
-	case_arrivee = meilleur_case( cocix->case_presence, NOURRITURE, true,0,verbal);
+	case_arrivee = meilleur_case( cocix->case_presence, NOURRITURE, true, cocix->case_naissance, verbal);
 
 	if(case_arrivee > 0){
 		if(verbal)
@@ -54,6 +54,7 @@ void Cherche_Nourriture::go(Cocix *cocix, const bool verbal){
 		// je bouge au hasard
 		if(verbal) cout << "... au hasard \n"; 
 		case_arrivee = case_hasard(cocix->case_presence);
+
 	}
 	if(bouge(cocix->id, cocix->case_presence, case_arrivee, verbal)) 
 	{

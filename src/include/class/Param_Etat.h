@@ -31,7 +31,7 @@ class Param_Etat{
 		
 		//methodes
 		void maj_balises(struct_balises*,const bool = false);
-		void souffrance(Param_Etat*, const bool, const bool = false);
+		bool souffrance(Param_Etat *XSante, const bool coma, const bool modif, const bool verbal = false);
 	
 		Param_Etat();
 		Param_Etat(const char[20], const char[3], float , float , float, float, float, float, float, float, float, float, float );
@@ -41,6 +41,7 @@ class Param_Etat{
 		float get_valeur(bool pourcentage=false);
 		float get_capacite();
 		char* get_nom();
+		bool souffre();	// renvoie vrai si des limites sont dépassées et qu'il y a souffrance sur l'état
 
 		// Setters
 		void set_valeur(float,struct_balises*, bool control = true); // met une valeur avec controle et mise à jours des balises ou pas
