@@ -1,26 +1,26 @@
-#include "Cherche_Eau.h"
+#include "Cherche_Partenaire.h"
 #include <cstring>
 #include <iostream>
 #include <iomanip>
 #include <map>
-#include "../../monde.h"
+#include "../../reproduction.h"
 #include "../Cocix.h"
 
 using namespace std;
 
-Cherche_Eau::Cherche_Eau(){
+Cherche_Partenaire::Cherche_Partenaire(){
 	charge();
 }
 
-bool Cherche_Eau::valide_Action(const Cocix* , const bool verbal){
+bool Cherche_Partenaire::valide_Action(const Cocix* , const bool verbal){
 	// on peut toujours chercher !
 	return true;
 }
 
-void Cherche_Eau::charge(){
-	set_id( 2 );
-	strcpy(action, "je cherche de l'eau");
-	strcpy(desire, "Chercher de l'eau");
+void Cherche_Partenaire::charge(){
+	set_id( 4 );
+	strcpy(action, "je cherche un partenaire");
+	strcpy(desire, "Chercher un partenaire");
 	set_chaleur(0.02f);
 	set_eau(1.0f);
 	set_calorie(1.0f);
@@ -28,14 +28,14 @@ void Cherche_Eau::charge(){
 	deplacement = true;
 	peut_etre_stoppee = true;
 }
-void Cherche_Eau::go(Cocix *cocix, const bool verbal){
+void Cherche_Partenaire::go(Cocix *cocix, const bool verbal){
 	
 	cout << ".........................................................................\n";
 	if(verbal) Actions::index();
-	cout << "CHERCHE de L'eau ....\n";
+	cout << "CHERCHE un partenaire ....\n";
 
 	short case_arrivee;
-	case_arrivee = meilleur_case( cocix->case_presence, EAU, true, 0, verbal);
+	case_arrivee = meilleur_case_partenaire( cocix->case_presence, cocix ,verbal);
 
 	if(case_arrivee > 0){
 		if(verbal)
@@ -45,28 +45,27 @@ void Cherche_Eau::go(Cocix *cocix, const bool verbal){
 			cout << "\nJe bouge ...";
 		}
 		// je bouge en case_arrivée
+		
+		
 
 	}
 	else
 	{
 		// je bouge au hasard
 		if(verbal) cout << "... au hasard \n"; 
-
 		case_arrivee = case_hasard(cocix->case_presence);
 	}
-	if(bouge(cocix->id,cocix->case_presence,case_arrivee)) 
+	if(bouge(cocix->id, cocix->case_presence, case_arrivee, verbal)) 
 	{
 				cocix->case_presence = case_arrivee;
 				if(verbal) cout << " en " << case_arrivee << "...\n";
 				set_action_terminee(true);
 	}
-	else
+	else 
 	{
-				le_temps_s_ecoule();
 				set_action_terminee(false);
-	}
-	
-	
+				le_temps_s_ecoule();
+	}	
 	cout << "\n";
 	Actions::affiche_action(false);
 	cout << ".........................................................................\n";

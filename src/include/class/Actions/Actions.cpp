@@ -49,16 +49,14 @@ void Actions::affiche_desire(bool verbal){
 		cout << desire << "\n";
 }
 
-void Actions::faire(){
-	cout << "Action NON IMPLÉMENTÉE !!\n";
-}
 void Actions::go(Cocix*,const bool){
 	cout << "Action NON IMPLÉMENTÉE !!\n";
 }
-bool Actions::valide_Action(const Cocix*, const bool){
-	cout << "valide_action() NON IMPLÉMENTÉE !\n";
+bool Actions::valide_Action(const Cocix*, const bool verbal){
+	if(verbal) cout << "Peut Toujours !\n";
 	return true;
 }
+
 
 bool Actions::terminee(){
 	return (temps_ecoule >= duree || peut_etre_stoppee || action_terminee);
@@ -93,6 +91,21 @@ void Actions::set_duree(short x_duree){
 	duree = x_duree;
 }
 
+void Actions::set_eau(float x_eau)
+{
+	eau = x_eau;
+}
+
+void Actions::set_chaleur(float x_chaleur)
+{
+	chaleur = x_chaleur;
+}
+
+void Actions::set_calorie(float x_calorie)
+{
+	calorie = x_calorie;
+}
+
 /********************************************************************************************************************
 					GETTER
 ********************************************************************************************************************/
@@ -116,6 +129,16 @@ short Actions::get_duree(){
 float Actions::get_chaleur()
 {
 	return chaleur;
+}
+
+float Actions::get_eau()
+{
+	return eau;
+}
+
+float Actions::get_calorie()
+{
+	return calorie;
 }
 
 char* Actions::get_action()

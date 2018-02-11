@@ -25,9 +25,9 @@ void Deposer::charge()
 	set_id (16);
 	strcpy(action, "Je Dépose");
 	strcpy(desire, "Déposer");
-	chaleur = 0.02f;
-	eau = 1.0f;
-	calorie = 1.0f;
+	set_chaleur(0.02f);
+	set_eau(1.0f);
+	set_calorie(1.0f);
 	set_duree(3);
 	deplacement = false;
 	peut_etre_stoppee = false;

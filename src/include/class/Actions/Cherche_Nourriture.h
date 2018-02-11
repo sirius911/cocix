@@ -13,7 +13,7 @@ class Cherche_Nourriture : public Actions
 
 	private:
 		void charge();
-		bool recolte;	//si vrai alors on recolte et on ne mange pasmeilleur_case
+		//bool recolte;	//si vrai alors on recolte et on ne mange pasmeilleur_case
 };
 
 #endif

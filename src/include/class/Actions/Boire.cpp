@@ -21,9 +21,9 @@ void Boire::charge(){
 	set_id( 1 );
 	strcpy(action, "Je bois");
 	strcpy(desire, "boire");
-	chaleur = -0.05f;
-	eau = 0.0f;
-	calorie = 0.3f;
+	set_chaleur(-0.05f);
+	set_eau(0.0f);
+	set_calorie(0.3f);
 	set_duree(5);
 	deplacement = false;
 	peut_etre_stoppee = false;

@@ -7,6 +7,7 @@
 
 #include "monde.h"
 #include "io.h"
+//#include "class/Cocix.h"
 
 using namespace std;
 
@@ -34,6 +35,8 @@ float radioactivite(const short num_case){
 	caseMonde = lirecase(num_case);
 	return caseMonde.radioactivite;
 }
+
+
 void affiche_case(short num_case, bool info){
 	struct ligneCase caseMonde;
 	struct struct_xy xy;
@@ -269,7 +272,7 @@ bool marque_trace(const short num_case, const int id, const bool verbal)
 		{
 			caseMonde.cocix[i] = id;
 			ecrireligne(num_case, & caseMonde);
-			if(verbal) cout << "Je marque le CoCiX en position " << i+1 << "\n";
+			if(verbal) cout << "Je marque le CoCiX en position " << i << "\n";
 			return true;
 		}
 	} while( ++i < MAX_PAR_CASE);
@@ -287,7 +290,7 @@ int existe(const short num_case, const int id, const bool verbal)
 	{
 		if(caseMonde.cocix[i] == id)
 		{
-			if(verbal) cout << "Trouvé en position : " << i+1 << "\n";
+			if(verbal) cout << "Trouvé en position : " << i << "\n";
 			return i;
 		} 
 	}while(++i < MAX_PAR_CASE);
@@ -402,12 +405,36 @@ void affiche_map(const multimap< float, short, greater<float> > &m )
 	multimap<float, short, greater<float> >::const_iterator im;
 	for (im=m.begin() ; im!=m.end(); im++)
 	{
-		cout << "il y a " << (*im).first << " uml sur ";
+		cout << "il y a " << (*im).first << " Element(s) sur ";
 		affiche_case((*im).second, false);
 		cout << "\n";
 	}
 
 
+}
+
+short case_libre(const short case_centrale)
+{
+	short tableau_case[8];
+	int i = 0;
+	
+	tableau_case[0] = monte_gauche(case_centrale);
+	tableau_case[1] = monte(case_centrale);
+	tableau_case[2] = monte_droite(case_centrale);
+	tableau_case[3] = droite(case_centrale);
+	tableau_case[4] = descend_droite(case_centrale);
+	tableau_case[5] = descend(case_centrale);
+	tableau_case[6] = descend_gauche(case_centrale);
+	tableau_case[7] = gauche(case_centrale);
+
+	do
+	{
+		
+		if(libre(tableau_case[i])) return tableau_case[i];
+
+	} while( ++i < 8);
+
+	return 0;
 }
 
 short meilleur_case(short case_centrale, int info, bool doit_etre_libre ,short recolte, bool verbal){
@@ -484,7 +511,7 @@ short meilleur_case(short case_centrale, int info, bool doit_etre_libre ,short r
 			trouve = true;
 
 		}
-		if((*adr_fonction)(case_droite) > 0 && (*adr_fonction)(case_droite) && case_droite != recolte) {
+		if((*adr_fonction)(case_droite) > 0 && libre(case_droite) && case_droite != recolte) {
 
 		/*		...
 				.ox

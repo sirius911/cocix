@@ -23,9 +23,9 @@ void Rentrer::charge()
 	set_id(11);
 	strcpy(action, "Je rentre");;
 	strcpy(desire, "Rentrer");
-	chaleur = 0.02f;
-	eau = 1.0f;
-	calorie = 1.0f;
+	set_chaleur(0.02f);
+	set_eau(1.0f);
+	set_calorie(1.0f);
 	set_duree(0);
 	deplacement = true;
 	peut_etre_stoppee = true;

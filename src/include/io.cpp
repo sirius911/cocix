@@ -92,7 +92,7 @@ void ecrireligne(short x_case, ligneCase * x_donnee){
  	f_in.close();
 
 }
-
+/*
 int take_int(const char* str)
 {
   // fonction renvoyant le numero entre crochet d'un fichier [XXX]AAA
@@ -112,9 +112,26 @@ int take_int(const char* str)
   tmp[j] = '\0';
   return (atoi(tmp));
 }
+*/
 
+int take_int(const char* str)
+{
+  // fonction renvoyant le numero entre crochet d'un fichier xxx.cox
+  int i = 0;
+  char tmp[]= "";
 
-vector<char*> affiche_nid(const bool num)
+  int j=0;
+  while(str[i] != '\0' && str[i] != '.')
+  {
+    tmp[j] = str[i];
+    i++;
+    j++;
+  }
+  tmp[j] = '\0';
+  return (atoi(tmp));
+}
+
+vector<char*> affiche_nid(const bool num, const int flag_oeuf)
 {
 
     DIR* rep = NULL;
@@ -126,10 +143,11 @@ vector<char*> affiche_nid(const bool num)
     struct SortByString 
     { 
        bool operator ()(const char* a1, const char* a2) const 
-    { 
-     return (take_int(a1) < take_int(a2));
-    } 
-}; 
+      { 
+          return (take_int(a1) < take_int(a2));
+          //return (a1 < a2);
+      } 
+    }; 
 
 
     rep = opendir(REPERTOIRE_NID); /* Ouverture d'un dossier */
@@ -144,17 +162,38 @@ vector<char*> affiche_nid(const bool num)
   cout << " -- Lecture du Nid '" << REPERTOIRE_NID << "' -- \n";
   while ((ent = readdir(rep)) != NULL)
     {/* Lecture du dossier. */
-        nom_fichier_cocix = ent->d_name;
-        if(strstr(nom_fichier_cocix, ".cox") != 0)
-        {
-          //cout << "* " << nom_fichier_cocix <<"\n";
-          nbFichiers++;
-          listeFichiers.insert(listeFichiers.end(), nom_fichier_cocix);
-         }
+      nom_fichier_cocix = ent->d_name;
+      if(flag_oeuf == 0)
+      {
+          if(strstr(nom_fichier_cocix, ".cox") != 0)
+          {
+              //cout << "* " << nom_fichier_cocix <<"\n";
+              nbFichiers++;
+              listeFichiers.insert(listeFichiers.end(), nom_fichier_cocix);
+          }
+      }
+      else if(flag_oeuf == 1)
+      {
+          if(strstr(nom_fichier_cocix, ".oeuf") != 0)
+          {
+              //cout << "* " << nom_fichier_cocix <<"\n";
+              nbFichiers++;
+              listeFichiers.insert(listeFichiers.end(), nom_fichier_cocix);
+          }
+      }
+      else
+      {
+          if(strstr(nom_fichier_cocix, ".oeuf") != 0 || strstr(nom_fichier_cocix, ".cox") != 0)
+          {
+              nbFichiers++;
+              listeFichiers.insert(listeFichiers.end(), nom_fichier_cocix);
+          }
+      }
     }
   
     //trie
     sort (listeFichiers.begin() , listeFichiers.end(), SortByString());
+    //sort (listeFichiers.begin() , listeFichiers.end());
 
     // affiche
     for(int i = 0; i < (int) listeFichiers.size(); i++)
@@ -168,8 +207,7 @@ vector<char*> affiche_nid(const bool num)
     if (closedir(rep) == -1)
     { /* S'il y a eu un souci avec la fermeture */
     	cout << "il y a eu un souci avec la fermeture\n";
-      //return NULL;
-	}
+	  }
     return listeFichiers;
 }
 

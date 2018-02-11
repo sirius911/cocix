@@ -19,7 +19,7 @@ void help(){
 		cout << "	--status                Affiche le status du serveur.\n";
 		cout << "	--version               Affiche la version du logiciel.\n";
 		cout << "	--incremente [vitesse]  Avance le cycle à la vitesse donnée.\n";	
-		cout << "	--index [XX]			Affiche ou initalise l'indexCocix\n";
+		cout << "	--index [XX]		Affiche ou initalise l'indexCocix\n";
 		cout << "	--heurenuit [hh]        Affiche ou initialise l'heure de tombée de la nuit [0-24].\n";
 		cout << "	--heurejour [hh]        Affiche ou initialise l'heure du lever de soleil [0-24].\n";
 		cout << "	--jour [jjj]            Affiche ou initialise le nombre de jours depuis le BigBang (jjj).\n";

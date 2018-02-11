@@ -8,7 +8,6 @@
 #include "constantes.h"
 #include "io.h"
 
-
 using namespace std;
 
 struct struct_xy
@@ -30,10 +29,12 @@ short valide_case(short);				// ferme le monde
 int nbCocix( short numCase);			//renvoi le nombre de CoCiX sur numCase ou 0 si vide
 const char* nbCocixGraph(const short numCase);	// renvoi une chaine de longueur fixe comme "**********" ou "   ****   "
 bool libre(short const numCase);	// renvoi vrai si le Nb de Cocix sur numCase < MAX_PAR_CASE
+short case_libre(const short numCase); // renvoi la case premiere case libre autour de la case centrale
 
 void efface_trace(const short,const int id=0, const bool verbal = false);	// efface les traces des CoCiX sur la case
 bool marque_trace(const short num_case, const int id, const bool verbal=false); // inscript l'Id du CoCiX sur la case si libre renvoi vrai si cela a fonctionné
 int existe(const short num_case, const int id, const bool verbal = false);// renvoi le numero de position du CoCiX id  num_case ou -1 si absent
+
 // deplacements
 bool bouge(const int numCocix, const short depart, const short arrivee, const bool verbal= false );	// bouge de case départ à case d'arrivée
 short aller(const short depart, const short arrivee, const bool= false ); // renvoi la case intermédière pour bouger départ à arrivée danz un monde fermé

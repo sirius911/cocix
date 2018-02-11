@@ -18,6 +18,10 @@
 #include "include/class/Actions/Recolter.h"
 #include "include/class/Actions/Cherche_Recolte.h"
 #include "include/class/Actions/Deposer.h"
+#include "include/class/Actions/Se_Reproduire.h"
+#include "include/class/Actions/Cherche_Partenaire.h"
+#include "include/class/Actions/Cherche_Case_Libre.h"
+#include "include/class/Actions/Pondre.h"
 
 #include "include/constantes.h"
 #include "include/io.h"
@@ -27,7 +31,6 @@ using namespace std;
 
 int main(int nbArg, char* argv[])
 {
-	//bool muet = false;
 	JourNuit Jour_Nuit;
 	srand(time(NULL));
 
@@ -38,7 +41,7 @@ int main(int nbArg, char* argv[])
 	bool sortie = false;
 	bool verbal = false;
 	bool sauvegarde = false;
-	char prompt[30] = "<Aucun CoCiX [noSav][muet]>";
+	char prompt[30] = "<[noSav][muet] Aucun CoCiX >";
 	char nomCocix[15] = "Aucun CoCiX";
 
 	cout << "\f";
@@ -66,7 +69,7 @@ int main(int nbArg, char* argv[])
 			if(strcmp(commande,"load") == 0)
 			{
 				// on charge une CoCiX
-				vector<char*> listeFichiers = affiche_nid(true);
+				vector<char*> listeFichiers = affiche_nid(true, 2);
 				cout << "Entrez le Num du CoCiX : ";
 				cin >> choix;
 				int i = atoi(choix);
@@ -79,18 +82,20 @@ int main(int nbArg, char* argv[])
 						strcpy(nomCocix,CoCiX->nom);
 						CoCiX->affiche(false);
 						strcpy(prompt,"<");
-						strcat(prompt, nomCocix);
 						strcat(prompt, (sauvegarde)?" [Sav]":" [noSav]");
-						strcat(prompt, (verbal)?"[verbal]>":"[muet]>");
+						strcat(prompt, (verbal)?"[verbal] ":"[muet] ");
+						strcat(prompt, nomCocix);
+						strcat(prompt, ">");
 					}
 					else
 					{
 						cout << "CoCiX non trouvé !\n";
 						strcpy(nomCocix,"Aucun CoCiX");
 						strcpy(prompt,"<");
-						strcat(prompt, nomCocix);
 						strcat(prompt, (sauvegarde)?" [Sav]":" [noSav]");
-						strcat(prompt, (verbal)?"[verbal]>":"[muet]>");
+						strcat(prompt, (verbal)?"[verbal] ":"[muet] ");
+						strcat(prompt, nomCocix);
+						strcat(prompt, ">");
 					}
 				}
 				else
@@ -120,6 +125,7 @@ int main(int nbArg, char* argv[])
 					cout << "\tbalises\t\tAffiche les balises du CoCiX chargé.\n";
 					cout << "\tcortexEtat\t\tLance la méthode cortex_etat() du CoCiX chargé.\n";
 					cout << "\tcortexAction\t\tLance la méthode cortex_action() du CoCiX chargé.\n";
+					cout << "\tcouveuse\t\tAffiche les oeufs.\n";
 					cout << "\tdeplace\t\tDéplace le CoCiX sur une case.\n";
 					cout << "\tdesire\t\tAffiche le désire en cours du CoCiX chargé.\n";
 					cout << "\teau\t\tAffiche la quantité d'eau sur une case.\n";
@@ -183,9 +189,13 @@ int main(int nbArg, char* argv[])
 
 			} else if((strcmp(commande,"nid")==0))
 			{
-					affiche_nid(false);
+					affiche_nid(false, 0);
 
-			} else if((strcmp(commande,"balises")==0))
+			} else if((strcmp(commande,"couveuse")==0))
+			{
+					affiche_nid(false, 1);
+			}
+			else if((strcmp(commande,"balises")==0))
 			{
 					if( ! (CoCiX == (void*) NULL ))
 					{
@@ -387,14 +397,18 @@ int main(int nbArg, char* argv[])
 				if( ! (CoCiX == (void*) NULL )){
 						cout << "Choisissez : \n";
 						cout << "Boire() -> " << BOIRE << "\n";
+						cout << "Cherche_Case_Libre() -> " << CHERCHE_CASE_LIBRE << "\n";
 						cout << "Cherche_Eau() -> " << CHERCHE_EAU << "\n";
 						cout << "Cherche_Nourriture() -> " << CHERCHE_NOURRITURE << "\n";
+						cout << "Cherche_Partenaire() -> " << CHERCHE_PARTENAIRE << "\n";
 						cout << "Cherche_Recolte() -> " << CHERCHE_RECOLTE << "\n" ;
 						cout << "Deposer() -> " << DEPOSER << "\n";
 						cout << "Dormir() -> " << DORMIR << "\n";
 						cout << "Manger() -> " << MANGER << "\n";
+						cout << "Pondre() -> " << PONDRE << "\n";
 						cout << "Recolter() -> " << RECOLTER << "\n";
 						cout << "Rentrer() -> " << RENTRER << "\n";
+						cout << "Se_Reproduire() -> " << SE_REPRODUIRE << "\n";
 						cout << "Se_Soigner() -> " << SE_SOIGNER << "\n";
 						cout << "\t votre choix : ";
 						cin >> choix;
@@ -460,6 +474,30 @@ int main(int nbArg, char* argv[])
 								else
 									CoCiX->Desire = new Deposer();
 								break;
+							case SE_REPRODUIRE:
+								if((strcmp(commande,"forceAction")==0))
+									CoCiX->Action = new Se_Reproduire();
+								else
+									CoCiX->Desire = new Se_Reproduire();
+								break;
+							case CHERCHE_PARTENAIRE:
+								if((strcmp(commande,"forceAction")==0))
+									CoCiX->Action = new Cherche_Partenaire();
+								else
+									CoCiX->Desire = new Cherche_Partenaire();
+								break;
+							case PONDRE:
+								if((strcmp(commande,"forceAction")==0))
+									CoCiX->Action = new Pondre();
+								else
+									CoCiX->Desire = new Pondre();
+								break;
+							case CHERCHE_CASE_LIBRE:
+								if((strcmp(commande,"forceAction")==0))
+									CoCiX->Action = new Cherche_Case_Libre();
+								else
+									CoCiX->Desire = new Cherche_Case_Libre();
+								break;
 							default:
 								cout << "ERREUR: de numero.\n";		
 						}
@@ -482,7 +520,19 @@ int main(int nbArg, char* argv[])
 					cout << "Création du CoCiX Toto :";
 					CoCiX = new Cocix();
 					CoCiX->creation_Toto( 1 , verbal);
+					cout << "Fin\n";
 					delete CoCiX;
+					strcpy(nomCocix,"Aucun CoCiX");
+					strcpy(prompt,"<");
+					strcat(prompt, nomCocix);
+					strcat(prompt, (sauvegarde)?" [Sav]":" [noSav]");
+					strcat(prompt, (verbal)?"[verbal]>":"[muet]>");
+
+			}else if((strcmp(commande,"creerTiti")==0))
+			{
+					if( ! (CoCiX == (void*) NULL ))
+						delete CoCiX;
+
 					cout << " Création du CoCiX Titi : ";
 					CoCiX = new Cocix();
 					CoCiX->creation_Titi( 2 , verbal);
@@ -500,7 +550,8 @@ int main(int nbArg, char* argv[])
 
 		} while(!sortie);
 		cout << "Au revoir !\n";
-		delete CoCiX;
+		if( ! (CoCiX == (void*) NULL ))
+			delete CoCiX;
 		return 0;
 	}
 

@@ -17,6 +17,5 @@ struct ligneCase {
 ligneCase lirecase (short const);
 void ecrireligne(short , ligneCase* );
 int aleatoire (int x, int y);
-vector<char*> affiche_nid(const bool num);
-
+vector<char*> affiche_nid(const bool num , const int flag_oeuf);	// falg oeuf = 0 pas les oeuf, 1 = que les oeufs, 2 les oeufs et les CoCiX
 #endif

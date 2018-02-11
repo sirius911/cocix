@@ -1,7 +1,7 @@
 #ifndef DEF_CONSTANTES
 #define DEF_CONSTANTES
 
-#define VERSION_LOGICIEL "0.2 Beta"
+#define VERSION_LOGICIEL "0.3 Beta"
 #ifndef DEBUG
 	#define DEBUG false
 #endif
@@ -40,9 +40,31 @@
 #define IMMATURE -1
 
 
-// GENETIQUE
+//  **************************************************      GENETIQUE
+/*
+		Modes de transmission:
+		P => transmission par le père
+		M => transmission par la mère
+		PM => transmission par le père OU la mère
+		pm => transmission de père en fils ou de mère en fille
+		GP => transmission par un des deux Grands pères (saute une génération)
+		GM => transmission par une des deux grands mères
+		H => transmission par les males p, gp_m, gp_p
+		F => transmission par les femelles m, gm_m , gm_p
+		m6 => transmission par les 6 membres
+		*/
+#define P 0
+#define M 1
+#define PM 3
+#define pm 4
+#define GP 5
+#define GM 6
+#define H 7
+#define F 8
+#define m6 9
 
-#define MAX_GEN 21
+
+//#define MAX_GEN 21
 
 #define ASSIMILATION_CALORIQUE 0
 #define ASSIMILATION_HYDRIQUE 1
@@ -66,14 +88,18 @@
 #define SEUIL_COMA 19
 #define VIEILLISSEMENT 20
 
-// Actions
+//   ****************************************************************** Actions
 
 #define BOIRE 1
 #define CHERCHE_EAU 2
 #define CHERCHE_NOURRITURE 3
+#define CHERCHE_PARTENAIRE 4
 #define DORMIR 6
 #define MANGER 8
+#define PONDRE 9
+#define CHERCHE_CASE_LIBRE 10
 #define RENTRER 11
+#define SE_REPRODUIRE 12
 #define SE_SOIGNER 14
 #define RECOLTER 15
 #define DEPOSER 16

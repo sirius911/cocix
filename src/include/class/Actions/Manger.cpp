@@ -24,9 +24,9 @@ void Manger::charge()
 	set_id( 8 );
 	strcpy(action, "Je mange");
 	strcpy(desire, "Manger");
-	chaleur = -0.05f;
-	eau = 0.5f;
-	calorie = 0.5f;
+	set_chaleur(-0.05f);
+	set_eau(0.5f);
+	set_calorie(0.5f);
 	set_duree(5);
 	deplacement = false;
 	peut_etre_stoppee = false;

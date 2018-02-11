@@ -25,9 +25,9 @@ void Se_Soigner::charge()
 	set_id(14);
 	strcpy(action, "Je me soigne");
 	strcpy(desire, "Me soigner");
-	chaleur = 0.02f;
-	eau = 0.1f;
-	calorie = 1.0f;
+	set_chaleur(0.02f);
+	set_eau(0.1f);
+	set_calorie(1.0f);
 	set_duree(5);
 	deplacement = false;
 	peut_etre_stoppee = false;

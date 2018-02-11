@@ -6,8 +6,11 @@ class Pondre : public Actions
 {
 	public:
 		Pondre();
-		void faire();
-		bool valide_Action();
+		void go(Cocix*,bool=false);
+		bool valide_Action(const Cocix* , const bool = false);
+
+	private:
+		void charge();
 };
 
 #endif

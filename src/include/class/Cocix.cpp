@@ -2,11 +2,13 @@
 #include <fstream>
 #include <cstring>
 #include <math.h>
+#include <vector>
 #include "Gene.h"
 #include "Cocix.h"
 #include "JourNuit.h"
 #include "Param_Etat.h"
 #include "../monde.h"
+#include "../reproduction.h"
 #include <iomanip>
 
 #include "Actions/Actions.h"
@@ -16,31 +18,35 @@
 #include "Actions/Deposer.h"
 #include "Actions/Dormir.h"
 #include "Actions/Manger.h"
-//#include "Actions/Pondre.h"
+#include "Actions/Pondre.h"
 #include "Actions/Recolter.h"
 #include "Actions/Cherche_Recolte.h"
 #include "Actions/Rentrer.h"
-//#include "Actions/Se_Reproduire.h"
+#include "Actions/Se_Reproduire.h"
 #include "Actions/Se_Soigner.h"
+#include "Actions/Cherche_Partenaire.h"
+#include "Actions/Cherche_Case_Libre.h"
 
 using namespace std;
 
 Cocix::Cocix(){}
 
 
-Cocix::Cocix(const int x_id,bool verbal){
+Cocix::Cocix(const int x_id, const bool oeuf, const bool verbal){
 	//constructeur 
 	id = x_id;
+
 	// construction du  nom du fichier
-	/*
+	if(oeuf)
+		sprintf(fichier, "%d.oeuf", id);
+	else
+		sprintf(fichier, "%d.cox", id);
 
-	TODO
-
-	*/
-	if(!MUET) cout << "chargement du CoCiX N° " << id << " ...";
+	// chargement
+	if(verbal) cout << "chargement du CoCiX N° " << id << " ...";
 	if(chargement(verbal))
 	{
-		temp_exterieur = temperature(case_presence);
+		prend_temperature();
 		if(verbal) cout << " Terminé\n";
 	}
 	else 
@@ -59,7 +65,7 @@ Cocix::Cocix(const char x_fichier[30],bool verbal)
 	
 	if(chargement(verbal))
 	{
-		temp_exterieur = temperature(case_presence);
+		prend_temperature();
 		if(verbal) cout << " Terminé\n";
 	}
 	else
@@ -73,42 +79,6 @@ Cocix::~Cocix(){
 	
 }
 
-Cocix::Cocix(int x_id, char x_nom[10], int x_idPere, int x_idMere,short x_date_naissance, bool x_sexe, short x_case_presence, 
-	short x_case_naissance, short x_vieux, short x_recolte, Gene * x_genome,	Param_Etat x_Sante, Param_Etat x_Hydro, Param_Etat x_Calorie, Param_Etat x_Temperature){
-	
-	id = x_id;
-	strcpy(nom, x_nom);
-	idPere = x_idPere;
-	idMere = x_idMere;
-	date_naissance = x_date_naissance;
-	date_mort = 0;
-	sexe = x_sexe;
-	case_presence = x_case_presence;
-	case_naissance = x_case_naissance;
-	vieux = x_vieux;
-	recolte = x_recolte;
-		//chargement du genome;
-		int i = 0;
-		do {
-			genome[i] = x_genome[i];
-		} while (i++ < MAX_GEN-1);
-
-	//paramètre d'etat
-	Sante = x_Sante;
-	Hydro = x_Hydro;
-	Calorie = x_Calorie;
-	Temperature = x_Temperature;
-
-	// balises etat
-	balises.fecondee = false;
-	balises.vivant = true;
-	balises.mort = false;
-	balises.malade = false;
-	balises.coma = false;
-
-	temp_exterieur = temperature(case_presence);
-}
-
 /* Création de Cocix exemple pour le debugage ******************************************************************
 			A EFFACER ensuite
 			*/
@@ -118,43 +88,47 @@ void Cocix::creation_Toto(int x_id, const bool verbal){
 	// Paramètre d'identité
 	id = x_id;
 	strcpy(nom, "Toto");
-	strcpy(fichier,"[1]M_Toto.cox");
+	strcpy(fichier,"1.cox");
 	idPere = 0;
 	idMere = 0;
 	date_naissance = 31;
 	date_mort = 0;
 	sexe = MALE;
-	case_presence = 9565;
+	case_presence = 9694;
 	case_naissance = 3030;
 	vieux = 20;
+	vivacite = 50;
 	recolte = 0;
+	id_partenaire = 2;
+	id_oeuf = 0;
 	// creation de son genome
 	//Gene genome[MAX_GEN];
-	
-	genome[ASSIMILATION_CALORIQUE] = Gene("Assimilation Calorique",ASSIMILATION_CALORIQUE,8.0f,3.0f,2.0f,8.0f,4.0f,4.0f,2.0f);
-	genome[ASSIMILATION_HYDRIQUE] = Gene("Assimilation Hydrique",ASSIMILATION_HYDRIQUE,10.f,10.0f,2.0f,3.0f,3.0f,2.0f,2.0f);
-	genome[CALORIE] = Gene("Calorie",CALORIE,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f);
-	genome[FAIM] = Gene("Faim",FAIM,0.5f,0.65f,0.5f,0.65f,0.65f,0.65f,0.65f);
-	genome[FROID] = Gene("Froid",FROID,0.65f,0.65f,0.65f,0.65f,0.65f,0.65f,0.65f);
-	genome[HYDRO] = Gene("Hydro",HYDRO,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f);
-	genome[SANTE] = Gene("Sante",SANTE,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f);
-	genome[SATIETE] = Gene("Satiété",SATIETE,0.58f,0.58f,0.60f,0.65f,0.65f,0.65f,0.65f);
-	genome[SOIF] = Gene("Soif",SOIF,0.50f,0.60f,0.50f,0.50f,0.50f,0.50f,0.50f);
-	genome[TEMP] = Gene("Temp",TEMP,0.1f,0.1f,0.1f,0.1f,0.1f,0.1f,0.1f);
-	genome[VIEUX] = Gene("Vieux",VIEUX,20.0f,20.0f,20.0f,20.0f,20.0f,20.0f,20.0f);
-	genome[SOUFFRE_FAIM] = Gene("Souffre_Faim",SOUFFRE_FAIM,0.50f,0.30f,0.5f,0.3f,0.3f,0.3f,0.3f);
-	genome[SOUFFRE_SOIF] = Gene("Souffre_Soif",SOUFFRE_SOIF,0.8f,0.8f,0.4f,0.5f,0.8f,0.4f,0.3f);
-	genome[RECUP_SOMMEIL] = Gene("Recup_Sommeil",RECUP_SOMMEIL,0.0005f,0.0004f,0.0005f,0.0004f,0.0003f,0.0005f,0.0005f);
-	genome[RECOLTE] = Gene("Récolte",RECOLTE,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f);
-	genome[AGRESSIVITE] = Gene("Agressivité",AGRESSIVITE,0.3333f,0.3333f,0.3333f,0.3333f,0.3333f,0.3333f,0.3333f);
-	genome[VIVACITE] = Gene("Vivacité",VIVACITE,0.3f,0.3f,0.3f,0.3f,0.3f,0.3f,0.3f);
-	genome[SOINS] = Gene("Soins",SOINS,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f);
-	genome[SEUIL_MALADE] = Gene("Seuil_Malade",SEUIL_MALADE,0.45f,0.45f,0.45f,0.45f,0.45f,0.45f,0.45f);
-	genome[SEUIL_COMA] = Gene("Seuil_Comas",SEUIL_COMA,0.30f,0.30f,0.30f,0.30f,0.30f,0.30f,0.30f);
-	genome[VIEILLISSEMENT] = Gene("Vieillissement",VIEILLISSEMENT,0.007f,0.007f,0.007f,0.007f,0.007f,0.007f,0.007f);
+	nb_genes = 21;
+	genome.insert(genome.end(),Gene("Assimilation Calorique",ASSIMILATION_CALORIQUE,8.0f,3.0f,2.0f,8.0f,4.0f,4.0f,2.0f,m6,false));
+	genome.insert(genome.end(),Gene("Assimilation Hydrique",ASSIMILATION_HYDRIQUE,10.f,10.0f,2.0f,3.0f,3.0f,2.0f,2.0f,m6,false));
+	genome.insert(genome.end(),Gene("Calorie",CALORIE,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,PM,false));
+	genome.insert(genome.end(),Gene("Faim",FAIM,0.5f,0.65f,0.5f,0.65f,0.65f,0.65f,0.65f,m6,true));
+	genome.insert(genome.end(),Gene("Froid",FROID,0.65f,0.65f,0.65f,0.65f,0.65f,0.65f,0.65f,H,true));
+	genome.insert(genome.end(),Gene("Hydro",HYDRO,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,GP,false));
+	genome.insert(genome.end(),Gene("Sante",SANTE,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,H,false));
+	genome.insert(genome.end(),Gene("Satiété",SATIETE,0.58f,0.58f,0.60f,0.65f,0.65f,0.65f,0.65f,m6,true));
+	genome.insert(genome.end(),Gene("Soif",SOIF,0.50f,0.60f,0.50f,0.50f,0.50f,0.50f,0.50f,GP,true));
+	genome.insert(genome.end(),Gene("Temp",TEMP,0.1f,0.1f,0.1f,0.1f,0.1f,0.1f,0.1f,PM,true));
+	genome.insert(genome.end(),Gene("Vieux",VIEUX,20.0f,20.0f,20.0f,20.0f,20.0f,20.0f,20.0f,PM,false));
+	genome.insert(genome.end(),Gene("Souffre_Faim",SOUFFRE_FAIM,0.50f,0.30f,0.5f,0.3f,0.3f,0.3f,0.3f,m6,true));
+	genome.insert(genome.end(),Gene("Souffre_Soif",SOUFFRE_SOIF,0.5f,0.8f,0.4f,0.5f,0.8f,0.4f,0.3f,m6,true));
+	genome.insert(genome.end(),Gene("Recup_Sommeil",RECUP_SOMMEIL,0.0005f,0.0004f,0.0005f,0.0004f,0.0003f,0.0005f,0.0005f,M,true));
+	genome.insert(genome.end(),Gene("Récolte",RECOLTE,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,F,false));
+	genome.insert(genome.end(),Gene("Agressivité",AGRESSIVITE,0.3333f,0.3333f,0.3333f,0.3333f,0.3333f,0.3333f,0.3333f,H,true));
+	genome.insert(genome.end(),Gene("Vivacité",VIVACITE,0.3f,0.3f,0.3f,0.3f,0.3f,0.3f,0.3f,GM,true));
+	genome.insert(genome.end(),Gene("Soins",SOINS,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,GM,false));
+	genome.insert(genome.end(),Gene("Seuil_Malade",SEUIL_MALADE,0.45f,0.45f,0.45f,0.45f,0.45f,0.45f,0.45f,m6,true));
+	genome.insert(genome.end(),Gene("Seuil_Comas",SEUIL_COMA,0.30f,0.30f,0.30f,0.30f,0.30f,0.30f,0.30f,m6,true));
+	genome.insert(genome.end(),Gene("Vieillissement",VIEILLISSEMENT,0.007f,0.007f,0.007f,0.007f,0.007f,0.007f,0.007f,M,true));
 
 	//Param_Etat(nom,unite,capacite, valeur, limite_basse_malade,limite_haute_malade,  limite_basse_coma,limite_haute_coma,
 	//			limite_basse_souffrance, limite_haute_souffrance, correction)
+
 	Sante = Param_Etat("Santé","Pdv",100.0f,80.0f,
 		genome[SEUIL_MALADE].valeur*genome[SANTE].valeur, (float)NULL,
 		genome[SEUIL_COMA].valeur*genome[SANTE].valeur, (float)NULL,
@@ -172,7 +146,7 @@ void Cocix::creation_Toto(int x_id, const bool verbal){
 		genome[HYDRO].valeur * (float)COMA_HYDRO, (float)NULL,	
 		genome[SOUFFRE_SOIF].valeur * genome[HYDRO].valeur, (float)NULL,		
 		(float) SOUFFRANCE_HYDRIQUE, 0.0f, 100.0f);
-	Temperature = Param_Etat("Temp.","°",37.5f,(float)NULL,
+	Temperature = Param_Etat("Temp.","°C",37.5f,37.0f,
 		(float)NULL, 40.0f,
 		36.0f,42.0f,
 		36.0f,40.0f,
@@ -190,11 +164,13 @@ void Cocix::creation_Toto(int x_id, const bool verbal){
 	balises.soif = false;
 
 	cout << " Terminée !\n";
-	Desire =  new Manger();
-	Action =  new Dormir();
+
+	Desire =  new Se_Reproduire();
+	Action =  new Se_Reproduire();
+	Action->set_temps_ecoule(3);
 	sauvegarde(verbal);
 	temp_exterieur = temperature(case_presence);
-	
+	//affiche(true);
 }
 
 void Cocix::creation_Titi(int x_id, bool verbal){
@@ -203,47 +179,47 @@ void Cocix::creation_Titi(int x_id, bool verbal){
 	// Paramètre d'identité
 	id = x_id;
 	strcpy(nom, "Titi");
-	strcpy(fichier,"[2]F_Titi.cox");
+	strcpy(fichier,"2.cox");
 	idPere = 0;
 	idMere = 0;
 	date_naissance = 35;
 	date_mort = 0;
 	sexe = FEMELLE;
-	case_presence = 9596;
+	case_presence = 9694;
 	case_naissance = 1010;
 	vieux = 25;
+	vivacite = 65;
 	recolte = 100;
+	id_partenaire = 1;
+	id_oeuf = 0;
 	// creation de son genome
 	
 	//Gene genome[MAX_GEN];
-	
-	genome[ASSIMILATION_CALORIQUE] = Gene("Assimilation Calorique",ASSIMILATION_CALORIQUE,8.0f,3.0f,2.0f,8.0f,4.0f,4.0f,2.0f);
-	genome[ASSIMILATION_HYDRIQUE] = Gene("Assimilation Hydrique",ASSIMILATION_HYDRIQUE,10.f,10.0f,2.0f,3.0f,3.0f,2.0f,2.0f);
-	genome[CALORIE] = Gene("Calorie",CALORIE,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f);
-	genome[FAIM] = Gene("Faim",FAIM,0.5f,0.65f,0.5f,0.65f,0.65f,0.65f,0.65f);
-	genome[FROID] = Gene("Froid",FROID,0.65f,0.65f,0.65f,0.65f,0.65f,0.65f,0.65f);
-	genome[HYDRO] = Gene("Hydro",HYDRO,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f);
-	genome[SANTE] = Gene("Sante",SANTE,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f);
-	genome[SATIETE] = Gene("Satiété",SATIETE,0.58f,0.58f,0.60f,0.65f,0.65f,0.65f,0.65f);
-	genome[SOIF] = Gene("Soif",SOIF,0.50f,0.60f,0.50f,0.50f,0.50f,0.50f,0.50f);
-	genome[TEMP] = Gene("Temp",TEMP,0.1f,0.1f,0.1f,0.1f,0.1f,0.1f,0.1f);	// en °C valeur d'échange avec l'extérieur: proportionnelle à la "carapace" du CoCiX
-	genome[VIEUX] = Gene("Vieux",VIEUX,20.0f,20.0f,20.0f,20.0f,20.0f,20.0f,20.0f);
-	genome[SOUFFRE_FAIM] = Gene("Souffre_Faim",SOUFFRE_FAIM,0.50f,0.30f,0.5f,0.3f,0.3f,0.3f,0.3f);
-	genome[SOUFFRE_SOIF] = Gene("Souffre_Soif",SOUFFRE_SOIF,0.8f,0.8f,0.4f,0.5f,0.8f,0.4f,0.3f);
-	genome[RECUP_SOMMEIL] = Gene("Recup_Sommeil",RECUP_SOMMEIL,0.0005f,0.0004f,0.0005f,0.0004f,0.0003f,0.0005f,0.0005f);
-	genome[RECOLTE] = Gene("Récolte",RECOLTE,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f);
-	genome[AGRESSIVITE] = Gene("Agressivité",AGRESSIVITE,0.3333f,0.3333f,0.3333f,0.3333f,0.3333f,0.3333f,0.3333f);
-	genome[VIVACITE] = Gene("Vivacité",VIVACITE,0.3f,0.3f,0.3f,0.3f,0.3f,0.3f,0.3f);
-	genome[SOINS] = Gene("Soins",SOINS,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f);
-	genome[SEUIL_MALADE] = Gene("Seuil_Malade",SEUIL_MALADE,0.45f,0.45f,0.45f,0.45f,0.45f,0.45f,0.45f);
-	genome[SEUIL_COMA] = Gene("Seuil_Comas",SEUIL_COMA,0.30f,0.30f,0.30f,0.30f,0.30f,0.30f,0.30f);
-	genome[VIEILLISSEMENT] = Gene("Vieillissement",VIEILLISSEMENT,0.00007f,0.00007f,0.00007f,0.00007f,0.00007f,0.00007f,0.00007f);
-
+	nb_genes = 21;
+	genome.insert(genome.end(),Gene("Assimilation Calorique",ASSIMILATION_CALORIQUE,8.0f,3.0f,2.0f,8.0f,4.0f,4.0f,2.0f,m6,false));
+	genome.insert(genome.end(),Gene("Assimilation Hydrique",ASSIMILATION_HYDRIQUE,10.f,10.0f,2.0f,3.0f,3.0f,2.0f,2.0f,m6,false));
+	genome.insert(genome.end(),Gene("Calorie",CALORIE,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,PM,false));
+	genome.insert(genome.end(),Gene("Faim",FAIM,0.5f,0.65f,0.5f,0.65f,0.65f,0.65f,0.65f,m6,true));
+	genome.insert(genome.end(),Gene("Froid",FROID,0.65f,0.65f,0.65f,0.65f,0.65f,0.65f,0.65f,H,true));
+	genome.insert(genome.end(),Gene("Hydro",HYDRO,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,GP,false));
+	genome.insert(genome.end(),Gene("Sante",SANTE,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,H,false));
+	genome.insert(genome.end(),Gene("Satiété",SATIETE,0.58f,0.58f,0.60f,0.65f,0.65f,0.65f,0.65f,m6,true));
+	genome.insert(genome.end(),Gene("Soif",SOIF,0.50f,0.60f,0.50f,0.50f,0.50f,0.50f,0.50f,GP,true));
+	genome.insert(genome.end(),Gene("Temp",TEMP,0.1f,0.1f,0.1f,0.1f,0.1f,0.1f,0.1f,PM,true));
+	genome.insert(genome.end(),Gene("Vieux",VIEUX,20.0f,20.0f,20.0f,20.0f,20.0f,20.0f,20.0f,PM,false));
+	genome.insert(genome.end(),Gene("Souffre_Faim",SOUFFRE_FAIM,0.50f,0.30f,0.5f,0.3f,0.3f,0.3f,0.3f,m6,true));
+	genome.insert(genome.end(),Gene("Souffre_Soif",SOUFFRE_SOIF,0.5f,0.8f,0.4f,0.5f,0.8f,0.4f,0.3f,m6,true));
+	genome.insert(genome.end(),Gene("Recup_Sommeil",RECUP_SOMMEIL,0.0005f,0.0004f,0.0005f,0.0004f,0.0003f,0.0005f,0.0005f,M,true));
+	genome.insert(genome.end(),Gene("Récolte",RECOLTE,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,F,false));
+	genome.insert(genome.end(),Gene("Agressivité",AGRESSIVITE,0.3333f,0.3333f,0.3333f,0.3333f,0.3333f,0.3333f,0.3333f,H,true));
+	genome.insert(genome.end(),Gene("Vivacité",VIVACITE,0.3f,0.3f,0.3f,0.3f,0.3f,0.3f,0.3f,GM,true));
+	genome.insert(genome.end(),Gene("Soins",SOINS,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,GM,false));
+	genome.insert(genome.end(),Gene("Seuil_Malade",SEUIL_MALADE,0.45f,0.45f,0.45f,0.45f,0.45f,0.45f,0.45f,m6,true));
+	genome.insert(genome.end(),Gene("Seuil_Comas",SEUIL_COMA,0.30f,0.30f,0.30f,0.30f,0.30f,0.30f,0.30f,m6,true));
+	genome.insert(genome.end(),Gene("Vieillissement",VIEILLISSEMENT,0.007f,0.007f,0.007f,0.007f,0.007f,0.007f,0.007f,M,true));
 	//Param_Etat(nom,unite,capacite, valeur, limite_basse_malade,limite_haute_malade,  limite_basse_coma,limite_haute_coma,
 	//			limite_basse_souffrance, limite_haute_souffrance, correction, plancher, plafond)
-	//Param Sante
-	//Calories
-	//Param Hydro
+
 
 	Sante = Param_Etat("Param Santé","Pdv",100.0f,80.0f,
 		genome[SEUIL_MALADE].valeur*genome[SANTE].valeur, (float)NULL,
@@ -277,8 +253,9 @@ void Cocix::creation_Titi(int x_id, bool verbal){
 	balises.froid = false;
 	balises.faim = false;
 	balises.soif = false;
-	Desire = new Dormir();
-	Action = new Boire();
+	Desire =  new Se_Reproduire();
+	Action =  new Se_Reproduire();
+	Action->set_temps_ecoule(3);
 	cout << " Terminée !\n";
 	sauvegarde(verbal);
 	temp_exterieur = temperature(case_presence);
@@ -290,7 +267,7 @@ void Cocix::creation_Titi(int x_id, bool verbal){
 //                                 G E T T E R S
 //*******************************************************************************************************************
 
-int Cocix::get_id()
+int Cocix::get_id() const
 {
 	return id;
 }
@@ -300,10 +277,58 @@ short Cocix::get_recolte()
 	return recolte;
 }
 
+int Cocix::get_id_partenaire() const
+{
+	return id_partenaire;
+}
 
+int Cocix::get_id_oeuf() const
+{
+	return id_oeuf;
+}
+
+short Cocix::get_case_presence() const
+{
+	return case_presence;
+}
+
+int Cocix::get_nb_genes() const
+{
+	return nb_genes;
+}
+
+int Cocix::get_idPere() const
+{
+	return idPere;
+}
+
+int Cocix::get_idMere() const
+{
+	return idMere;
+}
+
+short Cocix::get_date_naissance() const
+{
+	return date_naissance;
+}
+
+short Cocix::get_date_mort() const
+{
+	return date_mort;
+}
+
+char* Cocix::get_fichier()
+{
+	return fichier;
+}
 //******************************************************************************************************************
 //                                 S E T T E R S
 //*******************************************************************************************************************
+
+void Cocix::set_id(int x_id)
+{
+	id = x_id;
+}
 
 void Cocix::set_case_presence(short x_case_presence)
 {
@@ -333,6 +358,70 @@ void Cocix::set_recolte(short x_recolte)
 	recolte = x_recolte;
 }
 
+void Cocix::set_id_partenaire(int x_id)
+{
+	id_partenaire = x_id;
+}
+
+void Cocix::set_id_oeuf( int x_id)
+{
+	id_oeuf = x_id;
+}
+
+void Cocix::set_sexe(bool x_sexe)
+{
+	sexe = x_sexe;
+}
+
+void Cocix::set_fichier( char *x_fichier)
+{
+	strcpy(fichier, x_fichier);
+}
+
+void Cocix::set_idPere(int x_idPere)
+{
+	idPere = x_idPere;
+}
+
+void Cocix::set_idMere(int x_idMere)
+{
+	idMere = x_idMere;
+}
+
+void Cocix::set_nom(char *x_nom)
+{
+	strcpy(nom, x_nom);
+}
+
+void Cocix::set_date_naissance( short x_date)
+{
+	date_naissance = x_date;
+}
+
+void Cocix::set_date_mort( short x_date)
+{
+	date_mort = x_date;
+}
+
+void Cocix::set_case_naissance( short x_case)
+{
+	case_naissance = x_case;
+}
+
+void Cocix::set_vieux(short x_vieux)
+{
+	vieux = x_vieux;
+}
+
+void Cocix::set_vivacite(short x_vivacite)
+{
+	vivacite = x_vivacite;
+}
+
+void Cocix::set_nb_genes( int x_nb_genes)
+{
+	nb_genes = x_nb_genes;
+}
 //******************************************************************************************************************
 //                                V I V R E
 //*******************************************************************************************************************
@@ -383,6 +472,11 @@ bool Cocix::cortex_Etat(bool verbal){
 			// Pas de Cortex d'état
 			if(verbal) cout << "Je suis un oeuf ! (TODO)</br>";
 			// verifier la température
+			if(temp_exterieur < 10.0f)
+			{
+				if(verbal) cout << " Temp ext < 10°C<\n";
+				Temperature.modif(-genome[TEMP].valeur, &balises,verbal); // on diminue la température de Genes.temp.valeur
+			}
 			return (balises.vivant);
 		}
 		
@@ -421,13 +515,13 @@ bool Cocix::cortex_Etat(bool verbal){
 		{
 			if(verbal)
 			{
-				cout << Action->get_action() << " ne me fait pas perdre de température car ma température < 36°C\n";
+				cout << Action->get_action() << " ne me fait pas perdre de température car ma température < 36,5°C\n";
 			}
 		}
 		else
 		{
 			Temperature.modif(Action->get_chaleur(), &balises,verbal);
-			if(verbal) cout << Action->get_action() << " -> +" << Action->chaleur << "°C = " << Temperature.get_valeur() << "°C\n";
+			if(verbal) cout << Action->get_action() << " -> +" << Action->get_chaleur() << "°C = " << Temperature.get_valeur() << "°C\n";
 
 		}
 
@@ -444,7 +538,7 @@ bool Cocix::cortex_Etat(bool verbal){
      						¯      ¯      ¯   ¯  ¯                               ¯ 
 		*/
 		// depense en eau en fonction de l'action:
-		depense_eau = Action->eau + (Action->eau * correction / 100);
+		depense_eau = Action->get_eau() + (Action->get_eau() * correction / 100);
 		if(fecondee()) 
 		{
 			depense_eau += ( depense_eau * 0.1f ); //si fécondée 10% en plus
@@ -461,7 +555,7 @@ bool Cocix::cortex_Etat(bool verbal){
      						¯      ¯      ¯   ¯  ¯                                  ¯ 
 		*/
 		// depense en Calorie en fonction de l'action:
-		depense_calorie = Action->calorie;
+		depense_calorie = Action->get_calorie();
 		if(fecondee())
 		{
 			depense_calorie += (depense_calorie * 0.1f);	// si fécondée 10% en plus
@@ -534,11 +628,11 @@ bool Cocix::cortex_Etat(bool verbal){
         	{
         		Desire = new Dormir();
         		Action = new Dormir();
-        	} else if(malade())
+        	} 
+        	else if(malade())
         		Desire = new Se_Soigner();
-        	else if(fecondee())
-        		cout << "Pondre() ...non implémenté...";
-        		//Desire = new Pondre();
+        	else if(fecondee() && cycle_sexuel() == 4 && get_id_oeuf() !=0)
+        		Desire = new Pondre();
         	else if(soif())
         		Desire = new Boire();
         	else if(faim())
@@ -562,42 +656,53 @@ bool Cocix::cortex_Etat(bool verbal){
         						cout << "Agresser  ...non implémenté...";
         						//Desire = new Agresser();
         					else
-        						cout << "Se_Reproduire()  ...non implémenté...";
-        						//Desire = new Se_Reproduire();
+        						Desire = new Se_Reproduire();
         				} else 
         					Desire = new Dormir();	//Immature
-        			} else {
-        			//FEMELLE
-        				if(fecondee()){
-        					//femelle fécondée
-        					if(pleine())
-        						cout << "Deposer()  ...non implémenté...";
-        						//Desire = new Deposer();	//déposer sa récolte
-        					else
-        						Desire = new Recolter();
-        				} else {
-        					// femelle non fécondée
-        					if(cycle_sexuel() >=0  && cycle_sexuel() < 3 ){
-        						//Fertile
-        						if(agressive())
-        							cout << "Agresser()  ...non implémenté...";
-        							//Desire = new Agresser();
-        						else
-        							cout << "Se_Reproduire()  ...non implémenté...";
-        							//Desire = new Se_Reproduire();
-        					} else {
-        						// non fertile
-        						if(agressive())
-        							cout << "Agresser()  ...non implémenté...";
-        							//Desire = new Agresser();
-        						else {
-        							//recolte
-        							if(pleine())
-        								cout << "Deposer()  ...non implémenté...";
-        								//Desire = new Deposer();
+        			}
+        			else
+        			{
+        			//FEMELLE      				
+       					// femelle 
+       					if(cycle_sexuel() >=0  && cycle_sexuel() < 3 )
+       					{	
+       						if(fecondee())
+       						{	// non fécondable
+       							if(agressive())
+       								cout << "Agresser()  ...non implémenté...";
+       								//Desire = new Agresser();
+       							else
+       							{
+       								//recolte
+       								if(pleine())
+	        							Desire = new Deposer();
         							else
-        								Desire = new Recolter();
+	        							Desire = new Recolter();
         						}
+       						}
+       						else
+       						{
+       							//Fertile
+        						if(agressive())
+	       							cout << "Agresser()  ...non implémenté...";
+       								//Desire = new Agresser();
+       							else
+           							Desire = new Se_Reproduire();
+           					}
+       					}
+       					else
+       					{
+       						// non fertile
+       						if(agressive())
+       							cout << "Agresser()  ...non implémenté...";
+       							//Desire = new Agresser();
+       						else
+       						{
+       							//recolte
+       							if(pleine())
+        							Desire = new Deposer();
+        						else
+        							Desire = new Recolter();
         					}
         				}
         			}
@@ -613,8 +718,7 @@ bool Cocix::cortex_Etat(bool verbal){
         cout << "Crépuscule ...";
         // CRESPUSCULE
         	if(malade())
-        		cout << "Se_Soigner  ...non implémenté...";
-        		//Desire = new Se_Soigner();
+        		Desire = new Se_Soigner();
         	else if(soif())
         		Desire = new Boire();
         	else if(faim())
@@ -859,19 +963,47 @@ void Cocix::vieillissement(bool verbal){
 			| | | |¯ |_| |¯\ |  | |¯|  |  | |_| | | 
 */
 void Cocix::affiche(const bool genetique,const bool verbal){
-	cout<<"\nCocix n° "<< id << " : " << nom << " en " << case_presence << (rentree()?" rentré(e)\n":"\n");
+	cout<<"\nCocix n° "<< id << " : " << nom;
+	if(date_naissance > 0)
+	{	
+		cout << " en " << case_presence << (rentree()?" rentré(e)\n":"\n");
+		cout << ((sexe == MALE)?"Mâle ":"Femelle ");
+		if(vivant())
+		{
+			cout << "de " << age() << " jour(s)\n";
+			cout << "Cycle Sexuel = " << cycle_sexuel() << "\n";
+		}
+		else
+		{
+			cout << "Mort(e) à " << age() << " jour(s)\n";
+		}
+	}
+	else
+	{
+		cout << " - Oeuf dans CoCiX N°" << get_idMere() << "\n";
+	}
 
-	cout << ((sexe == MALE)?"Mâle de ":"Femelle de ");
-	cout << age() << " jour(s)\n";
+	if(fecondee())
+	{
+		cout << "Porte l'oeuf #" << get_id_oeuf() << "\n";
+	}
+
+	if(get_id_partenaire() !=0)
+	{
+		cout << "Partenaire n° " << get_id_partenaire() << "\n";
+	}
+
 	Sante.affiche(true,verbal);
 	Hydro.affiche(false, verbal);
 	Calorie.affiche(false, verbal);
 	Temperature.affiche(false, verbal);
+
 	affiche_balises();
+	cout << "Contient " << nb_genes << " gènes.\n";
 	if(genetique){
-		int i;
-		for(i=0;i<MAX_GEN;i++){
-			genome[i].affiche();
+		unsigned int i;
+		for(i=0;i <  genome.size();i++){
+			genome.at(i).affiche();
 		}
 	}
 	cout << "Je désire ";
@@ -907,7 +1039,7 @@ bool Cocix::malade(){
 	return balises.malade;
 }
 
-bool Cocix::fecondee(){
+bool Cocix::fecondee() const{
 	return balises.fecondee;
 }
 
@@ -929,7 +1061,8 @@ bool Cocix::pleine() const{
 		return(recolte >= genome[RECOLTE].valeur);
 }
 
-bool Cocix::male(){
+bool Cocix::male() const
+{
 	return (sexe == MALE);
 }
 
@@ -937,8 +1070,11 @@ bool Cocix::agressive(){
 	return balises.agressive;
 }
 
-short Cocix::age(){
+short Cocix::age() const
+{
 		JourNuit Jour_Nuit;
+		if(date_naissance == 0 ) return 0;
+
 		if(balises.vivant){
 			return (Jour_Nuit.jours - date_naissance);
 		} else {
@@ -946,7 +1082,8 @@ short Cocix::age(){
 		}
 }
 
-short Cocix::cycle_sexuel(){
+short Cocix::cycle_sexuel() const
+{
 	short cycle;
 	// on revoie en numérique  (-1,0,1,2,3,4)
 	// si age < age maturité sexuelle alors les Mâles & femelles sont immatures
@@ -978,6 +1115,26 @@ void Cocix::affiche_desire(const bool verbal)
 {
 	Desire->affiche_desire(verbal);
 }
+
+void Cocix::prend_temperature(const bool verbal)
+{
+	if(get_date_naissance() == 0 )
+		{
+			// je prend la température de la case de la mère
+			Cocix *maman;
+			if(verbal) cout << "Je prend la température de la case de ma mère\n";
+			maman = new Cocix( get_idMere(), false, verbal);
+			temp_exterieur = temperature(maman->get_case_presence());
+			delete maman;
+		}
+		else
+		{
+			temp_exterieur = temperature(case_presence);
+		}
+
+}
+
+
 /********************************************************************************************************************
 										FICHIERS
 */
@@ -1007,7 +1164,10 @@ bool Cocix::sauvegarde(bool verbal){
     	f.write ((char*) &case_presence, sizeof (short));
     	f.write ((char*) &case_naissance, sizeof (short));
     	f.write ((char*) &vieux , sizeof (short));
+    	f.write ((char*) &vivacite , sizeof(short));
     	f.write ((char*) &recolte, sizeof(short));
+    	f.write ((char*) &id_partenaire, sizeof(int));
+    	f.write ((char*) &id_oeuf, sizeof(int));
     	// balises etat
     	f.write ((char*) &balises.fecondee ,1);
     	f.write ((char*) &balises.vivant ,1);
@@ -1023,10 +1183,23 @@ bool Cocix::sauvegarde(bool verbal){
     	Calorie.sauvegarde(&f);
     	Hydro.sauvegarde(&f);
     	Temperature.sauvegarde(&f);
+
+
+
+    	// on sauvegarde le nombre de Genes
+    	f.write ((char*) &nb_genes, sizeof(int));
+    	if(verbal) cout << "sauvegarde des " << nb_genes << " Gène(s).\n";
     	
     	// Sauvegarde Genome
-    	if(verbal) cout << " taille du genome : " << sizeof(Gene) << " Oc x " << MAX_GEN << " Gènes = " << (sizeof(Gene)+MAX_GEN) << " Oc\n";
-    	f.write ((char*) &genome, (sizeof(Gene) * MAX_GEN ));
+    	int i = 0, total = 0;
+    	do
+    	{
+    		genome[i].sauvegarde(&f);
+    		total += sizeof(Gene);
+    	} while( ++i < nb_genes);
+
+    	if(verbal) cout << "Taille des Genes = " << total << "\n";
+    	//f.write ((char*) &genome, sizeof(genome) );
 
     	// Sauvegarde Action 
     	Action->sauvegarde(&f);
@@ -1065,7 +1238,11 @@ bool Cocix::chargement(bool verbal){
     	f.read((char*) &case_presence, sizeof(short));
     	f.read((char*) &case_naissance, sizeof(short));
     	f.read((char*) &vieux, sizeof(short));
+    	f.read((char*) &vivacite, sizeof(short));
     	f.read((char*) &recolte, sizeof(short));
+    	f.read((char*) &id_partenaire, sizeof(int));
+    	f.read((char*) &id_oeuf, sizeof(int));
+
     	// balises etat
     	f.read ((char*) &balises.fecondee ,1);
     	f.read ((char*) &balises.vivant ,1);
@@ -1084,7 +1261,20 @@ bool Cocix::chargement(bool verbal){
     	Temperature.charge(&f);
 
     	// charge Genome
-    	f.read ((char*) &genome, (sizeof(Gene) * MAX_GEN ));
+    	// on récupère le nombre de gènes
+    	f.read((char*) &nb_genes, sizeof(int));
+    	//f.read ((char*) &genome, (sizeof(Gene) * MAX_GEN ));
+    	//cout << "Taille du genome = " << sizeof(genome) << "\n";
+    	if(verbal) cout << "Chargement des " << nb_genes << " Gène(s).\n";
+    	int i = 0;
+    	Gene *gene;
+    	do
+    	{
+    		gene  = new Gene();
+    		gene->charge(&f);
+    		genome.insert(genome.end(),*gene);
+    	} while(++i < nb_genes);
+    	delete gene;
 		
 		// charge NumAction
 		short numAction,x_temps_ecoule;
@@ -1120,6 +1310,18 @@ bool Cocix::chargement(bool verbal){
 				break;
 			case DEPOSER:
 				Action = new Deposer();
+				break;
+			case SE_REPRODUIRE:
+				Action = new Se_Reproduire();
+				break;
+			case CHERCHE_PARTENAIRE:
+				Action = new Cherche_Partenaire();
+				break;
+			case PONDRE:
+				Action = new Pondre();
+				break;
+			case CHERCHE_CASE_LIBRE:
+				Action = new Cherche_Case_Libre();
 				break;
 			default:
 				cout << "ERREUR: Je n'ai pas trouvé l'Action : " << numAction << "->Action init à Dormir()...";
@@ -1162,6 +1364,18 @@ bool Cocix::chargement(bool verbal){
 			case DEPOSER:
 				Desire = new Deposer();
 				break;
+			case SE_REPRODUIRE:
+				Desire = new Se_Reproduire();
+				break;
+			case CHERCHE_PARTENAIRE:
+				Desire = new Cherche_Partenaire();
+				break;
+			case PONDRE:
+				Desire = new Pondre();
+				break;
+			case CHERCHE_CASE_LIBRE:
+				Desire = new Cherche_Case_Libre();
+				break;	
 			default:
 				cout << "ERREUR: Je n'ai pas trouvé le Desire : " << numDesire << "->Desire init à Dormir()...";
 				Desire = new Dormir();

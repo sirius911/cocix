@@ -21,10 +21,10 @@ void Cherche_Recolte::charge(){
 	set_id( 17 );
 	strcpy(action, "je cherche de la nourriture à récolter");
 	strcpy(desire, "Chercher récolte");
-	chaleur = 0.02f;
-	eau = 1.0f;
-	calorie = 1.0f;
-	set_duree(0);
+	set_chaleur( 0.02f);
+	set_eau( 1.0f);
+	set_calorie( 1.0f);
+	set_duree( 0);
 	deplacement = true;
 	peut_etre_stoppee = true;
 }

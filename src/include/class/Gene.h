@@ -2,6 +2,7 @@
 #define DEF_CLASS_GENE
 
 #include <string>
+#include <fstream>
 
 using namespace std;
 
@@ -10,7 +11,7 @@ class Gene
 	public:
 
 		Gene();	//constructeur
-		Gene(const char[30] ,int ,float ,float,float, float, float, float, float);
+		Gene(const char[30] ,int ,float ,float,float, float, float, float, float, int, bool);
 
 		char nom[30];	// nom unique
 		int id;				// Id unique
@@ -21,11 +22,18 @@ class Gene
 		float gp_pere;		// grand-père Paternel
 		float gm_mere;		// grand-mère Maternelle
 		float gm_pere;		// grand-mère Paternelle
-		//string influent; //Garder ?
+		int mod_trans;		// mode de transmission
+		bool pourc;			// est un pourcentage
 
 		//methodes
 
 		void affiche();
+		const char* trans();
+		int sauvegarde(ofstream*);
+		int charge(ifstream*);
+
+	private:
+		const string affiche(const float);
 };
 
 #endif

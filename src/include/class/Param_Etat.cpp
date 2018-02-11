@@ -40,7 +40,7 @@ Param_Etat::Param_Etat(const char x_nom[20], const char x_unite[3], float x_capa
 
 	void Param_Etat::affiche(bool pourcentage, bool limite){
 		bool tab1=false,tab2 = false;
-		cout << "<" << fixed <<  setw(7) << nom << ">\t => " << setprecision(2)<< setw(9);
+		cout << "\n<" << fixed <<  setw(7) << nom << ">\t => " << setprecision(2)<< setw(9);
 		if(pourcentage)
 			cout << get_valeur(pourcentage)*100 << "\%";
 		else
@@ -139,7 +139,7 @@ void Param_Etat::verif_bornes(const bool verbal)
 {
 
 		// On controle les plafonds
-		if(verbal) cout << "		***** Controle du plancher & plafond pour [" << get_nom() << "] *****\n";
+		if(verbal) cout << "\n		***** Controle du plancher & plafond pour [" << get_nom() << "] *****\n";
 
 		if(valeur < plancher) 
 		{

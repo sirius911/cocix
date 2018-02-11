@@ -149,18 +149,7 @@ depend:
 	makedepend $(SRC)
 # DO NOT DELETE
 
-obj/Boire.o: src/include/class/Actions/Boire.cpp src/include/class/Actions/Boire.h
-obj/Boire.o: src/include/class/Actions/Actions.h
-obj/Boire.o: src/include/class/Cocix.h
-obj/Boire.o: src/include/constantes.h
-obj/Boire.o: src/include/class/Gene.h
-obj/Boire.o: src/include/class/Param_Etat.h
-obj/Boire.o: src/include/class/Actions/Actions.h
-obj/Boire.o: src/include/monde.h
-obj/Boire.o: src/include/constantes.h src/include/io.h
-obj/Boire.o: src/include/class/Actions/Cherche_Eau.h
-obj/Dormir.o: src/include/class/Actions/Dormir.h
-obj/Dormir.o: src/include/class/Actions/Actions.h
+
 
 
 	

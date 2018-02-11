@@ -58,9 +58,9 @@ void Recolter::charge()
 	set_id(15);
 	strcpy(action, "je récolte");
 	strcpy(desire, "Recolter");
-	chaleur = 0.05f;
-	eau = 1.0f;
-	calorie = 1.0f;
+	set_chaleur(0.05f);
+	set_eau(1.0f);
+	set_calorie(1.0f);
 	set_duree(3);
 	deplacement = false;
 	peut_etre_stoppee = false;
