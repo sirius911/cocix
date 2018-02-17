@@ -14,7 +14,7 @@ Boire::Boire(){
 
 bool Boire::valide_Action(const Cocix* cocix , bool verbal){
 	if(verbal) cout << " Y-a-t-il de l'eau sur ma case ?... ";
-	return(humidite(cocix->case_presence) > 0);
+	return(humidite(cocix->get_case_presence()) > 0);
 }
 
 void Boire::charge(){
@@ -36,7 +36,7 @@ void Boire::go(Cocix *cocix,bool verbal){
 	float quantite_prise, dim_temp;
 	struct struct_xy xy;
 
-	case_boisson = cocix->case_presence;
+	case_boisson = cocix->get_case_presence();
 	xy  = case_to_xy(case_boisson);
 
 	cout <<  "...................................................\n";

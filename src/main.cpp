@@ -37,12 +37,14 @@ int main(int nbArg, char* argv[])
 	char commande[20] = "";
 	char choix[] = "";
 	Cocix *CoCiX = NULL;
+	//Cocix *CoCiX = new Cocix("1.cox",true);
 	int i;
 	bool sortie = false;
 	bool verbal = false;
 	bool sauvegarde = false;
 	char prompt[30] = "<[noSav][muet] Aucun CoCiX >";
 	char nomCocix[15] = "Aucun CoCiX";
+	char nomFichier[30];
 
 	cout << "\f";
 	cout << " _____   _____   _____   _  __    __ \n";
@@ -75,7 +77,11 @@ int main(int nbArg, char* argv[])
 				int i = atoi(choix);
 				if(i > 0 && i <= (int) listeFichiers.size())
 				{
-					CoCiX = new Cocix(listeFichiers[i-1],verbal);
+					if( ! (CoCiX == (void*) NULL ))
+						delete CoCiX;
+
+					strcpy(nomFichier,listeFichiers[i-1]);
+					CoCiX = new Cocix(nomFichier,verbal);
 
 					if(CoCiX->get_id() > 0 )
 					{ 
@@ -109,11 +115,45 @@ int main(int nbArg, char* argv[])
 					{
 						cout << "Case où le CoCiX veut aller ? : ";
 						cin >> i;
-						CoCiX->deplace( aller (CoCiX->case_presence,i,verbal),verbal);
+						CoCiX->deplace( aller (CoCiX->get_case_presence(),i,verbal),verbal);
 					} else {
 						cout << "Aucune CoCix chargée ... (load)\n";
 					}
 				
+			} else if((strcmp(commande,"parents") == 0))
+			{
+					if( !(CoCiX == (void*) NULL ))
+					{	
+						cout << "Père : " << CoCiX->get_idPere() << "\n";
+						cout << "Mère : " << CoCiX->get_idMere() << "\n";
+					} else {
+						cout << "Aucune CoCix chargée ... (load)\n";
+					}
+			}
+			else if((strcmp(commande,"setAncetre")==0))
+			{
+					if( !(CoCiX == (void*) NULL ))
+					{	
+						int i = 0;
+						int val;
+						do
+						{
+							cout << "Ancetre N° " << i << " : ";
+							cin >> val;
+							CoCiX->set_ancetre(i,val);
+						} while (++i < 30);
+						CoCiX->ancetre();
+					} else {
+						cout << "Aucune CoCix chargée ... (load)\n";
+					}
+			} else if((strcmp(commande,"ancetre")==0))
+			{
+					if( !(CoCiX == (void*) NULL ))
+					{	
+						CoCiX->ancetre();
+					} else {
+						cout << "Aucune CoCix chargée ... (load)\n";
+					}
 			}
 			else if((strcmp(commande,"help")==0) || (strcmp(commande,"h") == 0))
 			{
@@ -123,6 +163,7 @@ int main(int nbArg, char* argv[])
 					cout << "\taffiche\t\tAffiche les infos du CoCiX chargé.\n";
 					cout << "\tafficheCase\t\tAffiche les infos d'une case.\n";
 					cout << "\tbalises\t\tAffiche les balises du CoCiX chargé.\n";
+					cout << "\tancetre\t\tAffiche les ancetres du CoCiX\n";
 					cout << "\tcortexEtat\t\tLance la méthode cortex_etat() du CoCiX chargé.\n";
 					cout << "\tcortexAction\t\tLance la méthode cortex_action() du CoCiX chargé.\n";
 					cout << "\tcouveuse\t\tAffiche les oeufs.\n";
@@ -283,7 +324,7 @@ int main(int nbArg, char* argv[])
 			{
 					if( ! (CoCiX == (void*) NULL ))
 					{
-						affiche_grille(CoCiX->case_presence);
+						affiche_grille(CoCiX->get_case_presence());
 					} else 
 					{
 						cout << "Numero de case ? : ";
@@ -295,7 +336,7 @@ int main(int nbArg, char* argv[])
 			{
 					if( ! (CoCiX == (void*) NULL ))
 					{
-						affiche_case(CoCiX->case_presence,verbal);
+						affiche_case(CoCiX->get_case_presence(),verbal);
 					} else 
 					{
 						cout << "Numero de case ? : ";
@@ -307,7 +348,7 @@ int main(int nbArg, char* argv[])
 			{
 					if( ! (CoCiX == (void*) NULL ))
 					{
-						cout << "Il y a "<< humidite(CoCiX->case_presence) << "uml sur " <<CoCiX->case_presence<<"\n";
+						cout << "Il y a "<< humidite(CoCiX->get_case_presence()) << "uml sur " <<CoCiX->get_case_presence()<<"\n";
 					} else 
 					{
 						cout << "Numero de case ? : ";
@@ -318,7 +359,7 @@ int main(int nbArg, char* argv[])
 			{
 					if( ! (CoCiX == (void*) NULL ))
 					{
-						cout << "Il y a "<< nourriture(CoCiX->case_presence) << "cal sur " <<CoCiX->case_presence<<"\n";
+						cout << "Il y a "<< nourriture(CoCiX->get_case_presence()) << "cal sur " <<CoCiX->get_case_presence()<<"\n";
 					} else 
 					{
 						cout << "Numero de case ? : ";
@@ -329,7 +370,7 @@ int main(int nbArg, char* argv[])
 			{
 					if( ! (CoCiX == (void*) NULL ))
 					{
-						nbCocix(CoCiX->case_presence);
+						cout << "Il y a " << nbCocix(CoCiX->get_case_presence()) << " CoCiX\n";
 					} else 
 					{
 						cout << "Numero de case ? : ";
@@ -346,7 +387,20 @@ int main(int nbArg, char* argv[])
 					} else {
 						cout << "Aucune CoCix chargée ... (load)\n";
 					}
+			} else if ((strcmp(commande,"temperature")==0))
+			{
+					if( ! (CoCiX == (void*) NULL )){
+						cout << "Valeur température : ";
+						float entree;
+						cin >> entree;
+						CoCiX->Temperature.set_valeur(entree,&CoCiX->balises,false);
+						cout << "\n";
+					} else {
+						cout << "Aucune CoCix chargée ... (load)\n";
+					}
+
 			} else if ((strcmp(commande,"vie")==0))
+			
 			{
 					if( ! (CoCiX == (void*) NULL )){
 						CoCiX->vie(verbal);

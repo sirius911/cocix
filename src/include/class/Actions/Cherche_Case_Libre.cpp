@@ -46,7 +46,7 @@ void Cherche_Case_Libre::go(Cocix *cocix, const bool verbal){
 			cout << "\nJe bouge ...";
 		}
 		// je bouge en case_arrivée
-		if(bouge(cocix->id, cocix->case_presence, case_arrivee, verbal)) 
+		if(bouge(cocix->id, cocix->get_case_presence(), case_arrivee, verbal)) 
 		{
 				cocix->set_case_presence(case_arrivee);
 				if(verbal) cout << " en " << case_arrivee << "...\n";
@@ -64,10 +64,10 @@ void Cherche_Case_Libre::go(Cocix *cocix, const bool verbal){
 	{
 		// je bouge au hasard
 		if(verbal) cout << "Pas de place libres autour de moi... je bouge au hasard \n"; 
-		case_arrivee = case_hasard(cocix->case_presence);
+		case_arrivee = case_hasard(cocix->get_case_presence());
 	}
 
-	if(bouge(cocix->id, cocix->case_presence, case_arrivee, verbal)) 
+	if(bouge(cocix->id, cocix->get_case_presence(), case_arrivee, verbal)) 
 	{
 				cocix->set_case_presence(case_arrivee);
 				if(verbal) cout << " en " << case_arrivee << "...\n";

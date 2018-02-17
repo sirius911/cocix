@@ -63,8 +63,8 @@ void Deposer::go(Cocix* cocix,bool verbal)
 		set_action_terminee(true);
 	}
 
-	if(verbal) cout << ", je dépose "<< quantiteDeposee << " Cal sur la case " << cocix->case_presence << ".\n";
-	ajoute_element(cocix->case_presence , (float) quantiteDeposee, NOURRITURE);
+	if(verbal) cout << ", je dépose "<< quantiteDeposee << " Cal sur la case " << cocix->get_case_presence() << ".\n";
+	ajoute_element(cocix->get_case_presence() , (float) quantiteDeposee, NOURRITURE);
 	cocix->set_recolte(cocix->get_recolte() - quantiteDeposee);
 	if(verbal)
 	{

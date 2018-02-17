@@ -13,12 +13,13 @@ Param_Etat::Param_Etat(const char x_nom[20], const char x_unite[3], float x_capa
 	float x_limite_basse_malade, float x_limite_haute_malade, 
 	float x_limite_basse_coma, float x_limite_haute_coma,  
 	float x_limite_basse_souffrance,float x_limite_haute_souffrance,  
-	float x_correction_souffrance, float x_plancher, float x_plafond){
+	float x_correction_souffrance, float x_plancher, float x_plafond)
+{
 	strcpy(nom, x_nom);
 	strcpy(unite, x_unite);
 	capacite = x_capacite;
 	valeur = x_valeur;
-	if(valeur > capacite) valeur = capacite;
+	if(capacite != (float) NULL && valeur > capacite) valeur = capacite;
 
 	//Limite rendant malade
 	limite_haute_malade = x_limite_haute_malade;

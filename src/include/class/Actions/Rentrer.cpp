@@ -42,15 +42,15 @@ void Rentrer::go(Cocix *cocix,bool verbal)
 	le_temps_s_ecoule(verbal);
 
 	// verifi qu'on est pas déjà arrivé
-	if(cocix->case_presence == cocix->case_naissance){
+	if(cocix->get_case_presence() == cocix->get_case_naissance()){
 		if(verbal) cout << "Je suis déjà arrivé(e) !\n";
 		set_action_terminee(true);
 		//case_arrivee = case_naissance;
 		return;
 	}
 		
-	case_arrivee = aller(cocix->case_presence , cocix->case_naissance, verbal);
-	if(bouge(cocix->get_id(),cocix->case_presence, case_arrivee, verbal))
+	case_arrivee = aller(cocix->get_case_presence() , cocix->get_case_naissance(), verbal);
+	if(bouge(cocix->get_id(),cocix->get_case_presence(), case_arrivee, verbal))
 	{
 			if( cocix->rentree() )
 			{

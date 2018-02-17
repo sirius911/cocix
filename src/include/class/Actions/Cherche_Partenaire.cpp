@@ -35,7 +35,7 @@ void Cherche_Partenaire::go(Cocix *cocix, const bool verbal){
 	cout << "CHERCHE un partenaire ....\n";
 
 	short case_arrivee;
-	case_arrivee = meilleur_case_partenaire( cocix->case_presence, cocix ,verbal);
+	case_arrivee = meilleur_case_partenaire( cocix->get_case_presence(), cocix ,verbal);
 
 	if(case_arrivee > 0){
 		if(verbal)
@@ -53,11 +53,11 @@ void Cherche_Partenaire::go(Cocix *cocix, const bool verbal){
 	{
 		// je bouge au hasard
 		if(verbal) cout << "... au hasard \n"; 
-		case_arrivee = case_hasard(cocix->case_presence);
+		case_arrivee = case_hasard(cocix->get_case_presence());
 	}
-	if(bouge(cocix->id, cocix->case_presence, case_arrivee, verbal)) 
+	if(bouge(cocix->id, cocix->get_case_presence(), case_arrivee, verbal)) 
 	{
-				cocix->case_presence = case_arrivee;
+				cocix->set_case_presence(case_arrivee);
 				if(verbal) cout << " en " << case_arrivee << "...\n";
 				set_action_terminee(true);
 	}

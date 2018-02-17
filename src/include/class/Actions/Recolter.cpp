@@ -40,7 +40,7 @@ bool Recolter::valide_Action(const Cocix* cocix , const bool verbal)
 	{
 		if(verbal) cout << "Oui.\tY-a-t-il de la nourriture sur ma case ? ";
 
-		if(nourriture(cocix->case_presence) > 0)
+		if(nourriture(cocix->get_case_presence()) > 0)
 		{
 			if(verbal) cout << "Oui => ";
 			return true;
@@ -71,7 +71,7 @@ void Recolter::charge()
 void Recolter::go(Cocix* cocix,bool verbal)
 {
 	float quantite_prise;
-	float case_recolte = cocix->case_presence;
+	float case_recolte = cocix->get_case_presence();
 	struct struct_xy xy;
 
 	xy  = case_to_xy(case_recolte);

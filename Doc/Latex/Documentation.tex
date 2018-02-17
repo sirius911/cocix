@@ -73,11 +73,10 @@ Ce module s'occupe de la base de donnée \textbf{Monde} (voir \ref{bd_monde} pag
 Ce module doit permettre à l'utilisateur, d'étudier les évolutions statistiques de sa colonie, tant du point de vue \emph{systémique} (Évolution des états généraux des \CoCiX) que \emph{génétique} (Évolution du Génome et des maladies liées)
 
 \subsection{Les langages}
-Les programmes et modules faisant vivre les \CoCiX ainsi que les différents cycles, seront écrit en \textbf{Programmation Objet}. La Base de Données sera gérée en ?TODO?.
+Les programmes et modules faisant vivre les \CoCiX ainsi que les différents cycles, seront écrit en \textbf{Programmation Objet}. La Base de Données sera gérée en interne.
 
 %\includegraphics{images/python-3}
 %\includegraphics[width=3cm]{images/logo-mysql}
-Plusieurs modules pour les statistiques, les arbres généalogiques etc... sont écrit en SWI-PROLOG. (voir chapitre \ref{prolog} page \pageref{prolog})
 
 Les programmes seront hébergés sur un serveur personnel, ce serveur fonctionnant en permanence 24h/24, les utilisateurs devront se connecter sur un compte pour accéder à la gestion de leurs \CoCiX. La gestion et la consultation se fera par l'intermédiaire de page en html/php sur un serveur \textbf{APACHE}.
 
@@ -92,19 +91,19 @@ Dans cette section, nous allons décrire les différents types de \textit{param�
 \item Les Paramètres "\textit{d'identité}": Ce sont des \textit{attributs} simples, comme le nom, date de naissance, positionnement etc...(page \pageref{identite})
 \item L'attribut \textbf{.Gene} est un tableau de tous les gènes de la \CoCiX.( voir chap \ref{genetique} page \pageref{genome})
 
-\item Les Paramètres "\textit{d'état}", comme la santé, la température etc...Ces paramètres fluctuent tout le long de la vie de la \CoCiX. Ils sont issus d'un patrimoine génétique et influencés par les gènes ainsi que par son activité ou le monde extérieur. Ils sont représentés par des  \textit{attributs} simple.(chap \ref{param_etat} \pageref{param_etat})
+\item Les Paramètres "\textit{d'état}", comme la santé, la température etc...Ces paramètres fluctuent tout le long de la vie de la \CoCiX. Ils sont issus d'un patrimoine génétique et influencés par les gènes ainsi que par son activité ou le monde extérieur. Ils sont représentés par des  \textit{Objets}.(chap \ref{param_etat} \pageref{param_etat})
 
-\item les Paramètres "\textit{génétiques}": comme le sexe, la couleur des yeux, l'agressivité, etc. Les Paramètres génétiques ne sont pas modifiables et sont acquis à la procréation par l'hérédité, ou par l'utilisateur lors de la création d'une \CoCiX. Ils sont représentés par des attributs simples.(page \pageref{genetique}).
+\item les Paramètres "\textit{génétiques}": comme le sexe, la couleur des yeux, l'agressivité, etc. Les Paramètres génétiques ne sont pas modifiables et sont acquis à la procréation par l'hérédité, ou par l'utilisateur lors de la création d'une \CoCiX. Ils sont représentés par un \textit{vector} d'\textit{Objet} \textbf{Genes}.(page \pageref{genetique}).
 
 
 \item Les Paramètres \textit{secondaires}, qui sont en général des \textit{attributs} lié à des actions ou des états spécifiques du \CoCiX.(partenaire, \textbf{.id\_oeuf}, etc\dots)(page \pageref{param_second})
 
-\item Le Paramètre \textbf{desire} qui est un \textit{Objet} représentant le désire de la \CoCiX.Il est déterminé par le \textit{Cortex d'Etat}.
+\item Le Paramètre \textbf{desire} qui est un \textit{Objet} dérivé de la Classe \textbf{Action} représentant le désire de la \CoCiX.Il est déterminé par le \textit{Cortex d'Etat}.
 
-\item Les Paramètres \textit{d'Action}, sont des variables \textit{Objets} correspondant à des actions.(page \pageref{param_action})\\
+\item Les Paramètres \textit{d'Action}, sont des \textit{Objets} dérivés de la Classe \textbf{Actions}.(page \pageref{param_action})\\
 \end{itemize}
 
-Nous verrons ensuite les \textit{balises d'alerte}, qui sont des variables booléennes, informant  le \CoCiX d'un état nécessitant une action ( Faim, Soif, Froid etc\dots)(page \pageref{balise}).
+Nous verrons ensuite les \textit{balises d'alerte}, qui sont des variables booléennes, informant  le \CoCiX d'un état nécessitant une action ( Faim, Soif, Froid etc\dots)(page \pageref{balise}). Ils sont mis en \textit{structure}.
 
 \newpage
 
@@ -124,57 +123,102 @@ Après \underline{le nom} de l'élément, vous avez, entre parenthèse, le nom d
 \textit{exemple }: 
 F4335\\
 
+%fichier
+\item[]\textbf{\underline{Fichier de sauvegarde (.fichier)}} : Chaque \CoCiX est stocké sur le disque dur dans le répertoire indiqué par la \textit{variable Globale} \textbf{REPERTOIRE\_NID}, dans un fichier binaire dont le nom est dans l'attribut .fichier. Le nom du fichier est de la forme XXX.ext, avec XXX son numéro d'identification (\textbf{id}). Pour un \CoCiX vivant et né, l'extension du fichier est \textbf{.cox}, pour un \CoCiX encore au stade d'oeuf, \textbf{.oeuf}.\\
+
+
 %IDPere,IDMere
 \item[]\textbf{\underline{Filiation (.idPere,.idMere)}} : C'est deux nombres sont les IDs du père et de la mère du \CoCiX. Si elle a été crée par l'utilisateur, c'est deux variables sont mises à 0, pour indiquer qu'il n'y a pas d'ascendant.\\
 
 %DATE_NAISSANCE
-\item[]\textbf{\underline{Date de naissance (.dateNaissance)}}: Indique la date de la procréation ou de la création si c'est un utilisateur qui a crée le \CoCiX. La variable est un entier et correspond au jour donné par la fonction \textit{Cycle.jour}.\\
+\item[]\textbf{\underline{Date de naissance (.date\_naissance)}}: Indique la date de la procréation ou de la création si c'est un utilisateur qui a crée le \CoCiX. La variable est un entier et correspond au jour donné par la fonction \textit{Cycle.jour}.\\
 
+%Date_Mort
+\item[]\textbf{\underline{Date de mort (.date\_mort)}}: Au jour de la mort d'un \CoCiX, \textbf{.date\_mort} est initialisé avec le jour renvoyé par la fonction Cycle.jour.\\
+ 
 % Sexe
 \item[]\textbf{\underline{Sexe (.sexe)} }: Détermine le sexe du \CoCiX. Il sera matérialisé par une variable Booléenne (\textbf{False} pour Femelle et \textbf{True} pour Mâle).\\ 
 
 % Localisation
-\item \textbf{\underline{Localisation (.case et .caseNaissance)}} :  Le \CoCiX se déplace dans un \textit{Monde} fermé à 2 dimensions (voir chapitre \ref{carte_monde} page \pageref{carte_monde}).
+\item \textbf{\underline{Localisation (.case\_presence et .case\_naissance)}} :  Le \CoCiX se déplace dans un \textit{Monde} fermé à 2 dimensions (voir chapitre \ref{carte_monde} page \pageref{carte_monde}).
 
-Pour connaître l'emplacement d'un \CoCiX, nous avons un \textit{identifiant de case} \textbf{.case}(voir chapitre \ref{coordonnees} page \pageref{coordonnees}).
+Pour connaître l'emplacement d'un \CoCiX, nous avons un \textit{identifiant de case} \textbf{.case\_presence}(voir chapitre \ref{coordonnees} page \pageref{coordonnees}).
 
-Il y a aussi un autre \textit{identifiant de case}, \textbf{.caseNaissance}, indiquant l'emplacement de sa naissance (ou \textbf{Nid}). Il sera pour elle, un endroit de repos, de soins etc\dots \label{nid}\\
+Il y a aussi un autre \textit{identifiant de case}, \textbf{.case\_naissance}, indiquant l'emplacement de sa naissance (ou \textbf{Nid}). Il sera pour elle, un endroit de repos, de soins etc\dots \label{nid}\\
 
 %vieux
 \item \underline{\textbf{Vieillesse (.vieux})} : Nombre de jour à partir de la procréation, qui détermine l'âge  "\textit{Vieux}" d'un \CoCiX. \label{vieillesse}
-Il est déterminé à la naissance, par le gène \textbf{gene[vieux]}, (voir page \pageref{liste_gene}), et modifié d'un facteur aléatoire de + ou - 10\%.
+Il est déterminé à la naissance, par le gène \textbf{gene[vieux]}, (voir page \pageref{liste_gene}).
 
 Un \CoCiX rentre dans l'âge "vieux" en général vers le $20^{eme}$ jours.
 
 Quand il devient "\emph{vieux}", le \CoCiX décline en santé (voir chapitre \ref{vieillissement} page \pageref{vieillissement}).\\
-Une \emph{méthode} existe pour savoir si un \CoCiX est vieux : \\
+Une \emph{méthode} existe pour connaître l'étape d'un \CoCiX : \\
 
 \begin{lstlisting}
-Methode .isVieille():
-	#Renvoi vrai si l'age de la CoCiX est > a vieux
-		Retourne .age > .vieux
+short Cocix::etape(){
+	short age;
+	age = (int) this->age();
+	if(age <= 1) return ETAT_OEUF;
+	if(age > 1 && age < MATURITE) return ETAT_BEBE;
+	if(age >= MATURITE && age < vieux) return ETAT_ADULTE;
+	return ETAT_VIEUX;
+}
 \end{lstlisting}	
 \end{description}
-
+La méthode renvoi un short. Les variables globales permettent de connaitre la signification:
+\begin{itemize}
+	\item ETAT\_OEUF : Le \CoCiX est un oeuf.
+	\item ETAT\_BEBE : Le \CoCiX est un bébé (- de 4 jours).
+	\item ETAT\_ADULTE : Le \CoCiX est adulte.
+	\item ETAT\_VIEUX : Le \CoCiX est vieux. 
+\end{itemize} 
 
 \subsection{Paramètres \textit{d'état} des \CoCiX}\label{param_etat}
-Les paramètres d'état sont des \textit{attributs} (variables) informant de tous les signes vitaux des \CoCiX. Ils sont au nombre de 4 principaux.\\
+Les paramètres d'état sont des \textit{Objet} de la classe Param\_Etat informant de tous les signes vitaux des \CoCiX. Ils sont au nombre de 4.\\
 
 Vous avez : 
 \begin{enumerate}
-\item Santé (\textbf{.sante} p\pageref{sante})
-\item Calorique (\textbf{.calorie} p\pageref{alimentation})
-\item Hydrique (\textbf{.hydro} p\pageref{hydro})
-\item Température (\textbf{.temperature} p\pageref{temperature})
+\item Santé (\textbf{.Sante} p\pageref{sante})
+\item Calorique (\textbf{.Calorie} p\pageref{alimentation})
+\item Hydrique (\textbf{.Hydro} p\pageref{hydro})
+\item Température (\textbf{.Temperature} p\pageref{temperature})
 \end{enumerate}
-%C'est 4 \textit{attributs} sont eux-même des \textit{Objets}.\\
-D'autres paramètres \textit{secondaires} existent comme :
+
+\subsubsection{Propriétés des Param\_Etat}
+Les 4 \textit{Paramètres d'Etat} ont tous des \textit{attributs} communs qui sont:\\
+
 \begin{itemize}
-	\item \textbf{.partenaire} (voir \ref{fecondee} p\pageref{fecondee})
-	\item  \textbf{.id\_oeuf} (voir \ref{fecondee} p\pageref{fecondee})
-	\item \textbf{.recolte} (voir \ref{param_second} p\pageref{param_second})
+	\item L'attribut \textbf{nom}: "\textit{Santé}", "\textit{Température}", "\textit{Calorie}" ou "\textit{Hydro}".\\
+	
+	\item Des bornes supérieures et inférieures appelées respectivement \textit{Plafond} et \textit{Plancher}. Ces bornes sont \underline{infranchissables}.\\
+	
+	\item Une valeur et une Capacité: La valeur est la représentation à l'instant t du paramètre du \CoCiX (sa santé, son nombre de calorie, sa température ou sa quantité d'eau). La Capacité est la valeur initialisée à la création du \CoCiX, en général issue d'un Gène. Cette valeur ne peut pas être  dépassée sauf pour le paramètre \textbf{.Temperature}. Cette Capacité peut, dans le cas du paramètre \textbf{.Sante} diminuer au cours de sa vie.(Voir le vieillissement \ref{vieillissement} p \pageref{vieillissement}).\\
+	
+	\item Des limites "\textit{maladie}" et "\textit{coma}": Chaque Param\_Etat a deux seuils déclenchant les \textit{balises d'alertes} \textbf{Malade} et \textbf{Coma}. Ces limites sont  bornées en inférieur et-ou supérieur ( \underline{exemple} : Le \CoCiX tombe malade si la température monte au dessus de 40\degres C et tombe dans le coma si elle descend en dessous de 35.8\degres C ou  monte au dessus de 42\degres C)\\
+	
+	\item Des limites de \textit{souffrance} : Les limites de \textit{souffrance}, vont baisser directement le \textit{Param\_Etat} \textbf{.Sante}. Elles sont comme les limites "\textit{maladie}" et "\textit{coma}" vues au dessus, soit bornées d'un côté, soit des deux. Si les limites de \textit{souffrance} sont atteintes, la santé sera diminuée d'un facteur de correction attribué à chaque \textit{Param\_Etat} et unique :\label{souffrances}\\
+	\begin{itemize}
+		\item[SOUFFRANCE\_CALORIQUE] : 0.1\%
+		\item[SOUFFRANCE\_HYDRIQUE] : 0.17\%
+		\item[SOUFFRANCE\_THERMIQUE] : 0.1\%
+		\item[SOUFFRANCE\_MALADIE] : 0.014\% (Le \CoCiX souffre d'être malade !).\\
+	\end{itemize}
+	
 \end{itemize}
-Ces attributs peuvent être soit des \textit{Objets}, soit des variables simples.
+
+Les 4 Paramètres d'Etat ont tous des Méthodes communes qui sont::\\
+
+\begin{itemize}
+	\item Les méthodes \textbf{get\_} et \textbf{set\_} sur \textbf{.valeur}, \textbf{.capacite} et \textbf{.nom} .\\
+	
+	\item La méthode \textbf{souffrance()}: Renvoie \textit{Vrai} si des limites ont été franchies et si le \textit{Param\_Etat} produit de la souffrance. Cette méthode, appelé par le Cortex d'Etat, peut mettre à jours le \textit{Param\_Etat} \textbf{.Sante}, sur demande.\\
+	
+	\item La méthode \textbf{modif( \textit{modificateur}, \textit{balises})} : qui est la méthode principale pour modifier la valeur du Param\_Etat, car elle contrôle les bornes, et toutes les limites du paramètre et met à jour les balises d'alertes.( malade, coma)\\
+	
+	\item La méthode \textbf{affiche( \textit{pourcentage} , \textit{limite})} : Cette méthode affiche le \textit{Param\_Etat}. \textbf{\textit{pourcentage}} indique si on veut le \textit{Param\_Etat} en pourcentage ( \textbf{valeur} est alors représentée par rapport \textbf{capacité}). \textbf{\textit{limite}}, indique si on veut afficher toutes les limites du \textit{Param\_Etat}, ou seulement les informations de bases (\textbf{valeur} et \textbf{capacite}).\\
+	
+\end{itemize}
 \subsubsection{Santé}\label{sante}
 \begin{center}
 	
@@ -183,8 +227,8 @@ Ces attributs peuvent être soit des \textit{Objets}, soit des variables simples
 \end{center}
 La santé des \CoCiX est représentée par \textbf{2} nombres réels positifs :\\
 \begin{itemize}
-\item Le premier est le \textit{\textbf{C}apital \textbf{S}anté} (\textbf{.cs}), attribué à la naissance.
-\item L'état de santé (\textbf{.sante}) représente la santé du \CoCiX à un instant T.
+\item L'état de santé (\textit{sante}) représente la santé du \CoCiX à un instant T et est l'attribut \textbf{valeur} du \textit{Param\_Etat} \textbf{.Sante}. Il est récupérable par la méthode : \textbf{Sante.get\_valeur(\textit{pourcentage})}.\\
+\item Le \textit{\textbf{C}apital \textbf{S}anté} (\textbf{.cs}), attribué à la naissance, et enregistré dans l'attribut \textbf{capacité} du \textit{Param\_Etat} \textbf{.Sante}. Il est récupérable par la méthode : \textbf{Sante.get\_capacite()}.\\
 \end{itemize}
 
 Les \CoCiX ont, en moyenne, un \textit{\textbf{C}apital \textbf{S}anté} (\textbf{.cs})  a 100, mais les facteurs génétiques et environnementaux peuvent faire fluctuer ce paramètre au fil des générations.
@@ -258,15 +302,15 @@ TODO
 \multirow{2}*{100\%}& \\
 & Vie normale\\ \hline
 \multirow{2}*{$<$ \textit{seuil maladie}\footnotemark[1]} &\\
-& Malade et Souffrance\\ \hline
-\multirow{2}*{$<$ \textit{seuil très malade}\footnotemark[2]} &\\
-&  très Malade\\ \hline
+& Malade et Souffrances\\ \hline
+\multirow{2}*{$<$ \textit{seuil coma}\footnotemark[2]} &\\
+&  coma et Souffrances\\ \hline
 0\% &\CoCiX mort !\\ \hline
 \end{tabular}
 \end{center}
 
 \footnotetext[1]{Le \emph{seuil maladie} est un nombre calculé avec le gène ['\textit{seuil\_malade}'] et la \textbf{.cs} du \CoCiX}
-\footnotetext[2]{Le \emph{seuil très malade} est un nombre calculé avec le gène ['\textit{seuil\_tres\_malade}'] et la \textbf{.cs} du \CoCiX}
+\footnotetext[2]{Le \emph{seuil coma} est un nombre calculé avec le gène ['\textit{seuil\_coma}'] et la \textbf{.cs} du \CoCiX}
 
 La \textit{santé} peut être diminuée par la faim ( voir chap \ref{alimentation} page \pageref{alimentation}), une température ambiante trop froide ou trop chaude, les accidents, des combats, des maladies (voir chapitre \ref{maladie} page \pageref{maladie}) etc...\\
 
@@ -278,8 +322,8 @@ La santé peut-être récupérée par du repos, et les soins. (dans la limite de
 Lorsque le \CoCiX devient "\textit{vieux}" (voir chapitre \ref{vieillesse} page \pageref{vieillesse}), son \textit{\textbf{C}apital \textbf{S}anté} (\textbf{.cs}) diminue d'une certaine quantité par jours marqué par le gène ['vieillissement'].\\
 Cette quantité se calcule de deux façons différentes en fonction de \textbf{.cs}:
 \begin{itemize}
-	\item \textbf{.cs >= 10}: la quantité diminue du \% de vieillissement "génétique"( environ 10\% par jour).
-	\item \textbf{.cs < 10}: c'est la quantité marquée par le gène ['vieillissement'] qui est retranchée (et non un \%) du \textit{\textbf{C}apital \textbf{S}anté}( Il y a donc une accélération du vieillissement en dessous d'un certain \textbf{.cs})\footnote{TODO: Mettre en paramètre génétique le seuil (10)}.\\
+	\item \textbf{.cs >= gene['seuil\_accel\_vieille]}: la quantité diminue du \% de vieillissement "génétique"( environ 10\% par jour).
+	\item \textbf{.cs <  gene['seuil\_accel\_vieille]}: c'est la quantité marquée par le gène ['vieillissement'] qui est retranchée (et non un \%) du \textit{\textbf{C}apital \textbf{S}anté}( Il y a donc une accélération du vieillissement en dessous d'un certain \textbf{.cs})\\
 \end{itemize}
 
 Le paramètre \textbf{sante},lui, ne change pas mais ne doit pas dépasser le \textit{\textbf{C}apital \textbf{S}anté}.\\
@@ -294,7 +338,7 @@ Le paramètre \textbf{sante},lui, ne change pas mais ne doit pas dépasser le \t
 \underline{\textbf{Maladie}}\label{maladie}
 \end{center}
 
-La santé (\textbf{.sante}) diminue d'un taux par jour, déterminé par le gène ['maladie\_legere'] quand le \CoCiX est \textit{malade}, et d'un autre taux (['maladie\_severe']) par jour quand elle est \textit{très malade}. Les deux taux ne sont pas cumulatifs et le \CoCiX est soit \textit{malade}, soit \textit{très malade}.
+Quand le \CoCiX est \textit{malade}, c'est en faite une souffrance d'un ou des \textit{Param\_Etat}. Les taux indiqués page \pageref{souffrances} diminuent la santé (\textbf{.sante}). A noter qu'un \CoCiX peut donc souffrir de plusieurs maux, température, manque calorique ou hydrique, ou simplement d'être malade (voir \ref{souffrances}).
 
 \begin{center}
 	\underline{Repos et soins :}\label{repos}
@@ -303,7 +347,7 @@ Les \CoCiX dorment lorsque c'est le cycle \textit{nuit} (voir chapitre \ref{cycl
 
 Elles \textit{récupèrent} d'un certain pourcentage, donné par le gène \textbf{["recup\_sommeil"]} (voir page \pageref{liste_gene}). Ce pourcentage est d'environ \textbf{30\%} de \textbf{.sante} pour 10 heures de repos.
 
-Les \CoCiX ont aussi la possibilité de se soigner si elles sont malades. Elles peuvent alors se régénérer d'un certain nombre de points de santé déterminé par le gène \textbf{['soins']} (ce nombre est en \textit{.santé} par minute.)
+Les \CoCiX ont aussi la possibilité de se soigner si elles sont malades. Elles peuvent alors se régénérer d'un certain nombre de points de santé déterminé par le gène \textbf{['soins']} (ce nombre est en \textit{.santé} par minute.). Elle va aussi réguler sa température pendant le sommeil pour l'équilibrer dans ses limites de non souffrance.
 
 Les \CoCiX femelle on un gène \textbf{['compassion']}, qui pourra, dans certainement condition, donner le désir de soigner ses congénères. Elle régénérera alors la santé d'un ou d'une autre \CoCiX d'un certain nombre de points de santé déterminé par le gène \textbf{['soins']} (ce nombre est en \textit{.sante} par minute.)
 

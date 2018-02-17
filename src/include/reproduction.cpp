@@ -415,13 +415,36 @@ int procreation (Cocix *Male, Cocix *Femelle, bool verbal)
 		(float) SOUFFRANCE_HYDRIQUE,0.0f,Oeuf_Cocix.genome[HYDRO].valeur);
 	if(verbal) Oeuf_Cocix.Hydro.affiche(false,verbal);
 
-	Oeuf_Cocix.Temperature = Param_Etat("Température","°C",37.5f,37.5f,
+	Oeuf_Cocix.Temperature = Param_Etat("Température","°C",(float)NULL,37.5f,
 		(float)NULL, 40.0f,
-		36.0f,42.0f,
+		35.8f,42.0f,
 		36.0f,40.0f,
 		(float) SOUFFRANCE_THERMIQUE, 35.5f, 43.5f);	
 	if(verbal) Oeuf_Cocix.Temperature.affiche(false,verbal);
 	
+
+	// transfert des ancetres
+	Oeuf_Cocix.set_ancetre(0, Male->get_id());
+	Oeuf_Cocix.set_ancetre(1, Femelle->get_id());
+	Oeuf_Cocix.set_ancetre(2, Male->get_ancetre(0));
+	Oeuf_Cocix.set_ancetre(3, Male->get_ancetre(1));
+	Oeuf_Cocix.set_ancetre(4, Femelle->get_ancetre(0));
+	Oeuf_Cocix.set_ancetre(5, Femelle->get_ancetre(1));
+	int j = 6, k = 2;
+	do 
+	{
+		Oeuf_Cocix.set_ancetre(j, Male->get_ancetre(k));
+		Oeuf_Cocix.set_ancetre(j+4, Femelle->get_ancetre(k));
+	} while( ++j < 10);
+	j = 14;
+	k = 6;
+	do
+	{
+		Oeuf_Cocix.set_ancetre(j, Male->get_ancetre(k));
+		Oeuf_Cocix.set_ancetre(j+8, Femelle->get_ancetre(k));
+	} while (++j < 22);
+	if(verbal) Oeuf_Cocix.ancetre();
+
 	// balises etat
 	Oeuf_Cocix.balises.fecondee = false;
 	Oeuf_Cocix.balises.vivant = true;
@@ -432,6 +455,7 @@ int procreation (Cocix *Male, Cocix *Femelle, bool verbal)
 	Oeuf_Cocix.balises.froid = false;
 	Oeuf_Cocix.balises.faim = false;
 	Oeuf_Cocix.balises.soif = false;
+
 
 	Oeuf_Cocix.Desire = new Dormir();
 	Oeuf_Cocix.Action = new Dormir();

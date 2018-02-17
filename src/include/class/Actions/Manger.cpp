@@ -15,7 +15,7 @@ Manger::Manger()
 bool Manger::valide_Action(const Cocix* cocix , const bool verbal)
 {
 	if(verbal) cout << " Y-a-t-il de la nourriture sur ma case ?... ";
-	return((nourriture(cocix->case_presence) > 0));
+	return((nourriture(cocix->get_case_presence()) > 0));
 }
 
 
@@ -38,7 +38,7 @@ void Manger::go(Cocix *cocix,bool verbal)
 	float quantite_prise, seuil_satiete;
 	struct struct_xy xy;
 
-	float case_nourriture = cocix->case_presence;
+	float case_nourriture = cocix->get_case_presence();
 	xy  = case_to_xy(case_nourriture);
 
 	cout <<  "...................................................\n";

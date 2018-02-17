@@ -22,7 +22,8 @@ bool Se_Reproduire::valide_Action( const Cocix* cocix , const bool verbal)
 	{
 		if(verbal) cout << "J'ai déjà un partenaire ... ";
 			// le partenaire est toujours là ?
-			if(existe(cocix->case_presence , cocix->get_id_partenaire(),  verbal) != -1 )
+			//cout << "case_presence = " << cocix->case_presence << " get_case_presence() = " << cocix->get_case_presence() << "\n";
+			if(existe(cocix->get_case_presence() , cocix->get_id_partenaire(),  verbal) != -1 )
 			{
 				if(verbal) cout << "toujours là ! ";
 				return true;
@@ -37,7 +38,7 @@ bool Se_Reproduire::valide_Action( const Cocix* cocix , const bool verbal)
 	// on regarde s'il existe un partenaire potentiel sur notre case
 	int id_partenaire_potentiel;
 
-	id_partenaire_potentiel = partenaire(cocix->case_presence, cocix, verbal);
+	id_partenaire_potentiel = partenaire(cocix->get_case_presence(), cocix, verbal);
 
 	if(id_partenaire_potentiel != 0){
 		
@@ -109,7 +110,7 @@ void Se_Reproduire::go(Cocix* cocix,bool verbal)
 	else
 	{
 		// je n'ai pas inscris de partenaire
-		id_partenaire_potentiel = partenaire(cocix->case_presence, cocix, verbal);
+		id_partenaire_potentiel = partenaire(cocix->get_case_presence(), cocix, verbal);
 		if(id_partenaire_potentiel > 0)
 		{	// j'ai un partenaire disponible
 			Partenaire = new Cocix(id_partenaire_potentiel, false, verbal);

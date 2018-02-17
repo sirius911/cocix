@@ -64,7 +64,7 @@
 #define m6 9
 
 
-//#define MAX_GEN 21
+#define MAX_GEN 23
 
 #define ASSIMILATION_CALORIQUE 0
 #define ASSIMILATION_HYDRIQUE 1
@@ -87,6 +87,8 @@
 #define SEUIL_MALADE 18
 #define SEUIL_COMA 19
 #define VIEILLISSEMENT 20
+#define SEUIL_ACCEL_VIEILLE 21
+#define COMPASSION 22
 
 //   ****************************************************************** Actions
 

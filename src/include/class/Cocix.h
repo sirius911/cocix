@@ -7,6 +7,7 @@
 #include "Actions/Actions.h"
 
 #include <vector>
+#include <array>
 
 
 using namespace std;
@@ -19,7 +20,8 @@ class Cocix
 		short date_mort;
 		int idPere;
 		int idMere;
-
+		short case_presence;
+		short case_naissance;
 		short recolte;
 		int id_partenaire;
 		int id_oeuf;
@@ -30,7 +32,7 @@ class Cocix
 		short vivacite;
 		//int ancetres[30];	// ancetres sur 4 générations
 		float temp_exterieur;
-
+		array <int , 30 > ancetres;
 
 	public:
 
@@ -46,8 +48,7 @@ class Cocix
 		char nom[10];	
 		
 		bool sexe;
-		short case_presence;
-		short case_naissance;
+		
 		short vieux;
 		
 		// reproduction
@@ -119,7 +120,7 @@ class Cocix
 		void set_id_partenaire(int);
 		void set_id_oeuf(int);
 		void set_sexe(bool);
-		void set_fichier(char*);
+		void set_fichier(const char*);
 		void set_idPere(int);
 		void set_idMere(int);
 		void set_vieux(short);
@@ -136,9 +137,17 @@ class Cocix
 		int get_id_oeuf() const;
 		short get_vivacite() const;
 		short get_case_presence() const;
+		short get_case_naissance() const;
 		int get_nb_genes() const;
 		short get_date_naissance() const;
 		short get_date_mort() const;
+
+
+// ancêtres
+		
+		void ancetre();
+		int get_ancetre(const short);
+		void set_ancetre(short,int);
 
 
 		bool sauvegarde(bool verbal = false);
