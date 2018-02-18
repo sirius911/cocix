@@ -85,6 +85,7 @@ class Cocix
 		bool alert_faim( const bool verbal = false);
 		bool alert_soif(const bool verbal = false);
 		bool agressive();
+		bool compassion();
 		bool rentree() const;
 		bool vivant();
 
@@ -146,8 +147,9 @@ class Cocix
 // ancêtres
 		
 		void ancetre();
-		int get_ancetre(const short);
+		int get_ancetre(const short) const;
 		void set_ancetre(short,int);
+		int consanguinite(int,bool = false);	// renvoi la consanguinité avec un id d'un CoCiX
 
 
 		bool sauvegarde(bool verbal = false);

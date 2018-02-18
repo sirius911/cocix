@@ -26,6 +26,8 @@
 #include "Actions/Se_Soigner.h"
 #include "Actions/Cherche_Partenaire.h"
 #include "Actions/Cherche_Case_Libre.h"
+#include "Actions/Soigner.h"
+#include "Actions/Cherche_Malade.h"
 
 using namespace std;
 
@@ -60,7 +62,7 @@ Cocix::Cocix(const char x_fichier[30],bool verbal)
 {
 	// initialise le nomFichier
 	// XXXF
-	cout << "fichier = " << x_fichier << "\n";
+	if(verbal) cout << "fichier = " << x_fichier << "\n";
 	set_fichier(x_fichier);
 	//strcpy(fichier,x_fichier);
 	
@@ -346,7 +348,7 @@ char* Cocix::get_fichier()
 	return fichier;
 }
 
-int Cocix::get_ancetre(const short numero )
+int Cocix::get_ancetre(const short numero ) const
 {
 	if(numero >=0 && numero < 30 )
 		return ancetres[numero];
@@ -497,6 +499,7 @@ bool Cocix::cortex_Etat(bool verbal){
 
 	raz_balises(verbal);
 	
+	temp_exterieur = temperature(case_presence);
 
 		/*
 		¯|¯ |¯ |\/| |¯| |¯ |¯| /¯\ ¯|¯ | | |¯| |¯ 
@@ -701,6 +704,8 @@ bool Cocix::cortex_Etat(bool verbal){
         					if(agressive())
         						cout << "Agresser  ...non implémenté...";
         						//Desire = new Agresser();
+        					else if(compassion())
+       							Desire = new Soigner();
         					else
         						Desire = new Se_Reproduire();
         				} else 
@@ -714,9 +719,15 @@ bool Cocix::cortex_Etat(bool verbal){
        					{	
        						if(fecondee())
        						{	// non fécondable
-       							if(agressive())
+       							if(compassion())
+       							{
+       								Desire = new Soigner();	
+       							}
+       							else if(agressive())
+       							{
        								cout << "Agresser()  ...non implémenté...";
-       								//Desire = new Agresser();
+       								//Desire = new Agresser();	
+       							}
        							else
        							{
        								//recolte
@@ -732,6 +743,8 @@ bool Cocix::cortex_Etat(bool verbal){
         						if(agressive())
 	       							cout << "Agresser()  ...non implémenté...";
        								//Desire = new Agresser();
+       							else if(compassion())
+       								Desire = new Soigner();
        							else
            							Desire = new Se_Reproduire();
            					}
@@ -742,6 +755,8 @@ bool Cocix::cortex_Etat(bool verbal){
        						if(agressive())
        							cout << "Agresser()  ...non implémenté...";
        							//Desire = new Agresser();
+       						else if(compassion())
+       							Desire = new Soigner();
        						else
        						{
        							//recolte
@@ -920,13 +935,24 @@ void Cocix::maj_balises( bool verbal){
 	else cout << " - Morte\n";
 }
 
-bool Cocix::alert_agressive(){
+bool Cocix::alert_agressive()
+{
 	// calcul l'agresivité
 	float taux_agressivite;
 	int hasard;
-	taux_agressivite = genome[AGRESSIVITE].valeur;	// pourcentage d'agresivite
+	taux_agressivite = genome[AGRESSIVITE].valeur;	// pourcentage d'agressivite
 	hasard = aleatoire(1,100);
 	return(hasard > (int)(taux_agressivite * 100.0f)); 
+}
+
+bool Cocix::compassion()
+{		//calcul de la compassion
+	float taux_compassion;
+	int hasard;
+	taux_compassion = genome[COMPASSION].valeur;	// pourcentage de compassion
+	hasard = aleatoire(1,100);
+	return (hasard > (int) (taux_compassion * 100.0f));
+
 }
 
 bool Cocix::alert_froid(bool verbal){
@@ -1180,6 +1206,24 @@ void Cocix::prend_temperature(const bool verbal)
 
 }
 
+int Cocix::consanguinite(int idC,  bool verbal)
+{
+	int consG = -1;
+	Cocix *C;
+	if(verbal) cout << "Calcul de consanguinité avec # " << idC << " = ";
+	C = new Cocix(idC,false,false);
+	if(C->get_id() > 0 )
+	{
+		consG = calcul_consanguin(this, C);
+		if(verbal) cout << consG << "\n";
+	}
+	else
+	{
+		cout << "Erreur au chargement du CoCiX N° " << idC << "\n";
+	}
+	delete C;
+	return consG;
+}
 
 /********************************************************************************************************************
 										FICHIERS
@@ -1378,6 +1422,12 @@ bool Cocix::chargement(bool verbal){
 			case CHERCHE_CASE_LIBRE:
 				Action = new Cherche_Case_Libre();
 				break;
+			case SOIGNER:
+				Action = new Soigner();
+				break;
+			case CHERCHE_MALADE:
+				Action = new Cherche_Malade();
+				break;
 			default:
 				cout << "ERREUR: Je n'ai pas trouvé l'Action : " << numAction << "->Action init à Dormir()...";
 				Action = new Dormir();
@@ -1431,6 +1481,12 @@ bool Cocix::chargement(bool verbal){
 			case CHERCHE_CASE_LIBRE:
 				Desire = new Cherche_Case_Libre();
 				break;	
+			case SOIGNER:
+				Desire = new Soigner();
+				break;
+			case CHERCHE_MALADE:
+				Desire = new Cherche_Malade();
+				break;
 			default:
 				cout << "ERREUR: Je n'ai pas trouvé le Desire : " << numDesire << "->Desire init à Dormir()...";
 				Desire = new Dormir();

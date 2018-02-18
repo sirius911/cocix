@@ -1,7 +1,7 @@
 #ifndef DEF_CONSTANTES
 #define DEF_CONSTANTES
 
-#define VERSION_LOGICIEL "0.3 Beta"
+#define VERSION_LOGICIEL "0.4 Beta"
 #ifndef DEBUG
 	#define DEBUG false
 #endif
@@ -14,7 +14,7 @@
 #define NUIT -1
 #define CREPUSCULE 0
 
-#define COMA_CALORIE 0.05			// 5%de CC en dessous duquel => COMA
+#define COMA_CALORIE 0.05			// 5%de Calorie en dessous duquel => COMA
 #define SOUFFRANCE_CALORIQUE 0.001	// correction à apporter si souffrance calorique
 #define COMA_HYDRO	0.08				// 8%de CH en dessous duquel => COMA
 #define SOUFFRANCE_HYDRIQUE 0.0017	// Correction à apporter si souffrance hydrique
@@ -96,7 +96,9 @@
 #define CHERCHE_EAU 2
 #define CHERCHE_NOURRITURE 3
 #define CHERCHE_PARTENAIRE 4
+#define SOIGNER 5
 #define DORMIR 6
+#define CHERCHE_MALADE 7
 #define MANGER 8
 #define PONDRE 9
 #define CHERCHE_CASE_LIBRE 10

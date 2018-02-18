@@ -10,12 +10,16 @@
 \usepackage{listings}
 \usepackage{array}
 \usepackage{tocvsec2}
+\usepackage{tikz}
 %\maxsecnumdepth{subsubsection}
 %\lstset{language=python,frame=single,basicstyle=\ttfamily,
 %keywordstyle=\bfseries,stringstyle=\textit,commentstyle=\color{gray}}
 \usepackage[frenchb]{babel}
 \usepackage{graphicx}
 
+\ifx\du\undefined
+\newlength{\du}\fi
+\setlength{\du}{15\unitlength}
 
 \setcounter{secnumdepth}{3}
 % titre
@@ -103,7 +107,8 @@ Dans cette section, nous allons décrire les différents types de \textit{param�
 \item Les Paramètres \textit{d'Action}, sont des \textit{Objets} dérivés de la Classe \textbf{Actions}.(page \pageref{param_action})\\
 \end{itemize}
 
-Nous verrons ensuite les \textit{balises d'alerte}, qui sont des variables booléennes, informant  le \CoCiX d'un état nécessitant une action ( Faim, Soif, Froid etc\dots)(page \pageref{balise}). Ils sont mis en \textit{structure}.
+Nous verrons ensuite les \textit{balises d'alerte}, qui sont des variables booléennes, informant  le \CoCiX d'un état nécessitant une action ( Faim, Soif, Froid etc\dots)(page \pageref{balise}). Ils sont mis en \textit{structure}.\\
+Il reste ensuite un tableau des 30 ancêtres du \CoCiX (en faite il s'agit des 30 numéro d'identification \textbf{.id})
 
 \newpage
 
@@ -364,8 +369,17 @@ Le paramètre \textbf{vivant} est une balise indiquant si la\CoCiX est vivante o
 
 Le programme, à la naissance du \CoCiX, initialise le paramètre \textbf{.calorie} en lui donnant la valeur du \textit{\textbf{C}apital \textbf{C}alorique} (\textbf{.cc})\\
 
+Ces deux variables sont stockées dans le\textit{ Param\_Etat} \textbf{.Calorie}. On accède à \textbf{CC} par la méthode \textbf{.Calorie.get\_capacite()} et \textbf{.calorie} par \textbf{.Calorie.get\_valeur()}.\\
+\begin{itemize}
+	\item Le \textit{Param\_Etat} \textbf{Calorie} est bornée entre $[0;CC]$ en calories.\\
+	\item Il n'y a pas de limites "\textit{maladie}" pour ce \textit{Param\_Etat}.\\
+	\item La limite "coma" est $[5\% de CC ,\infty [$.\\
+	\item La limite "souffrance" est [ Gene['souffre\_faim'].$valeur * CC , \infty [$.\\
+\end{itemize}
+
+
+
 Ce paramètre (\textbf{.calorie}) baisse pour chaque action du \CoCiX  :\\
-\textbf{.calorie} et \textbf{.cc} sont tous les deux des entiers positifs.
 
 \begin{center}\label{depense_calorique}
 \begin{tabular}{|c|c|}\hline
@@ -392,10 +406,6 @@ A noter que les femelles qui sont fécondées, ont une augmentation de leurs dé
 
 La variable \textbf{Genes["faim"].valeur} est un pourcentage indiquant le seuil de ressenti de la faim (voir page \pageref{liste_gene}).\\
 La balise d'alerte \textbf{faim} est mise à \textbf{\textit{Vrai}} (Voir chap \ref{balise} page \pageref{balise}).\\
-
-Si \textbf{.calorie} descend en dessous d'un certain pourcentage donné par le gène \textbf{Genes["souffre\_faim"]} de \textbf{Genes["faim"].valeur}, la santé (\textbf{.sante}) diminue de \textbf{Genes["souffre\_faim"]} \textit{Calorie(s)} par heure.\\
-
-Si \textbf{.calorie} passe sous la barre des 5\% de \textbf{cc}, la balise \textbf{coma} est mise a \textbf{\textit{VRAI}} (Voir chap \ref{balise} page \pageref{balise}).\\
 
 \textit{Exemple} :\\
 \begin{quote}
@@ -434,6 +444,15 @@ L'eau est un élément vital pour la vie des \CoCiX.
 A la procréation, chaque \CoCiX, reçoit un \textit{Capital Hydrique} (\textbf{.ch}), par le Gene \textit{influent} \textbf{Genes["hydro"]} (voir page \pageref{liste_gene}). Ce Capital Hydrique est en $\mu$ Litre.\\
 
 Le programme, à la naissance de la \CoCiX, initialise le paramètre Hydro (\textbf{.hydro}) en lui donnant la valeur du \textit{Capital Hydrique} (\textbf{.ch}).\\
+
+Ces deux variables sont stockées dans le\textit{ Param\_Etat} \textbf{.Hydro}. On accède à \textbf{CH} par la méthode \textbf{.Hydro.get\_capacite()} et \textbf{.hydro} par \textbf{.Hydro.get\_valeur()}.\\
+\begin{itemize}
+	\item Le \textit{Param\_Etat} \textbf{Hydro} est bornée entre $[0; CH]$ en calories.\\
+	\item Il n'y a pas de limites "\textit{maladie}" pour ce \textit{Param\_Etat}.\\
+	\item La limite "coma" est $[8\% de CH ,\infty [$.\\
+	\item La limite "souffrance" est [ Gene['souffre\_soif'].$valeur * CC , \infty [$.\\
+\end{itemize}
+
 Ce Paramètre (\textbf{.hydro}) baisse pour chaque action de la \CoCiX  :\\
 \begin{center}
 	\begin{tabular}{|c|c|}\hline
@@ -470,7 +489,7 @@ Si \textbf{.hydro} passe sous la barre des 8\% du \textit{\textbf{C}apital \text
 %%% T E M P E R A T  U R E %%%
 \subsubsection{Température}\label{temperature}
 La température corporelle est un paramètre évoluant avec l'environnement, les maladies etc...\\
-Il est fournit par le paramètre température\textbf{.temperature} réel positif.\\
+Il est fournit par le \textit{Param\_Etat} \textbf{.Temperature}, réel positif.\\
 Les \CoCiX ne ressentent pas la chaleur mais le froid.
 
 %% naissance
@@ -483,10 +502,10 @@ A la procréation, le paramètre \textbf{.temperature} est initialisé à 37,5\d
 \begin{center}
 	\underline{Température et Santé}
 \end{center}
-La température normale d'une \CoCiX est comprise entre 36\degres C et 37,9\degres C. Au delà de cette fourchette, la santé s'altère de 6\% par heure.\\
+La température normale d'une \CoCiX est comprise entre 36,8\degres C et 37,9\degres C. Au delà de cette fourchette, la santé s'altère de 6\% par heure.\\
 A partir de 38\degres C, la \CoCiX va avoir soif. La balise d'alerte \textbf{.soif} est mise à \textbf{\textit{Vrai}} (Voir chap \ref{balise} page \pageref{balise}).\\
-A partir de 40\degres C, la balise \textbf{.malade} est mise à \textbf{\textit{Vrai}} (Voir chap \ref{balise} page \pageref{balise}).\\
-
+A partir de 40\degres C, ou en dessous de 36,8\degres C, la balise \textbf{.malade} est mise à \textbf{\textit{Vrai}} (Voir chap \ref{balise} page \pageref{balise}).\\
+En dessous de 35.8\degres C ou au dessus de 42\degres C la \CoCiX tombe dans le coma.
 
 %% environnement
 \begin{center}
@@ -558,15 +577,15 @@ Pour connaître le mode de transmission du gène \emph{agressivite} :
 	\textbf{.Genome["agressivite"].transmission}.\\
 \end{center}
 
-Un gène peut être \textit{Influent} ou \textit{Non-Influent}:
+Un gène peut être un \textit{Pourcentage} ou \textit{une valeur}:
 
-\subsubsection{Influent}
-Certain paramètres du \CoCiX sont \textit{influencés} par un gène. On dit que Le gène est \textit{Influent} de la caractéristique.
+\subsubsection{les gènes valeur}
+Certain paramètres du \CoCiX sont \textit{influencés} par un gène. On dit que Le gène est \textit{Influent} de la caractéristique. Ce gène va donner la valeur à la caractéristique.\\
 
 \textit{\underline{exemple} :}
 Le \textit{Capital Calorique} à la naissance (\textbf{cc}) est influencé par le gène \textbf{Genome["calorie"]} qui est transmis par le père ou la mère (voir chap \ref{cc} page \pageref{cc}).\\
 
-\subsubsection{Non-Influent}
+\subsubsection{les gènes 'pourcentage'}
 Certains gènes ne sont pas \textit{influents}, mais déterminent un pourcentage  ou une quantité servant à une fonction : \\
 
 \textit{\underline{exemple}} :
@@ -576,22 +595,18 @@ Certains gènes ne sont pas \textit{influents}, mais déterminent un pourcentage
 
 Les gènes sont transmis par l'hérédité.\\
 
-La liste de tous les gènes est regroupée dans une base de donnée.(voir chapitre \ref{liste_gene} page \pageref{liste_gene}) \\ 
 Voici la liste des attributs de l'objet \textbf{Genome} :
 
 \begin{table}[htdp]
 	
-	%\begin{tabular}{| >{\begin{bf}}p{3cm} <{\end{bf}} |>{\begin{small}}{5cm}<{\end{small}} | >{\begin{small}} p{6cm}<{\end{small}} |}
-	
-	
-	
-	\begin{tabular}{|p{1.5cm}|p{8cm}|l|}
+	\begin{tabular}{|p{1.7cm}|p{8cm}|l|}
 		\hline
 		\rowcolor{yellow} \textbf{Attribut}  & \textbf{commentaire} & \textbf{exemple}\\
 		\hline .nom & nom du gène & Gene["hydro"].nom = hydro\\
-		\hline .id & Numéro d'identification de la base de donnée du Genome. & Genes["hydro"].id = 2443\\
-		\hline .influent & Indique le paramètre influencé par le gène.\footnotemark[1] &  Genes["calorie"].influant = cc \\
-		\hline .valeur &  Valeur  du gène\footnotemark[2] &  Genes["hydro"].valeur = 100 $\mu L$ \\
+		\hline .id & Numéro d'identification & Genes["hydro"].id = 5\\
+		\hline .valeur &  Valeur  du gène\footnotemark[1] &  Genes["hydro"].valeur = 100 $\mu L$ \\
+		\hline .pourc & Vrai si \textit{Gène Pourcentage}, Faux si \textit{Gène valeur} & Gene["soins"].pourc = false\\
+		\hline .mod\_trans & Mode de transmission\footnotemark[2] & (m6,pm,GP \dots)\\
 		\hline .pere & Valeur du gène, transmis par le père.\footnotemark[3] Il sert pour l'hérédité de ses descendants. & Genes["agressivite"].pere = 33 \%\\
 		\hline .mere & Valeur du gène, transmis par la mère.\footnotemark[3] & Genes["endurance"].mere = 65\%\\ 
 		\hline .gp\_mere & Valeur du gène, transmis par le Grand-Père maternel.\footnotemark[3] & Genes["force"].gpMere = 65\\
@@ -604,14 +619,29 @@ Voici la liste des attributs de l'objet \textbf{Genome} :
 \end{table}
 
 \textit{L'objet} \textbf{Genes} est déclaré par une classe à part.
+(voir chapitre \ref{liste_gene} page \pageref{liste_gene}) \\ 
+Les Gènes sont regroupés, pour un \CoCiX, dans un \emph{Vector}.\\
 
-Les Gènes sont regroupés, pour un \CoCiX, dans un \emph{dictionnaire}.\\
 
-\footnotetext[1]{Vide si le gène n'est pas influent.}
-\footnotetext[2]{La valeur est un pourcentage si le gène n'est pas influent.}
+\footnotetext[1]{La valeur est un pourcentage si le gène est un \textit{Gène pourcentage}.}
+\footnotetext[2]{Voir \ref{modeTransmission} p \pageref{modeTransmission}}
 \footnotetext[3]{Ces gènes peuvent ne pas du tout influencer la vie du \CoCiX mais servent pour le transfert génétique aux générations futures.}
 
 \newpage
+
+\subsubsection{Mode de transmission}\label{modeTransmission}
+Chaque Gène a un mode particulier de transmission donné par l'attribut \textbf{.mod\_trans}. :
+\begin{itemize}
+	\item P: Gène transmis par le Père.
+	\item M: Gène transmis par la Mère.
+	\item PM: Gène transmis soit par le Père, soit par la Mère.
+	\item pm: Gène transmis du père au fils ou de la mère à la fille.
+	\item GP: Gène transmis par un des deux grand-pères (saute une génération) 
+	\item GM: Gène transmis par une des deux grand-mères (saute une génération)
+	\item H: Gène transmis que par les mâles.(Père, ou grand-pères)
+	\item F: Gène transmis que par les femelles (Mère, ou grand-mères)
+	\item m6: Gène transmis aléatoirement par un des 6 membres de la famille.
+\end{itemize}
 
 \subsection{Agressivité}\label{agressivite}
 Le Gene \textbf{\$gene.agressivite}, représente le pourcentage qu'a la \CoCiX à être agressive vis à vis de ses congénères adulte et de même sexe.\\
@@ -665,6 +695,995 @@ Le nom des balises d'alertes est assez explicite :
 
 Les balises d'alertes sont mises à jour par le \textit{cortex d'état} (voir chap \ref{cortex_etat} page \pageref{cortex_etat}), toutes les minutes.\\
 
+\subsection{Ancêtres}
+Les ancêtres du \CoCiX sont stockés dans un tableau de 30 entiers (les Numéros d'identification \textbf{.id}). Ils sont répartis sur l'arbre suivant:
+
+
+\begin{tikzpicture}
+\pgftransformxscale{1.000000}
+\pgftransformyscale{-1.000000}
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\definecolor{dialinecolor}{rgb}{1.000000, 1.000000, 1.000000}
+\pgfsetfillcolor{dialinecolor}
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{0.678431, 0.847059, 0.901961}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{1.550000\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 1.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{1.550000\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (1.550000\du,1.610625\du){15};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.752941, 0.796078}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{3.291667\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{3.291667\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (3.291667\du,1.610625\du){16};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{0.678431, 0.847059, 0.901961}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{5.033333\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 1.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{5.033333\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (5.033333\du,1.610625\du){17};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.752941, 0.796078}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{6.775000\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{6.775000\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (6.775000\du,1.610625\du){18};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{0.678431, 0.847059, 0.901961}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{8.516667\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 1.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{8.516667\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (8.516667\du,1.610625\du){19};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.752941, 0.796078}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{10.258333\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{10.258333\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (10.258333\du,1.610625\du){20};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{0.678431, 0.847059, 0.901961}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{12.000000\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 1.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{12.000000\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (12.000000\du,1.610625\du){21};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.752941, 0.796078}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{13.732143\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{13.732143\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (13.732143\du,1.610625\du){22};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{0.678431, 0.847059, 0.901961}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{15.483333\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 1.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{15.483333\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (15.483333\du,1.610625\du){23};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.752941, 0.796078}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{17.225000\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{17.225000\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (17.225000\du,1.610625\du){24};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{0.678431, 0.847059, 0.901961}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{18.966667\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 1.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{18.966667\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (18.966667\du,1.610625\du){25};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.752941, 0.796078}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{20.708333\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{20.708333\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (20.708333\du,1.610625\du){26};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{0.678431, 0.847059, 0.901961}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{22.450000\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 1.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{22.450000\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (22.450000\du,1.610625\du){27};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.752941, 0.796078}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{24.191667\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{24.191667\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (24.191667\du,1.610625\du){28};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{0.678431, 0.847059, 0.901961}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{25.933333\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 1.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{25.933333\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (25.933333\du,1.610625\du){29};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.752941, 0.796078}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{27.675000\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{27.675000\du}{1.443056\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (27.675000\du,1.610625\du){30};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{0.678431, 0.847059, 0.901961}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{2.440000\du}{3.527500\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 1.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{2.440000\du}{3.527500\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (2.440000\du,3.695069\du){7};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.752941, 0.796078}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{5.906667\du}{3.527500\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{5.906667\du}{3.527500\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (5.906667\du,3.695069\du){8};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{0.678431, 0.847059, 0.901961}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{9.473333\du}{3.527500\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 1.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{9.473333\du}{3.527500\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (9.473333\du,3.695069\du){9};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.752941, 0.796078}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{12.940000\du}{3.527500\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{12.940000\du}{3.527500\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (12.940000\du,3.695069\du){10};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{0.678431, 0.847059, 0.901961}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{16.386667\du}{3.527500\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 1.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{16.386667\du}{3.527500\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (16.386667\du,3.695069\du){11};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.752941, 0.796078}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{19.853333\du}{3.527500\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{19.853333\du}{3.527500\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (19.853333\du,3.695069\du){12};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{0.678431, 0.847059, 0.901961}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{23.510000\du}{3.527500\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 1.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{23.510000\du}{3.527500\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (23.510000\du,3.695069\du){13};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.752941, 0.796078}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{26.976667\du}{3.527500\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{26.976667\du}{3.527500\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (26.976667\du,3.695069\du){14};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{0.678431, 0.847059, 0.901961}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{4.206667\du}{5.694167\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 1.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{4.206667\du}{5.694167\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (4.206667\du,5.861736\du){3};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{0.678431, 0.847059, 0.901961}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{18.320000\du}{5.694167\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 1.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{18.320000\du}{5.694167\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (18.320000\du,5.861736\du){5};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{0.678431, 0.847059, 0.901961}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{7.733333\du}{7.760833\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 1.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{7.733333\du}{7.760833\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (7.733333\du,7.928403\du){1};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.752941, 0.796078}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{22.240000\du}{7.760833\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{22.240000\du}{7.760833\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (22.240000\du,7.928403\du){2};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.752941, 0.796078}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{25.430000\du}{5.494167\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{25.430000\du}{5.494167\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (25.430000\du,5.661736\du){6};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetlinewidth{0.100000\du}
+\pgfsetbuttcap
+\pgfsetmiterjoin
+\pgfsetdash{}{0pt}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.752941, 0.796078}
+\pgfsetfillcolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{11.220000\du}{5.727500\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{fill}
+\definecolor{dialinecolor}{rgb}{1.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\pgfpathellipse{\pgfpoint{11.220000\du}{5.727500\du}}{\pgfpoint{0.700000\du}{0\du}}{\pgfpoint{0\du}{0.693056\du}}
+\pgfusepath{stroke}
+% setfont left to latex
+\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+\pgfsetstrokecolor{dialinecolor}
+\node at (11.220000\du,5.895069\du){4};
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+{
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetfillcolor{dialinecolor}
+	% was here!!!
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetstrokecolor{dialinecolor}
+	\draw (1.842249\du,2.127523\du)--(2.147751\du,2.843033\du);
+}
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+{
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetfillcolor{dialinecolor}
+	% was here!!!
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetstrokecolor{dialinecolor}
+	\draw (3.291667\du,2.136111\du)--(2.827575\du,2.894309\du);
+}
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+{
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetfillcolor{dialinecolor}
+	% was here!!!
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetstrokecolor{dialinecolor}
+	\draw (5.200000\du,2.177778\du)--(5.561270\du,2.867797\du);
+}
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+{
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetfillcolor{dialinecolor}
+	% was here!!!
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetstrokecolor{dialinecolor}
+	\draw (6.489018\du,2.129558\du)--(6.192649\du,2.840997\du);
+}
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+{
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetfillcolor{dialinecolor}
+	% was here!!!
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetstrokecolor{dialinecolor}
+	\draw (8.666667\du,2.177778\du)--(9.091073\du,2.887898\du);
+}
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+{
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetfillcolor{dialinecolor}
+	% was here!!!
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetstrokecolor{dialinecolor}
+	\draw (10.258333\du,2.136111\du)--(9.839194\du,2.879023\du);
+}
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+{
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetfillcolor{dialinecolor}
+	% was here!!!
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetstrokecolor{dialinecolor}
+	\draw (12.305913\du,2.121416\du)--(12.634087\du,2.849140\du);
+}
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+{
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetfillcolor{dialinecolor}
+	% was here!!!
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetstrokecolor{dialinecolor}
+	\draw (15.733333\du,2.144444\du)--(16.068773\du,2.854544\du);
+}
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+{
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetfillcolor{dialinecolor}
+	% was here!!!
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetstrokecolor{dialinecolor}
+	\draw (19.133333\du,2.177778\du)--(19.502826\du,2.870433\du);
+}
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+{
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetfillcolor{dialinecolor}
+	% was here!!!
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetstrokecolor{dialinecolor}
+	\draw (22.450000\du,2.136111\du)--(23.058154\du,2.934393\du);
+}
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+{
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetfillcolor{dialinecolor}
+	% was here!!!
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetstrokecolor{dialinecolor}
+	\draw (25.933333\du,2.136111\du)--(26.529888\du,2.931676\du);
+}
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+{
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetfillcolor{dialinecolor}
+	% was here!!!
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetstrokecolor{dialinecolor}
+	\draw (13.732143\du,2.136111\du)--(13.308416\du,2.880382\du);
+}
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+{
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetfillcolor{dialinecolor}
+	% was here!!!
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetstrokecolor{dialinecolor}
+	\draw (16.947261\du,2.133630\du)--(16.664406\du,2.836926\du);
+}
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+{
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetfillcolor{dialinecolor}
+	% was here!!!
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetstrokecolor{dialinecolor}
+	\draw (20.425908\du,2.131594\du)--(20.135759\du,2.838962\du);
+}
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+{
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetfillcolor{dialinecolor}
+	% was here!!!
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetstrokecolor{dialinecolor}
+	\draw (24.191667\du,2.136111\du)--(23.836188\du,2.861699\du);
+}
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+{
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetfillcolor{dialinecolor}
+	% was here!!!
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetstrokecolor{dialinecolor}
+	\draw (27.675000\du,2.136111\du)--(27.310148\du,2.863057\du);
+}
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+{
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetfillcolor{dialinecolor}
+	% was here!!!
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetstrokecolor{dialinecolor}
+	\draw (2.911427\du,4.105666\du)--(3.735239\du,5.116001\du);
+}
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+{
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetfillcolor{dialinecolor}
+	% was here!!!
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetstrokecolor{dialinecolor}
+	\draw (5.446388\du,4.114129\du)--(4.666945\du,5.107537\du);
+}
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+{
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetfillcolor{dialinecolor}
+	% was here!!!
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetstrokecolor{dialinecolor}
+	\draw (9.923646\du,4.094688\du)--(10.769688\du,5.160313\du);
+}
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+{
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetfillcolor{dialinecolor}
+	% was here!!!
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetstrokecolor{dialinecolor}
+	\draw (12.481025\du,4.114561\du)--(11.678975\du,5.140440\du);
+}
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+{
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetfillcolor{dialinecolor}
+	% was here!!!
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetstrokecolor{dialinecolor}
+	\draw (16.883452\du,4.084242\du)--(17.823215\du,5.137424\du);
+}
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+{
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetfillcolor{dialinecolor}
+	% was here!!!
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetstrokecolor{dialinecolor}
+	\draw (19.422645\du,4.136082\du)--(18.750688\du,5.085585\du);
+}
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+{
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetfillcolor{dialinecolor}
+	% was here!!!
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetstrokecolor{dialinecolor}
+	\draw (24.031484\du,4.061659\du)--(24.908516\du,4.960007\du);
+}
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+{
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetfillcolor{dialinecolor}
+	% was here!!!
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetstrokecolor{dialinecolor}
+	\draw (26.515612\du,4.113755\du)--(25.891055\du,4.907912\du);
+}
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+{
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetfillcolor{dialinecolor}
+	% was here!!!
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetstrokecolor{dialinecolor}
+	\draw (4.851558\du,6.072080\du)--(7.088442\du,7.382920\du);
+}
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+{
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetfillcolor{dialinecolor}
+	% was here!!!
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetstrokecolor{dialinecolor}
+	\draw (10.576465\du,6.102793\du)--(8.376868\du,7.385540\du);
+}
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+{
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetfillcolor{dialinecolor}
+	% was here!!!
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetstrokecolor{dialinecolor}
+	\draw (18.980352\du,6.042311\du)--(21.579648\du,7.412689\du);
+}
+\pgfsetlinewidth{0.100000\du}
+\pgfsetdash{}{0pt}
+\pgfsetdash{}{0pt}
+\pgfsetbuttcap
+{
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetfillcolor{dialinecolor}
+	% was here!!!
+	\definecolor{dialinecolor}{rgb}{0.000000, 0.000000, 0.000000}
+	\pgfsetstrokecolor{dialinecolor}
+	\draw (24.820582\du,5.927191\du)--(22.849418\du,7.327809\du);
+}
+\end{tikzpicture}
+
+\begin{center}
+	Le 1 étant le Père et 2 la mère.\\
+\end{center}
+Au moment du choix du partenaire, une fonction va pouvoir ainsi "remonter" 4 générations et détecter des \CoCiX communs et ainsi calculer la consanguinité.\\
+
+2 méthodes servent à récuperer ou entrer un ancêtre : 
+\begin{itemize}
+	\item \textbf{\textit{.get\_ancetre(numéro)}} : renvoi l'\textbf{.id} de l'ancêtre.
+	\item \textit{\textbf{.set\_ancetre(numero, .id)}} : initialise au \textit{numéro} d'ancêtre, le numéro \textbf{.id} de l'ancêtre.
+\end{itemize}
 \section{Les étapes de la vie d'un \CoCiX}
 \subsection{Naissance \& Mort}
 Un \CoCiX a une espérance de vie de 30 à 40 jours à partir de la date de procréation.

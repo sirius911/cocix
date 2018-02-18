@@ -31,7 +31,6 @@ bool Se_Reproduire::valide_Action( const Cocix* cocix , const bool verbal)
 			else
 			{
 				if(verbal) cout << " mais qui est parti(e) ";
-				//cocix->set_id_partenaire(0);
 			}
 
 	} 

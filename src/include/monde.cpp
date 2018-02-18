@@ -7,7 +7,7 @@
 
 #include "monde.h"
 #include "io.h"
-//#include "class/Cocix.h"
+#include "class/Cocix.h"
 
 using namespace std;
 
@@ -405,12 +405,23 @@ void affiche_map(const multimap< float, short, greater<float> > &m )
 	multimap<float, short, greater<float> >::const_iterator im;
 	for (im=m.begin() ; im!=m.end(); im++)
 	{
-		cout << "il y a " << (*im).first << " Element(s) sur ";
+		cout << "il y a " <<setprecision(3) << (*im).first << "  sur ";
 		affiche_case((*im).second, false);
 		cout << "\n";
 	}
 
 
+}
+
+void affiche_map(const multimap<int,int,greater<int> > &m )
+{
+	multimap<int, int, greater<int> >::const_iterator im;
+	for(im=m.begin() ; im != m.end(); im++)
+	{
+		cout << "Consanguinite = "<< (*im).first << " sur ";
+		affiche_case((*im).second, false);
+		cout << "\n";
+	}
 }
 
 short case_libre(const short case_centrale)
@@ -667,6 +678,198 @@ short meilleur_case(short case_centrale, int info, bool doit_etre_libre ,short r
 		return 0;
 	}
 
+}
+
+short meilleur_case_malade(short case_centrale, Cocix *cocix, bool verbal)
+{	// fonction renvoyant le num de la case du meilleuir Malade !
+	short case_haut_gauche,case_haut,case_haut_droite,case_droite,case_gauche,case_bas_droite,case_bas,case_bas_gauche;
+	int malad_haut_gauche,malad_haut,malad_haut_droite,malad_droite,malad_gauche,malad_bas_droite,malad_bas,malad_bas_gauche;
+	
+	multimap<float, short, greater<float> > zoneRecherche;	// Map des zones recherche trouvée
+	bool trouve = false;
+	short case_trouvee;
+	Cocix *c;
+		// case de recherche
+	case_haut_gauche = monte_gauche(case_centrale);
+	case_haut = monte(case_centrale);
+	case_haut_droite = monte_droite(case_centrale);
+	case_droite = droite(case_centrale);
+	case_gauche = gauche(case_centrale);
+	case_bas_droite = descend_droite(case_centrale);
+	case_bas = descend(case_centrale);
+	case_bas_gauche = descend_gauche(case_centrale);
+
+	// on execute la recherche
+
+	malad_haut_gauche = malade(case_haut_gauche, cocix, verbal);
+	malad_haut = malade(case_haut, cocix, verbal);
+	malad_haut_droite = malade(case_haut_droite, cocix, verbal);
+	malad_droite = malade(case_droite, cocix, verbal);
+	malad_bas_droite = malade(case_bas_droite, cocix, verbal);
+	malad_bas = malade(case_bas, cocix, verbal);
+	malad_bas_gauche = malade(case_bas_gauche, cocix, verbal);
+	malad_gauche = malade(case_gauche, cocix, verbal);
+
+	// les places doivent être libres
+		if( malad_haut_gauche > 0 && libre(case_haut_gauche) ) {
+
+		/*		x..
+				.o.
+				...			*/
+
+			if(verbal) cout << "La case en haut à gauche est libre et a un malade...\n";
+			c = new Cocix(malad_haut_gauche,false,false);
+			zoneRecherche.insert(make_pair(c->Sante.get_valeur(true), case_haut_gauche));
+			delete c;
+			trouve = true;
+
+		}
+		if( malad_haut > 0 && libre(case_haut)) {
+
+		/*		.x.
+				.o.
+				...			*/		
+
+			if(verbal) cout << "La case en haut est libre et a un malade...\n";
+			c = new Cocix(malad_haut,false,false);
+			zoneRecherche.insert(make_pair(c->Sante.get_valeur(true), case_haut));
+			delete c;
+			trouve = true;
+
+		}	
+		if( malad_haut_droite > 0 && libre(case_haut_droite)) {
+
+		/*		..x
+				.o.
+				...			*/		
+
+			if(verbal) cout << "La case en haut à droite est libre et a un malade...\n";
+			c = new Cocix(malad_haut_droite,false,false);
+			zoneRecherche.insert(make_pair(c->Sante.get_valeur(true), case_haut_droite));
+			delete c;
+			trouve = true;
+
+		}
+		if( malad_droite > 0 && libre(case_droite)) {
+
+		/*		...
+				.ox
+				...			*/
+
+			if(verbal) cout << "La case à droite est libre et a un malade...\n";
+			c = new Cocix(malad_droite,false,false);
+			zoneRecherche.insert(make_pair(c->Sante.get_valeur(true), case_droite));
+			delete c;
+			trouve = true;
+
+
+		}
+		if( malad_bas_droite > 0 && libre(case_bas_droite)) {
+
+		/*		...
+				xo.
+				...			*/
+			if(verbal) cout << "La case à gauche  est libre et a un malade...\n";
+			c = new Cocix(malad_bas_droite,false,false);
+			zoneRecherche.insert(make_pair(c->Sante.get_valeur(true), case_bas_droite));
+			delete c;
+			trouve = true;
+
+
+		} 
+		if(malad_bas > 0 && libre(case_bas) ) {
+		/*		...
+				.o.
+				..x			*/	
+
+			if(verbal) cout << "La case en bas à droite est libre et a un malade...\n";
+			c = new Cocix(malad_bas,false,false);
+			zoneRecherche.insert(make_pair(c->Sante.get_valeur(true), case_bas));
+			delete c;
+			trouve = true;
+
+
+		} 
+		if( malad_bas_gauche > 0 && libre(case_bas_gauche)){
+		/*		...
+				.o.
+				.x.			*/		
+
+			if(verbal) cout << "La case en bas est libre et a un malade...\n";
+			c = new Cocix(malad_bas_gauche,false,false);
+			zoneRecherche.insert(make_pair(c->Sante.get_valeur(true), case_bas_gauche));
+			delete c;
+			trouve = true;
+
+
+		}
+		if(malad_gauche > 0 && libre(case_gauche) ) {
+		/*		...
+				.o.
+				x..			*/
+			if(verbal) cout << "La case en bas à gauche est libre et a un malade...\n";
+			c = new Cocix(malad_gauche,false,false);
+			zoneRecherche.insert(make_pair(c->Sante.get_valeur(true), case_gauche));
+			delete c;
+			trouve = true;
+
+
+		}
+	if(trouve){
+		if(verbal)
+		{
+			cout << "il y a " << zoneRecherche.size() << " case(s) possible.\n";
+			affiche_map(zoneRecherche);
+		} 
+		multimap<float, short, greater<float> >::reverse_iterator im;	//inversion pour prendre la plus basse valeur
+		im = zoneRecherche.rbegin();	// on prend le plus bas
+		case_trouvee = (*im).second;
+		return case_trouvee;
+
+	} else {
+			if(verbal) cout << "Il n'y a personne de malade autour de moi !\n";
+		return 0;
+	}
+
+
+}
+int malade(const short num_case, const Cocix *cocix, const bool verbal)
+{
+	// fonction renvoyant le id cocix le plus malade  sur num_case 
+	struct ligneCase caseMonde;
+	int num_malade = 0;
+	float sante_Malade, plus_malade = 1.0f;	//100%
+	Cocix *Malade = NULL;
+	
+	caseMonde = lirecase(num_case);
+	int i=0;
+	do
+	{
+		if(caseMonde.cocix[i] != 0 && caseMonde.cocix[i] != cocix->get_id())
+		{
+			// ni vide ni moi même
+
+			Malade = new Cocix(caseMonde.cocix[i]);
+			if(verbal) cout << "Malade trouvé en " << num_case << " => # " << Malade->get_id();
+			// on récupere sa santé
+			sante_Malade = Malade->Sante.get_valeur(true);
+			if(verbal) cout << " -> "<< sante_Malade * 100.0f << "% ";
+			if(sante_Malade < plus_malade)
+			{
+				//il est plus malade
+				num_malade = Malade->get_id();
+				plus_malade = sante_Malade;
+				if(verbal) cout << " le plus malade !\n";
+			}
+			else
+			{
+				if(verbal) cout << " moins malade !\n";
+			}
+		}
+	} while( ++i < MAX_PAR_CASE);
+	if( ! (Malade == (void*) NULL ))
+						delete Malade;
+	return num_malade;
 }
 
 void affiche_grille(short numCase){

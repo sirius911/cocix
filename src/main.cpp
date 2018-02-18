@@ -22,12 +22,19 @@
 #include "include/class/Actions/Cherche_Partenaire.h"
 #include "include/class/Actions/Cherche_Case_Libre.h"
 #include "include/class/Actions/Pondre.h"
+#include "include/class/Actions/Soigner.h"
+#include "include/class/Actions/Cherche_Malade.h"
 
 #include "include/constantes.h"
 #include "include/io.h"
 #include "include/monde.h"
 
 using namespace std;
+
+void consanguinite_case(short i)
+{
+
+}
 
 int main(int nbArg, char* argv[])
 {
@@ -40,9 +47,9 @@ int main(int nbArg, char* argv[])
 	//Cocix *CoCiX = new Cocix("1.cox",true);
 	int i;
 	bool sortie = false;
-	bool verbal = false;
+	bool verbal = true;
 	bool sauvegarde = false;
-	char prompt[30] = "<[noSav][muet] Aucun CoCiX >";
+	char prompt[31] = "<[noSav][verbal] Aucun CoCiX >";
 	char nomCocix[15] = "Aucun CoCiX";
 	char nomFichier[30];
 
@@ -56,7 +63,12 @@ int main(int nbArg, char* argv[])
 	cout << "		" << VERSION_LOGICIEL << "\n";
 	cout << "   ******************************\n";
 	Jour_Nuit.status();
-
+/*
+	cout << "Action spéciale : ";
+	CoCiX = new Cocix(1,false,true);
+	CoCiX->Sante.set_valeur(10.0f,&CoCiX->balises,false);
+	CoCiX->sauvegarde(true);
+*/
 	cout << "\n";
 	cout << "Tapez votre commande (quit pour quitter).\n";
 	if( nbArg == 1){
@@ -164,6 +176,7 @@ int main(int nbArg, char* argv[])
 					cout << "\tafficheCase\t\tAffiche les infos d'une case.\n";
 					cout << "\tbalises\t\tAffiche les balises du CoCiX chargé.\n";
 					cout << "\tancetre\t\tAffiche les ancetres du CoCiX\n";
+					cout << "\tconsanguinite\t\tDonne la consanguinité des CoCix d'une case.\n";
 					cout << "\tcortexEtat\t\tLance la méthode cortex_etat() du CoCiX chargé.\n";
 					cout << "\tcortexAction\t\tLance la méthode cortex_action() du CoCiX chargé.\n";
 					cout << "\tcouveuse\t\tAffiche les oeufs.\n";
@@ -232,7 +245,28 @@ int main(int nbArg, char* argv[])
 			{
 					affiche_nid(false, 0);
 
-			} else if((strcmp(commande,"couveuse")==0))
+			} else if((strcmp(commande,"consanguinite")==0))
+			{
+					if( ! (CoCiX == (void*) NULL ))
+					{
+						// on charge une CoCiX
+						vector<char*> listeFichiers = affiche_nid(false, 2);
+						cout << "Entrez le Num d'un CoCiX : ";
+						cin >> choix;
+						int i = atoi(choix);
+						if(i > 0 && i <= (int) listeFichiers.size())
+						{
+							CoCiX->consanguinite( i , true);
+						}
+						else
+						{
+							cout << "Mauvais numéro !\n";
+						}
+					} else {
+						cout << "Aucune CoCix chargée ... (load)\n";
+					}
+			}
+			else if((strcmp(commande,"couveuse")==0))
 			{
 					affiche_nid(false, 1);
 			}
@@ -450,20 +484,22 @@ int main(int nbArg, char* argv[])
 			{
 				if( ! (CoCiX == (void*) NULL )){
 						cout << "Choisissez : \n";
-						cout << "Boire() -> " << BOIRE << "\n";
-						cout << "Cherche_Case_Libre() -> " << CHERCHE_CASE_LIBRE << "\n";
-						cout << "Cherche_Eau() -> " << CHERCHE_EAU << "\n";
-						cout << "Cherche_Nourriture() -> " << CHERCHE_NOURRITURE << "\n";
-						cout << "Cherche_Partenaire() -> " << CHERCHE_PARTENAIRE << "\n";
-						cout << "Cherche_Recolte() -> " << CHERCHE_RECOLTE << "\n" ;
-						cout << "Deposer() -> " << DEPOSER << "\n";
-						cout << "Dormir() -> " << DORMIR << "\n";
-						cout << "Manger() -> " << MANGER << "\n";
-						cout << "Pondre() -> " << PONDRE << "\n";
-						cout << "Recolter() -> " << RECOLTER << "\n";
-						cout << "Rentrer() -> " << RENTRER << "\n";
-						cout << "Se_Reproduire() -> " << SE_REPRODUIRE << "\n";
-						cout << "Se_Soigner() -> " << SE_SOIGNER << "\n";
+						cout << "Boire()\t ->\t " << BOIRE << "\n";
+						cout << "Cherche_Case_Libre()\t ->\t " << CHERCHE_CASE_LIBRE << "\n";
+						cout << "Cherche_Eau()\t ->\t " << CHERCHE_EAU << "\n";
+						cout << "Cherche_Malade()\t ->\t " << CHERCHE_MALADE << "\n";
+						cout << "Cherche_Nourriture()\t ->\t " << CHERCHE_NOURRITURE << "\n";
+						cout << "Cherche_Partenaire()\t ->\t " << CHERCHE_PARTENAIRE << "\n";
+						cout << "Cherche_Recolte()\t ->\t " << CHERCHE_RECOLTE << "\n" ;
+						cout << "Deposer()\t ->\t " << DEPOSER << "\n";
+						cout << "Dormir()\t ->\t " << DORMIR << "\n";
+						cout << "Manger()\t ->\t " << MANGER << "\n";
+						cout << "Pondre()\t ->\t " << PONDRE << "\n";
+						cout << "Recolter()\t ->\t " << RECOLTER << "\n";
+						cout << "Rentrer()\t ->\t " << RENTRER << "\n";
+						cout << "Se_Reproduire()\t ->\t " << SE_REPRODUIRE << "\n";
+						cout << "Se_Soigner()\t ->\t " << SE_SOIGNER << "\n";
+						cout << "Soigner()\t ->\t " << SOIGNER << "\n";
 						cout << "\t votre choix : ";
 						cin >> choix;
 						i = atoi(choix);
@@ -552,6 +588,19 @@ int main(int nbArg, char* argv[])
 								else
 									CoCiX->Desire = new Cherche_Case_Libre();
 								break;
+							case SOIGNER:
+								if((strcmp(commande,"forceAction")==0))
+									CoCiX->Action = new Soigner();
+								else
+									CoCiX->Desire = new Soigner();
+								break;
+							case CHERCHE_MALADE:
+								if((strcmp(commande,"forceAction")==0))
+									CoCiX->Action = new Cherche_Malade();
+								else
+									CoCiX->Desire = new Cherche_Malade();
+								break;
+
 							default:
 								cout << "ERREUR: de numero.\n";		
 						}

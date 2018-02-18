@@ -50,12 +50,12 @@ void Se_Soigner::go(Cocix *cocix,bool verbal)
 	if(cocix->Temperature.souffrance(&cocix->Sante , &cocix->balises.coma, false, verbal))
 	{
 		//il y a souffrance 
-		if( cocix->Temperature.get_valeur() < cocix->Temperature.get_capacite())
+		if( cocix->Temperature.get_valeur() < 37.5f)
 		{
 			//on rechauffe si temp < capacite 
 			cocix->Temperature.modif(cocix->genome[TEMP].valeur , &cocix->balises, verbal);
 			if(verbal) cout << "\nJe me rechauffe de " << cocix->genome[TEMP].valeur << "°C.\n";
-		} else if(cocix->Temperature.get_valeur() > cocix->Temperature.get_capacite())
+		} else if(cocix->Temperature.get_valeur() > 37.5f)
 		{
 			// je refroidi
 			cocix->Temperature.modif(- cocix->genome[TEMP].valeur , &cocix->balises, verbal);

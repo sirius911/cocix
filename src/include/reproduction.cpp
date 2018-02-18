@@ -17,11 +17,11 @@
 
 int partenaire(const short num_case, const Cocix *cocix, const bool verbal)
 {
-	// fonction renvoyant un id cocix partenaire potentiel sur num_case 
+	// fonction renvoyant le id cocix partenaire potentiel sur num_case avec la plus faible consanginité
 	struct ligneCase caseMonde;
-	int num_partenaire = 0;
+	int num_partenaire = 0, conSang = -1,consanguinite_potentiel;
 
-	Cocix *partenaire_potentiel;
+	Cocix *partenaire_potentiel = NULL;
 	
 	caseMonde = lirecase(num_case);
 	int i=0;
@@ -36,7 +36,7 @@ int partenaire(const short num_case, const Cocix *cocix, const bool verbal)
 			// on teste la potentialité de ce cocix
 			if (partenaire_potentiel->get_id() !=0)
 			{
-				if(verbal) cout << "\tPartenaire potentiel = " << partenaire_potentiel->get_id() << "\n";
+				if(verbal) cout << "\tPartenaire potentiel N° " << partenaire_potentiel->get_id() << "\n";
 				if(cocix->sexe != partenaire_potentiel->sexe)
 				{
 					if(verbal) cout << "\t\tSexuellement compatible.\n";
@@ -50,7 +50,20 @@ int partenaire(const short num_case, const Cocix *cocix, const bool verbal)
 						{
 							// ok
 							// il faut ici faire les criteres de consanguinité
-							num_partenaire = partenaire_potentiel->get_id();
+							consanguinite_potentiel = calcul_consanguin( cocix, partenaire_potentiel);
+							if(verbal) cout << "Consanguinité = " << consanguinite_potentiel;
+							if(consanguinite_potentiel > conSang)
+							{
+								// meilleur taux de consanginité
+								if(verbal) cout << " Meilleure !\n";
+								num_partenaire = partenaire_potentiel->get_id();
+								conSang = consanguinite_potentiel;
+							}
+							else
+							{
+								if(verbal) cout << " moins bonne !\n";
+							}
+							
 							if(verbal) cout << "\t\t\t\tPartenaire retenu\n";
 						}
 						else
@@ -70,16 +83,70 @@ int partenaire(const short num_case, const Cocix *cocix, const bool verbal)
 			}
 		}
 	} while( ++i < MAX_PAR_CASE);
-
+	if( ! (partenaire_potentiel == (void*) NULL ))
+		delete partenaire_potentiel;
 	return num_partenaire;
 }
 
-short meilleur_case_partenaire(short case_centrale, Cocix *cocix, bool verbal){
+int calcul_consanguin(const Cocix *C1, const Cocix *C2)
+{
+	int i=0,k=0;
+
+	if(C1->get_id() == C2->get_id())
+		return -1;	// c'est moi !!
+
+	// est-ce que C1 est un ancetre ?
+	do
+	{
+		if(C1->get_id() == C2->get_ancetre(k))
+		{
+			if(k == 0) return 0;
+			return (k-1);	// on retranche un 
+		}
+	} while (++k < 30 );
+
+	// est-ce que C2 est un ancêtre ?
+	k=0;
+	do
+	{
+		if(C2->get_id() == C1->get_ancetre(k))
+		{
+			if(k == 0 ) return 0;
+			return (k-1);
+		}
+	} while(++k < 30 );
+
+	// sinon est-ce qu'un de mes ancêtres l'est ?
+
+	do
+	{
+		if(C1->get_ancetre(i) != 0)
+		{
+			k = 0;
+			do
+			{
+				if(C2->get_ancetre(k) != 0 )
+				{
+					if(C1->get_ancetre(i) == C2->get_ancetre(k))
+						return (i+k);	// on renvoi le premier qui correspond
+				}
+			} while( ++k < 30);
+
+		}
+	} while( ++i < 30 );
+	return -1;
+}
+
+short meilleur_case_partenaire(short case_centrale, Cocix *cocix, bool verbal)
+{
 	/* Fonction renvoyant le num case du meilleur partenaire 
 	*/
 	short case_haut_gauche,case_haut,case_haut_droite,case_droite,case_gauche,case_bas_droite,case_bas,case_bas_gauche;
 	int part_haut_gauche,part_haut,part_haut_droite,part_droite,part_gauche,part_bas_droite,part_bas,part_bas_gauche;
-		
+	multimap<int, int, greater<int> > zoneRecherche;	// Map des zones recherche trouvée
+	bool trouve = false;
+	short case_trouvee;
+
 		// case de recherche
 	case_haut_gauche = monte_gauche(case_centrale);
 	case_haut = monte(case_centrale);
@@ -109,8 +176,8 @@ short meilleur_case_partenaire(short case_centrale, Cocix *cocix, bool verbal){
 				...			*/
 
 			if(verbal) cout << "La case en haut à gauche est libre et a un partenaire...\n";
-			return case_haut_gauche;
-			
+			zoneRecherche.insert(make_pair(cocix->consanguinite(part_haut_gauche,verbal), case_haut_gauche));
+			trouve = true;
 
 		}
 		if( part_haut > 0 && libre(case_haut)) {
@@ -120,7 +187,8 @@ short meilleur_case_partenaire(short case_centrale, Cocix *cocix, bool verbal){
 				...			*/		
 
 			if(verbal) cout << "La case en haut est libre et a un partenaire...\n";
-			return case_haut;
+			zoneRecherche.insert(make_pair(cocix->consanguinite(part_haut,verbal), case_haut));
+			trouve = true;
 
 		}	
 		if( part_haut_droite > 0 && libre(case_haut_droite)) {
@@ -130,7 +198,8 @@ short meilleur_case_partenaire(short case_centrale, Cocix *cocix, bool verbal){
 				...			*/		
 
 			if(verbal) cout << "La case en haut à droite est libre et a un partenaire...\n";
-			return case_haut_droite;
+			zoneRecherche.insert(make_pair(cocix->consanguinite(part_haut_droite,verbal), case_haut_droite));
+			trouve = true;
 
 		}
 		if( part_droite > 0 && libre(case_droite)) {
@@ -140,7 +209,9 @@ short meilleur_case_partenaire(short case_centrale, Cocix *cocix, bool verbal){
 				...			*/
 
 			if(verbal) cout << "La case à droite est libre et a un partenaire...\n";
-			return case_droite;
+			zoneRecherche.insert(make_pair(cocix->consanguinite(part_droite,verbal), case_droite));
+			trouve = true;
+
 
 		}
 		if( part_bas_droite > 0 && libre(case_bas_droite)) {
@@ -149,7 +220,9 @@ short meilleur_case_partenaire(short case_centrale, Cocix *cocix, bool verbal){
 				xo.
 				...			*/
 			if(verbal) cout << "La case à gauche  est libre et a un partenaire...\n";
-			return case_bas_droite;
+			zoneRecherche.insert(make_pair(cocix->consanguinite(part_bas_droite,verbal), case_bas_droite));
+			trouve = true;
+
 
 		} 
 		if(part_bas > 0 && libre(case_bas) ) {
@@ -158,7 +231,9 @@ short meilleur_case_partenaire(short case_centrale, Cocix *cocix, bool verbal){
 				..x			*/	
 
 			if(verbal) cout << "La case en bas à droite est libre et a un partenaire...\n";
-			return case_bas;
+			zoneRecherche.insert(make_pair(cocix->consanguinite(part_bas,verbal), case_bas));
+			trouve = true;
+
 
 		} 
 		if( part_bas_gauche > 0 && libre(case_bas_gauche)){
@@ -167,7 +242,9 @@ short meilleur_case_partenaire(short case_centrale, Cocix *cocix, bool verbal){
 				.x.			*/		
 
 			if(verbal) cout << "La case en bas est libre et a un partenaire...\n";
-			return case_bas_gauche;
+			zoneRecherche.insert(make_pair(cocix->consanguinite(part_bas_gauche,verbal), case_bas_gauche));
+			trouve = true;
+
 
 		}
 		if(part_gauche > 0 && libre(case_gauche) ) {
@@ -175,10 +252,27 @@ short meilleur_case_partenaire(short case_centrale, Cocix *cocix, bool verbal){
 				.o.
 				x..			*/
 			if(verbal) cout << "La case en bas à gauche est libre et a un partenaire...\n";
-			return case_gauche;
+			zoneRecherche.insert(make_pair(cocix->consanguinite(part_gauche,verbal), case_gauche));
+			trouve = true;
+
 
 		}
-	return 0;
+	if(trouve){
+		if(verbal)
+		{
+			cout << "il y a " << zoneRecherche.size() << " case(s) possible.\n";
+			affiche_map(zoneRecherche);
+		} 
+		multimap<int, int, greater<int> >::const_iterator im;
+		im = zoneRecherche.begin();	// on prend le plus haut
+		case_trouvee = (*im).second;
+		return case_trouvee;
+
+	} else {
+			if(verbal) cout << "Il n'y a personne autour de moi !\n";
+		return 0;
+	}
+
 }
 
 
@@ -418,7 +512,7 @@ int procreation (Cocix *Male, Cocix *Femelle, bool verbal)
 	Oeuf_Cocix.Temperature = Param_Etat("Température","°C",(float)NULL,37.5f,
 		(float)NULL, 40.0f,
 		35.8f,42.0f,
-		36.0f,40.0f,
+		36.8f,40.0f,
 		(float) SOUFFRANCE_THERMIQUE, 35.5f, 43.5f);	
 	if(verbal) Oeuf_Cocix.Temperature.affiche(false,verbal);
 	
