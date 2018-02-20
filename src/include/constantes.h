@@ -30,6 +30,7 @@
 
 #define FICHIER_JOUR_NUIT "./data/cycles.dat"
 #define REPERTOIRE_NID "./data/nid/"
+#define REPERTOIRE_CIMETIERE "./data/nid/cimetiere/"
 
 // ETAPE CoCiX
 #define ETAT_OEUF 0

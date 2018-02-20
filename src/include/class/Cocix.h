@@ -5,6 +5,7 @@
 #include "Gene.h"
 #include "Param_Etat.h"
 #include "Actions/Actions.h"
+#include "Cortex/Cortex.h"
 
 #include <vector>
 #include <array>
@@ -12,6 +13,7 @@
 
 using namespace std;
 
+class Cortex;
 
 class Cocix
 {
@@ -26,13 +28,12 @@ class Cocix
 		int id_partenaire;
 		int id_oeuf;
 		bool chargement(bool verbal = false);
-		void vieillissement(bool verbal = false);
-		void prend_temperature(const bool = false);	// fonction qui prend la température de la case et maj temp_exterieur
+		
 		char fichier[30];	//nom physique du fichier CoCiX .cox
 		short vivacite;
-		//int ancetres[30];	// ancetres sur 4 générations
 		float temp_exterieur;
 		array <int , 30 > ancetres;
+		Cortex *cortex;
 
 	public:
 
@@ -75,9 +76,12 @@ class Cocix
 
 		// methodes de "vie"
 		int vie(bool = false);
+		void meurt(bool verbal = false);
 		bool cortex_Etat(const bool verbal = false);	// Fonction du Cortex d'etat
 		bool cortex_Action(const bool verbal = false); // Fonction du Cortex d'Action
-
+		void vieillissement(bool verbal = false);
+		
+		void prend_temperature(const bool = false);	// fonction qui prend la température de la case et maj temp_exterieur
 		void raz_balises(const  bool verbal = false);
 		void maj_balises(const bool verbal = false);
 		bool alert_agressive();
@@ -95,7 +99,7 @@ class Cocix
 		void affiche_action(const bool verbal = false);
 		void affiche_desire(const bool verbal = false);
 		
-		short etape();	// renvoi l'etape bébé (OEUF,BEBE,ADULTE ou VIEUX)
+		const int etape();	// renvoi l'etape bébé (OEUF,BEBE,ADULTE ou VIEUX)
 		short age() const;	// Age actuel ou à sa mort
 		bool coma();
 		bool malade();
@@ -142,6 +146,8 @@ class Cocix
 		int get_nb_genes() const;
 		short get_date_naissance() const;
 		short get_date_mort() const;
+		float get_temp_exterieur() const;
+		char* get_nom_cortex() const;
 
 
 // ancêtres

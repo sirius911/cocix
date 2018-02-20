@@ -63,12 +63,13 @@ int main(int nbArg, char* argv[])
 	cout << "		" << VERSION_LOGICIEL << "\n";
 	cout << "   ******************************\n";
 	Jour_Nuit.status();
-/*
+
 	cout << "Action spéciale : ";
-	CoCiX = new Cocix(1,false,true);
-	CoCiX->Sante.set_valeur(10.0f,&CoCiX->balises,false);
+	CoCiX = new Cocix(2,false,true);
+	CoCiX->set_id_oeuf(7);
+	CoCiX->balises.fecondee = true;
 	CoCiX->sauvegarde(true);
-*/
+
 	cout << "\n";
 	cout << "Tapez votre commande (quit pour quitter).\n";
 	if( nbArg == 1){
@@ -177,6 +178,7 @@ int main(int nbArg, char* argv[])
 					cout << "\tbalises\t\tAffiche les balises du CoCiX chargé.\n";
 					cout << "\tancetre\t\tAffiche les ancetres du CoCiX\n";
 					cout << "\tconsanguinite\t\tDonne la consanguinité des CoCix d'une case.\n";
+					cout << "\tcortex\t\tAffiche le cortex actuel du CoCiX\n";
 					cout << "\tcortexEtat\t\tLance la méthode cortex_etat() du CoCiX chargé.\n";
 					cout << "\tcortexAction\t\tLance la méthode cortex_action() du CoCiX chargé.\n";
 					cout << "\tcouveuse\t\tAffiche les oeufs.\n";
@@ -187,9 +189,10 @@ int main(int nbArg, char* argv[])
 					cout << "\tforceAction\t\tForce une action pour le CoCiX chargé.\n";
 					cout << "\tforceDesire\t\tForce un Désire pour le CoCiX chargé.\n";
 					cout << "\tgenetique\t\tAffiche le genome du CoCiX chargé.\n";
-					cout << "\tgo\t\tLance la methode go() du CoCiX chargé.\n";
+					
 					cout << "\tgrille\t\tAffiche les 25 cases (5x5) autour du CoCiX.\n";
 					cout << "\tmarquePresence\t\tMarque la présence du Cocix sur sa case dans Monde\n";
+					cout << "\tmeurt\t\tFait mourrir le CoCiX\n";
 					cout << "\tmodeSauvegarde\t\tPermute le mode de sauvegarde automatique.\n";
 					cout << "\tmuet\t\tPermute en mode 'MUET'.\n";
 					cout << "\tnid\t\tAffiche le nid.\n";
@@ -232,7 +235,16 @@ int main(int nbArg, char* argv[])
 						cout << "Erreur de n° de case ![1-10000]\n";
 					}
 
-			}else if((strcmp(commande,"marquePresence")==0))
+			}else if((strcmp(commande,"cortex")==0))
+			{
+					if(CoCiX)
+					{
+						cout << "Le cortex est : " << CoCiX->get_nom_cortex() << "\n";
+					} else {
+						cout << "Aucune CoCix chargée ... (load)\n";
+					}
+			}
+			else if((strcmp(commande,"marquePresence")==0))
 			{
 					if( ! (CoCiX == (void*) NULL ))
 					{
@@ -468,10 +480,11 @@ int main(int nbArg, char* argv[])
 						cout << "Aucune CoCix chargée ... (load)\n";
 					}
 
-			} else if((strcmp(commande,"go")==0))
+			} else if((strcmp(commande,"meurt")==0))
 			{
 				if( ! (CoCiX == (void*) NULL )){
-						CoCiX->Desire->go(CoCiX, verbal);
+
+						CoCiX->meurt(verbal);
 						CoCiX->affiche(false);
 						if(sauvegarde)
 							CoCiX->sauvegarde(verbal);

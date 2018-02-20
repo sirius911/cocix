@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
-#include <math.h>
+//#include <math.h>
 #include <vector>
 #include "Gene.h"
 #include "Cocix.h"
@@ -10,6 +10,11 @@
 #include "../monde.h"
 #include "../reproduction.h"
 #include <iomanip>
+
+#include "Cortex/Cortex_Adulte_Male.h"
+#include "Cortex/Cortex_Adulte_Femelle.h"
+#include "Cortex/Cortex_Oeuf.h"
+#include "Cortex/Cortex_Bebe.h"
 
 #include "Actions/Actions.h"
 //#include "Actions/Agresser.h"
@@ -348,6 +353,16 @@ char* Cocix::get_fichier()
 	return fichier;
 }
 
+float Cocix::get_temp_exterieur() const
+{
+	return temp_exterieur;
+}
+
+char* Cocix::get_nom_cortex() const
+{
+	return cortex->get_nom();
+}
+
 int Cocix::get_ancetre(const short numero ) const
 {
 	if(numero >=0 && numero < 30 )
@@ -482,321 +497,21 @@ int Cocix::vie(bool verbal){
 	}
 	return -1;
 }
-/*****************************************************************************************************************/
-	/*
-	 _____   _____   _____    _____   _____  __    __       _____   _____       ___   _____  
-	/  ___| /  _  \ |  _  \  |_   _| | ____| \ \  / /      | ____| |_   _|     /   | |_   _| 
-	| |     | | | | | |_| |    | |   | |__    \ \/ /       | |__     | |      / /| |   | |   
-	| |     | | | | |  _  /    | |   |  __|    }  {        |  __|    | |     / / | |   | |   
-	| |___  | |_| | | | \ \    | |   | |___   / /\ \       | |___    | |    / /  | |   | |   
-	\_____| \_____/ |_|  \_\   |_|   |_____| /_/  \_\      |_____|   |_|   /_/   |_|   |_| */  
 
 bool Cocix::cortex_Etat(bool verbal){
-	float correction,depense_eau,depense_calorie;
+	
 	JourNuit Jour_Nuit;
-	
-	cout << "\n****     C O R T E X   E T A T     ****\n";
+	if(cortex) 	cortex->gestion_Etat(this,verbal);
 
-	raz_balises(verbal);
-	
-	temp_exterieur = temperature(case_presence);
-
-		/*
-		¯|¯ |¯ |\/| |¯| |¯ |¯| /¯\ ¯|¯ | | |¯| |¯ 
- 		 |  |¯ |  | |¯  |¯ |¯\ |¯|  |  |_| |¯\ |¯ 
-      	 	 ¯           ¯                      ¯ 
-		
-				Echange avec l'extérieur
-		*/
-	
-		
-		if(verbal) cout << "Température ("<< temp_exterieur << " °C): \n";
-		else cout << "temp...";
-	// vérifie l'étape de la Fourmiz
-		if(etape() == ETAT_OEUF ) {
-			// Pas de Cortex d'état
-			if(verbal) cout << "Je suis un oeuf ! (TODO)</br>";
-			// verifier la température
-			if(temp_exterieur < 10.0f)
-			{
-				if(verbal) cout << " Temp ext < 10°C\n";
-				Temperature.modif(-genome[TEMP].valeur, &balises,verbal); // on diminue la température de Genes.temp.valeur
-			} else if(temp_exterieur > 35.0f)
-			{
-				if(verbal) cout << "Temp ext > 35°C";
-				Temperature.modif(+genome[TEMP].valeur, &balises, verbal);	// on augmente la température 
-			}
-			return (balises.vivant);
-		}
-		
-		if(etape() == ETAT_BEBE) {
-			
-			// cortex d'etat des Bébés
-			if(verbal) cout << "Je suis un bébé ! </br>";
-			// TO DO
-		}
-
-
-		if(temp_exterieur > Temperature.get_valeur() ){
-			// si la température exterieur ext supérieur au augmente la température interne de Genes['temp']->valeur
-			if(verbal) cout << " Temp ext > Temp corporel => \n"; 
-			Temperature.modif(genome[TEMP].valeur, &balises,verbal);
-		} else {
-			// sinon rien ne change
-			if(verbal) cout << " Temp ext <= temp corporel -> aucune modif\n";
-		}
-
-
-		// verification de la température extérieur < à 10°C
-		if(temp_exterieur < 10.0f) {
-			
-			if(verbal) cout << " Temp ext < 10°C<\n";
-			Temperature.modif(-genome[TEMP].valeur, &balises,verbal); // on diminue la température de Genes.temp.valeur
-			
-		}
-
-
-		//variation de température en fonction de l'action
-		// la température ne descend pas en dessous de 36.5 quand elle Mange Dort ou BOIT
-
-		// si je dort ou si je mange ou si bois et que ma température est inf à 36.5°C mon action ne bouge pas ma température
-		if(Action->get_chaleur() <= 0 && Temperature.get_valeur() < 36.5f)
-		{
-			if(verbal)
-			{
-				cout << Action->get_action() << " ne me fait pas perdre de température car ma température < 36,5°C\n";
-			}
-		}
-		else
-		{
-			Temperature.modif(Action->get_chaleur(), &balises,verbal);
-			if(verbal) cout << Action->get_action() << " -> +" << Action->get_chaleur() << "°C = " << Temperature.get_valeur() << "°C\n";
-
-		}
-
-		
-		// Calcul du facteur de correction de température
-		correction = (Temperature.get_valeur() - 37.5f) * (Temperature.get_valeur() - 37.5f) * sqrt(Temperature.get_valeur());
-
-		if(verbal) cout << "Facteur de correction  de Temperature = " << correction << "%\n";
-	cout << "ok\n";
-	cout << "Hydro...";
-		/*
-						|¯\ |¯ |¯| |¯ |\| |¯  |¯ |¯    | | \| |¯\ |¯| | |¯|  | | |¯ 
-						|_/ |¯ |¯  |¯ | |  ¯| |¯  ¯|   |¯|  | |_/ |¯\ | |_|¬ |_| |¯ 
-     						¯      ¯      ¯   ¯  ¯                               ¯ 
-		*/
-		// depense en eau en fonction de l'action:
-		depense_eau = Action->get_eau() + (Action->get_eau() * correction / 100);
-		if(fecondee()) 
-		{
-			depense_eau += ( depense_eau * 0.1f ); //si fécondée 10% en plus
-			if(verbal) cout << "fécondée : + 10% ";
-		}
-		Hydro.modif(-depense_eau, &balises,verbal);
-		if(verbal) cout << Action->get_action() << " -> -" << depense_eau << " muL = " << Hydro.get_valeur() << " muL\n";
-	
-	cout << "ok\n";
-	cout << "Cal...";
-		/*
-						|¯\ |¯ |¯| |¯ |\| |¯  |¯ |¯    |¯ /¯\ |  |¯| |¯| | |¯|  | | |¯ 
-						|_/ |¯ |¯  |¯ | |  ¯| |¯  ¯|   |_ |¯| |_ |_| |¯\ | |_|¬ |_| |¯ 
-     						¯      ¯      ¯   ¯  ¯                                  ¯ 
-		*/
-		// depense en Calorie en fonction de l'action:
-		depense_calorie = Action->get_calorie();
-		if(fecondee())
-		{
-			depense_calorie += (depense_calorie * 0.1f);	// si fécondée 10% en plus
-			if(verbal) cout << "fécondée : + 10% ";
-		} 
-		Calorie.modif(-depense_calorie, &balises);
-		if(verbal) cout << Action->get_action() << " -> -" << depense_calorie <<" Cal = " << Hydro.get_valeur() << "Cal\n";
-
-	cout << "ok\n";
-	cout << "SA...";
-		/*
-		\ | /¯\ |¯| | /¯\ ¯|¯ | |¯| |\|   |¯\ |¯   |¯  /¯\ |\| ¯|¯ |¯ 
- 		 \| |¯| |¯\ | |¯|  |  | |_| | |   |_/ |¯    ¯| |¯| | |  |  |¯ 
-                                              ¯    ¯               ¯ 
-		*/
-		// Vieux ?	
-		if(etape() == ETAT_VIEUX) {
-			vieillissement(verbal);
-		}
-
-		// Souffrances des Etats
-	cout << "ok\n";
-	cout << "Souffrances :\nHydro...";	
-		Hydro.souffrance(&Sante,  balises.coma, true, verbal);
-	cout << "\nCal...";
-		Calorie.souffrance(&Sante,  balises.coma, true, verbal);
-	cout << "\nTemp...";
-		Temperature.souffrance(&Sante,  balises.coma, true, verbal);
-	cout << "\nSant...";
-		Sante.souffrance(&Sante,  balises.coma, true, verbal);
-	cout << "\n";
-
-		// GESTION DU SOMMEIL
-		if(Action->equal(Dormir())) {
-			// La CoCix Dort
-			cout << "Sommeil...";
-			Sante.modif(Sante.get_valeur() * genome[RECUP_SOMMEIL].valeur, &balises,verbal);	
-			if(verbal) cout << "Action = DORMIR ==> Santé + " << setprecision(3) << ( Sante.get_valeur() * genome[RECUP_SOMMEIL].valeur )<< setprecision(2) <<  "% = " << Sante.get_valeur() << "\n";
-			cout << "ok\n";
-		}
-
-/*
-                                +-+-+-+-+-+-+-+
-								|B|A|L|I|S|E|S|
-								+-+-+-+-+-+-+-+
-*/
-        maj_balises(verbal);
-
-        //MORT
-        if(Sante.get_valeur() < 1 || Sante.get_capacite() < 1){
-        	if(verbal)cout << "\n\t JE MEURT !! =============> TODO \n";
-        	// meurt();	 TODO
-        	return false;
-        }
-/*
-					 ####  #    #  ####  # #    #    #####  ######  ####  # #####  ######  ####  
-					#    # #    # #    # #  #  #     #    # #      #      # #    # #      #      
-					#      ###### #    # #   ##      #    # #####   ####  # #    # #####   ####  
-					#      #    # #    # #   ##      #    # #           # # #####  #           # 
-					#    # #    # #    # #  #  #     #    # #      #    # # #   #  #      #    # 
- 					####  #    #  ####  # #    #    #####  ######  ####  # #    # ######  ####  
-*/
-         cout << "Désire...";
-        if (Jour_Nuit.jour_nuit == JOUR)
-        {
-        //JOUR
-        cout << "Jour...";
-        	// Besoins vitaux
-        	if(coma())
-        	{
-        		Desire = new Dormir();
-        		Action = new Dormir();
-        	} 
-        	else if(malade())
-        		Desire = new Se_Soigner();
-        	else if(fecondee() && cycle_sexuel() == 4 && get_id_oeuf() !=0)
-        		Desire = new Pondre();
-        	else if(soif())
-        		Desire = new Boire();
-        	else if(faim())
-        		Desire = new Manger();
-        	else if(froid())
-        	{
-        		// si le CoCiX a froid elle désire rentrer car chez elle elle n'a plus froid
-        		Desire = new Rentrer();
-        	}
-        	else
-        	{
-        	// besoins non-vitaux
-        		if(etape() > ETAT_BEBE){
-        			if(male())
-        			{
-        			//MALE
-        				if(cycle_sexuel() == 0)
-        				{	//mature
-        					// on regarde l'agressivité
-        					if(agressive())
-        						cout << "Agresser  ...non implémenté...";
-        						//Desire = new Agresser();
-        					else if(compassion())
-       							Desire = new Soigner();
-        					else
-        						Desire = new Se_Reproduire();
-        				} else 
-        					Desire = new Dormir();	//Immature
-        			}
-        			else
-        			{
-        			//FEMELLE      				
-       					// femelle 
-       					if(cycle_sexuel() >=0  && cycle_sexuel() < 3 )
-       					{	
-       						if(fecondee())
-       						{	// non fécondable
-       							if(compassion())
-       							{
-       								Desire = new Soigner();	
-       							}
-       							else if(agressive())
-       							{
-       								cout << "Agresser()  ...non implémenté...";
-       								//Desire = new Agresser();	
-       							}
-       							else
-       							{
-       								//recolte
-       								if(pleine())
-	        							Desire = new Deposer();
-        							else
-	        							Desire = new Recolter();
-        						}
-       						}
-       						else
-       						{
-       							//Fertile
-        						if(agressive())
-	       							cout << "Agresser()  ...non implémenté...";
-       								//Desire = new Agresser();
-       							else if(compassion())
-       								Desire = new Soigner();
-       							else
-           							Desire = new Se_Reproduire();
-           					}
-       					}
-       					else
-       					{
-       						// non fertile
-       						if(agressive())
-       							cout << "Agresser()  ...non implémenté...";
-       							//Desire = new Agresser();
-       						else if(compassion())
-       							Desire = new Soigner();
-       						else
-       						{
-       							//recolte
-       							if(pleine())
-        							Desire = new Deposer();
-        						else
-        							Desire = new Recolter();
-        					}
-        				}
-        			}
-        		} else {
-        			// Bébé ou Oeuf
-        			Desire = new Dormir();
-        		}
-        	}
+	 //MORT  // a mettre en dehors du cortex
+    if(Sante.get_valeur() < 1 || Sante.get_capacite() < 1){
         	
-        } 
-        else if (Jour_Nuit.jour_nuit == CREPUSCULE)
-        {
-        cout << "Crépuscule ...";
-        // CRESPUSCULE
-        	if(malade())
-        		Desire = new Se_Soigner();
-        	else if(soif())
-        		Desire = new Boire();
-        	else if(faim())
-        		Desire = new Manger();
-        	else
-        		Desire = new Dormir();
-        
-        } 
-        else 
-        {
-        //Il fait Nuit
-        	cout << "Nuit ...";
-       		Desire = new Dormir();
-       	}
-       	cout << " ==> ";
-        Desire->affiche_desire(verbal);
-        return balises.vivant;
+        if(verbal)cout << "\n\t JE MEURT !! =============> TODO \n";
+        	return false;
+        	
+    }
+	
+    return cortex->decide_Desire(this,verbal);;
 }
 /* ********************************************************************************************************************
 
@@ -1029,6 +744,61 @@ void Cocix::vieillissement(bool verbal){
 			if(Sante.get_valeur() > Sante.get_capacite()) Sante.set_valeur(Sante.get_capacite(), &balises , false); 
 }
 
+void Cocix::meurt(bool verbal)
+{
+	char fichier_a_effacer[30] = "";
+
+	JourNuit Jour_Nuit;
+	balises.vivant = false;
+	set_date_mort(Jour_Nuit.jours);
+	// on récupère la quantité de calorie a remettre sur la case
+	float recup_cal,recup_hydro;
+	recup_cal = ( Calorie.get_valeur(false) * 0.75f) + get_recolte();	// 75% + récolte
+	recup_hydro = ( Hydro.get_valeur(false) * 0.90f);	// 90% de l'eau
+
+	// regarde si récolte
+
+	if(fecondee())
+	{
+		Cocix *oeuf;
+		if(verbal) cout << "La CoCiX était fécondée, l'oeuf est perdu \n";
+
+		// on récupère les cal de l'oeuf
+		oeuf  = new Cocix(get_id_oeuf(),true,verbal);
+		if( oeuf->get_id() !=0 )
+		{
+			recup_cal += (oeuf->Calorie.get_valeur(false)/2);	// 50% des calories de l'oeuf
+			// on efface l'oeuf
+			sprintf(fichier_a_effacer, "%s%s", REPERTOIRE_NID, oeuf->get_fichier());
+			if(verbal) cout << "Effacement de " << fichier_a_effacer << "\n";
+
+			remove(fichier_a_effacer);		
+		}
+		else
+		{
+			if(verbal) cout << "Je ne retrouve plus l'oeuf\n";
+		}
+		delete oeuf;
+	}
+	if(verbal) cout << "Récupération des cal = " << recup_cal << " cal et eau = " << recup_hydro << " uml\n";
+
+	// on met la nourriture
+	ajoute_element(get_case_presence(),recup_cal,NOURRITURE);
+	// on met l'eau
+	ajoute_element(get_case_presence(),recup_hydro,EAU);
+	// on efface la trace
+	efface_trace(get_case_presence(),get_id(),verbal);
+	// on efface le fichier
+	sprintf(fichier_a_effacer, "%s%s", REPERTOIRE_NID, get_fichier());
+	if(verbal) cout << "Effacement de "<< fichier_a_effacer << "\n";
+	remove(fichier_a_effacer);
+
+	// sauvegarde dans le cimetiere
+	sauvegarde();
+
+
+}
+
 
 /*
 			| |\| |¯ |¯| |¯| |\/| /¯\ ¯|¯ | |¯| |\| 
@@ -1089,7 +859,7 @@ bool Cocix::rentree() const
 		return (case_presence == case_naissance);
 }
 
-short Cocix::etape(){
+const int Cocix::etape(){
 		short age;
 		age = (int) this->age();
 		if(age <= 1) return ETAT_OEUF;
@@ -1232,7 +1002,10 @@ int Cocix::consanguinite(int idC,  bool verbal)
 bool Cocix::sauvegarde(bool verbal){
 
 	char nomFichier[30] = "";
-	sprintf(nomFichier, "%s%s", REPERTOIRE_NID, fichier);
+	if(vivant())
+		sprintf(nomFichier, "%s%s", REPERTOIRE_NID, fichier);
+	else
+		sprintf(nomFichier, "%s%s", REPERTOIRE_CIMETIERE, fichier);
 	if(verbal) cout << "Sauvegarde de " << nomFichier << " ...";
 	ofstream f (nomFichier, ios::out | ios::binary);
 
@@ -1321,11 +1094,14 @@ bool Cocix::chargement(bool verbal){
 	sprintf(nomFichier, "%s%s", REPERTOIRE_NID, fichier);
 	if(verbal) cout << "Chargement de " << nomFichier << " ... ";
     ifstream f(nomFichier, std::ios::binary);
-  	if (!f){
+  	if (!f)
+  	{
       	cout << "Impossible de lire dans le fichier :'" << nomFichier << "'";
       	return false;
       	
-    } else {
+    }
+    else
+    {
     	// Paramètres d'identité
     	f.read((char*) &id, sizeof(int));
     	f.read((char*) &nom, sizeof(char[10]));
@@ -1502,6 +1278,36 @@ bool Cocix::chargement(bool verbal){
 				f.read ((char*) &temp , sizeof(int));
 				set_ancetre(i,temp);
 			} while (++i < 30);
+
+		// Cortex
+		if(verbal) cout << "Chargement du Cortex ";
+		
+		switch(etape())
+		{
+			case  ETAT_BEBE:
+				if(verbal) cout << "Bébé\n";
+				cortex = new Cortex_Bebe();
+				break;
+			case  ETAT_OEUF:
+				if(verbal) cout << "Oeuf\n";
+				cortex = new Cortex_Oeuf(get_date_naissance() != 0);
+				break;
+			case ETAT_ADULTE:
+				if(verbal) cout << "Adulte ";
+				if(male()) cortex = new Cortex_Adulte_Male();
+				else cortex = new Cortex_Adulte_Femelle();
+				break;
+			case ETAT_VIEUX:
+				if(verbal) cout << "Vieux ";
+				if(male()) cortex = new Cortex_Adulte_Male();
+				else cortex = new Cortex_Adulte_Femelle();
+				break;
+
+			default:
+				cout << "Pas de Cortex\n";
+				f.close();
+				return false;
+		}
 
   	 	f.close();
   	 	return true;

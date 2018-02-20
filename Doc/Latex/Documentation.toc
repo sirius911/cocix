@@ -12,74 +12,74 @@
 \contentsline {part}{I\hspace {1em}\textbf {C}o\textbf {C}i\textbf {X} }{5}
 \contentsline {chapter}{\numberline {2}Les \textbf {C}o\textbf {C}i\textbf {X} }{6}
 \contentsline {section}{\numberline {2.1}Les \textit {Param\IeC {\`e}tres} d'un \textbf {C}o\textbf {C}i\textbf {X} }{6}
-\contentsline {subsection}{\numberline {2.1.1}Param\IeC {\`e}tres \textit {d'identit\IeC {\'e}} des \textbf {C}o\textbf {C}i\textbf {X} }{7}
-\contentsline {subsection}{\numberline {2.1.2}Param\IeC {\`e}tres \textit {d'\IeC {\'e}tat} des \textbf {C}o\textbf {C}i\textbf {X} }{8}
-\contentsline {subsubsection}{\numberline {2.1.2.1}Propri\IeC {\'e}t\IeC {\'e}s des Param\_Etat}{8}
-\contentsline {subsubsection}{\numberline {2.1.2.2}Sant\IeC {\'e}}{9}
-\contentsline {subsubsection}{\numberline {2.1.2.3}\IeC {\'E}tat Calorique}{12}
-\contentsline {subsubsection}{\numberline {2.1.2.4}\IeC {\'E}tat Hydrique}{14}
-\contentsline {subsubsection}{\numberline {2.1.2.5}Temp\IeC {\'e}rature}{15}
-\contentsline {subsection}{\numberline {2.1.3}Param\IeC {\`e}tres \textit {g\IeC {\'e}n\IeC {\'e}tiques} des \textbf {C}o\textbf {C}i\textbf {X} }{16}
-\contentsline {subsubsection}{\numberline {2.1.3.1}les g\IeC {\`e}nes valeur}{16}
-\contentsline {subsubsection}{\numberline {2.1.3.2}les g\IeC {\`e}nes 'pourcentage'}{17}
-\contentsline {subsubsection}{\numberline {2.1.3.3}Mode de transmission}{18}
-\contentsline {subsection}{\numberline {2.1.4}Agressivit\IeC {\'e}}{18}
-\contentsline {subsection}{\numberline {2.1.5}Vivacit\IeC {\'e}}{18}
-\contentsline {subsection}{\numberline {2.1.6}Autres param\IeC {\`e}tres secondaires}{18}
-\contentsline {paragraph}{\textbf {R\IeC {\'e}coltes et stockage}}{18}
-\contentsline {subsection}{\numberline {2.1.7}Param\IeC {\`e}tre \textit {Desire}}{18}
-\contentsline {subsection}{\numberline {2.1.8}Param\IeC {\`e}tres \textit {d'Actions} des \textbf {C}o\textbf {C}i\textbf {X} }{19}
-\contentsline {subsection}{\numberline {2.1.9}Les balises d'alertes}{19}
-\contentsline {subsection}{\numberline {2.1.10}Anc\IeC {\^e}tres}{19}
-\contentsline {section}{\numberline {2.2}Les \IeC {\'e}tapes de la vie d'un \textbf {C}o\textbf {C}i\textbf {X} }{20}
-\contentsline {subsection}{\numberline {2.2.1}Naissance \& Mort}{20}
-\contentsline {subsection}{\numberline {2.2.2}Reproduction et F\IeC {\'e}condation}{20}
-\contentsline {subsection}{\numberline {2.2.3}Les Cycles}{20}
-\contentsline {subsubsection}{\numberline {2.2.3.1}Cycle Jour/Nuit}{20}
-\contentsline {subsubsection}{\numberline {2.2.3.2}Cycles sexuels}{21}
-\contentsline {section}{\numberline {2.3}Le Syst\IeC {\`e}me nerveux des \textbf {C}o\textbf {C}i\textbf {X} }{22}
-\contentsline {subsection}{\numberline {2.3.1}Le Cortex d'\IeC {\'E}tat}{22}
+\contentsline {subsection}{\numberline {2.1.1}Param\IeC {\`e}tres \textit {d'identit\IeC {\'e}} des \textbf {C}o\textbf {C}i\textbf {X} }{8}
+\contentsline {subsection}{\numberline {2.1.2}Param\IeC {\`e}tres \textit {d'\IeC {\'e}tat} des \textbf {C}o\textbf {C}i\textbf {X} }{9}
+\contentsline {subsubsection}{\numberline {2.1.2.1}Propri\IeC {\'e}t\IeC {\'e}s des Param\_Etat}{9}
+\contentsline {subsubsection}{\numberline {2.1.2.2}Sant\IeC {\'e}}{10}
+\contentsline {subsubsection}{\numberline {2.1.2.3}\IeC {\'E}tat Calorique}{13}
+\contentsline {subsubsection}{\numberline {2.1.2.4}\IeC {\'E}tat Hydrique}{15}
+\contentsline {subsubsection}{\numberline {2.1.2.5}Temp\IeC {\'e}rature}{16}
+\contentsline {subsection}{\numberline {2.1.3}Param\IeC {\`e}tres \textit {g\IeC {\'e}n\IeC {\'e}tiques} des \textbf {C}o\textbf {C}i\textbf {X} }{17}
+\contentsline {subsubsection}{\numberline {2.1.3.1}les g\IeC {\`e}nes valeur}{17}
+\contentsline {subsubsection}{\numberline {2.1.3.2}les g\IeC {\`e}nes 'pourcentage'}{18}
+\contentsline {subsubsection}{\numberline {2.1.3.3}Mode de transmission}{19}
+\contentsline {subsection}{\numberline {2.1.4}Agressivit\IeC {\'e}}{19}
+\contentsline {subsection}{\numberline {2.1.5}Vivacit\IeC {\'e}}{19}
+\contentsline {subsection}{\numberline {2.1.6}Autres param\IeC {\`e}tres secondaires}{19}
+\contentsline {paragraph}{\textbf {R\IeC {\'e}coltes et stockage}}{19}
+\contentsline {subsection}{\numberline {2.1.7}Param\IeC {\`e}tre \textit {Desire}}{19}
+\contentsline {subsection}{\numberline {2.1.8}Param\IeC {\`e}tres \textit {d'Actions} des \textbf {C}o\textbf {C}i\textbf {X} }{20}
+\contentsline {subsection}{\numberline {2.1.9}Les balises d'alertes}{20}
+\contentsline {subsection}{\numberline {2.1.10}Anc\IeC {\^e}tres}{20}
+\contentsline {section}{\numberline {2.2}Les \IeC {\'e}tapes de la vie d'un \textbf {C}o\textbf {C}i\textbf {X} }{21}
+\contentsline {subsection}{\numberline {2.2.1}Naissance \& Mort}{21}
+\contentsline {subsection}{\numberline {2.2.2}Reproduction et F\IeC {\'e}condation}{21}
+\contentsline {subsection}{\numberline {2.2.3}Les Cycles}{21}
+\contentsline {subsubsection}{\numberline {2.2.3.1}Cycle Jour/Nuit}{21}
+\contentsline {subsubsection}{\numberline {2.2.3.2}Cycles sexuels}{22}
+\contentsline {section}{\numberline {2.3}Le Syst\IeC {\`e}me nerveux des \textbf {C}o\textbf {C}i\textbf {X} }{23}
+\contentsline {subsection}{\numberline {2.3.1}Le Cortex d'\IeC {\'E}tat}{23}
 \contentsline {subsection}{\numberline {2.3.2}D\IeC {\'e}sires}{25}
 \contentsline {subsubsection}{\numberline {2.3.2.1}g\IeC {\'e}n\IeC {\'e}ralit\IeC {\'e}s}{25}
-\contentsline {subsubsection}{\numberline {2.3.2.2}Les d\IeC {\'e}sires}{25}
-\contentsline {subsubsection}{\numberline {2.3.2.3}Structure de l'\textit {Objet} desire}{26}
-\contentsline {subsection}{\numberline {2.3.3}Le Cortex d'Action}{28}
-\contentsline {section}{\numberline {2.4}Les Actions}{29}
-\contentsline {subsection}{\numberline {2.4.1}Principe}{29}
-\contentsline {subsection}{\numberline {2.4.2}Structures de l'Objet Action}{29}
-\contentsline {subsection}{\numberline {2.4.3}Liste des Actions (Verbes conjugu\IeC {\'e}s)}{29}
-\contentsline {chapter}{\numberline {3}Le G\IeC {\'e}nome}{31}
-\contentsline {section}{\numberline {3.1}Principes et G\IeC {\'e}n\IeC {\'e}ralit\IeC {\'e}s}{31}
-\contentsline {section}{\numberline {3.2}Table du Genome}{32}
-\contentsline {chapter}{\numberline {4}Sexualit\IeC {\'e} \& Reproduction}{33}
-\contentsline {section}{\numberline {4.1}Principes \& g\IeC {\'e}n\IeC {\'e}ralit\IeC {\'e}s}{33}
-\contentsline {section}{\numberline {4.2}Quand la reproduction est-elle possible ?}{33}
-\contentsline {section}{\numberline {4.3}La reproduction}{34}
-\contentsline {section}{\numberline {4.4}Un ou une Nouveau(ele) \textbf {C}o\textbf {C}i\textbf {X} }{34}
-\contentsline {subsection}{\numberline {4.4.1}principe}{34}
-\contentsline {subsection}{\numberline {4.4.2}Fonction \textit {reproduction()}}{34}
-\contentsline {section}{\numberline {4.5}La ponte}{36}
-\contentsline {chapter}{\numberline {5}Les Combats}{37}
-\contentsline {section}{\numberline {5.1}Principe}{37}
-\contentsline {section}{\numberline {5.2}Quand le combat est-elle possible ?}{37}
-\contentsline {section}{\numberline {5.3}Le Combat}{37}
-\contentsline {part}{II\hspace {1em}Environnement}{39}
-\contentsline {chapter}{\numberline {6}G\IeC {\'e}n\IeC {\'e}ralit\IeC {\'e}, notion de temps et bases de donn\IeC {\'e}es}{40}
-\contentsline {section}{\numberline {6.1}La Base Cycles}{40}
-\contentsline {chapter}{\numberline {7}Monde}{43}
-\contentsline {section}{\numberline {7.1}Coordonn\IeC {\'e}es (x,y)}{43}
-\contentsline {subsection}{\numberline {7.1.1}Principes}{43}
-\contentsline {section}{\numberline {7.2}Orientation \& D\IeC {\'e}placements}{44}
-\contentsline {subsection}{\numberline {7.2.1}Principes}{44}
-\contentsline {subsection}{\numberline {7.2.2}Fonctions}{44}
-\contentsline {section}{\numberline {7.3}Base de donn\IeC {\'e}es \textbf {Monde}}{45}
-\contentsline {section}{\numberline {7.4}Fonctions}{47}
-\contentsline {subsection}{\numberline {7.4.1}Fonction Temperature()}{47}
-\contentsline {part}{III\hspace {1em}Classes et Objet}{48}
-\contentsline {chapter}{\numberline {8}Les d\IeC {\'e}clarations de Classes}{49}
-\contentsline {section}{\numberline {8.1}G\IeC {\'e}n\IeC {\'e}ralit\IeC {\'e}s}{49}
-\contentsline {section}{\numberline {8.2}La Classe Gene }{49}
-\contentsline {section}{\numberline {8.3}La Classe CoCiX}{49}
-\contentsline {subsection}{\numberline {8.3.1}Les d\IeC {\'e}finitions de la Classe CoCiX}{49}
-\contentsline {subsection}{\numberline {8.3.2}Les fonctions d'alertes}{50}
-\contentsline {subsection}{\numberline {8.3.3}chargement d'une \textbf {C}o\textbf {C}i\textbf {X} }{51}
+\contentsline {subsubsection}{\numberline {2.3.2.2}Les d\IeC {\'e}sires}{26}
+\contentsline {subsubsection}{\numberline {2.3.2.3}Structure de l'\textit {Objet} desire}{27}
+\contentsline {subsection}{\numberline {2.3.3}Le Cortex d'Action}{29}
+\contentsline {section}{\numberline {2.4}Les Actions}{30}
+\contentsline {subsection}{\numberline {2.4.1}Principe}{30}
+\contentsline {subsection}{\numberline {2.4.2}Structures de l'Objet Action}{30}
+\contentsline {subsection}{\numberline {2.4.3}Liste des Actions (Verbes conjugu\IeC {\'e}s)}{30}
+\contentsline {chapter}{\numberline {3}Le G\IeC {\'e}nome}{32}
+\contentsline {section}{\numberline {3.1}Principes et G\IeC {\'e}n\IeC {\'e}ralit\IeC {\'e}s}{32}
+\contentsline {section}{\numberline {3.2}Table du Genome}{33}
+\contentsline {chapter}{\numberline {4}Sexualit\IeC {\'e} \& Reproduction}{34}
+\contentsline {section}{\numberline {4.1}Principes \& g\IeC {\'e}n\IeC {\'e}ralit\IeC {\'e}s}{34}
+\contentsline {section}{\numberline {4.2}Quand la reproduction est-elle possible ?}{34}
+\contentsline {section}{\numberline {4.3}La reproduction}{35}
+\contentsline {section}{\numberline {4.4}Un ou une Nouveau(ele) \textbf {C}o\textbf {C}i\textbf {X} }{35}
+\contentsline {subsection}{\numberline {4.4.1}principe}{35}
+\contentsline {subsection}{\numberline {4.4.2}Fonction \textit {reproduction()}}{35}
+\contentsline {section}{\numberline {4.5}La ponte}{37}
+\contentsline {chapter}{\numberline {5}Les Combats}{38}
+\contentsline {section}{\numberline {5.1}Principe}{38}
+\contentsline {section}{\numberline {5.2}Quand le combat est-elle possible ?}{38}
+\contentsline {section}{\numberline {5.3}Le Combat}{38}
+\contentsline {part}{II\hspace {1em}Environnement}{40}
+\contentsline {chapter}{\numberline {6}G\IeC {\'e}n\IeC {\'e}ralit\IeC {\'e}, notion de temps et bases de donn\IeC {\'e}es}{41}
+\contentsline {section}{\numberline {6.1}La Base Cycles}{41}
+\contentsline {chapter}{\numberline {7}Monde}{44}
+\contentsline {section}{\numberline {7.1}Coordonn\IeC {\'e}es (x,y)}{44}
+\contentsline {subsection}{\numberline {7.1.1}Principes}{44}
+\contentsline {section}{\numberline {7.2}Orientation \& D\IeC {\'e}placements}{45}
+\contentsline {subsection}{\numberline {7.2.1}Principes}{45}
+\contentsline {subsection}{\numberline {7.2.2}Fonctions}{45}
+\contentsline {section}{\numberline {7.3}Base de donn\IeC {\'e}es \textbf {Monde}}{46}
+\contentsline {section}{\numberline {7.4}Fonctions}{48}
+\contentsline {subsection}{\numberline {7.4.1}Fonction Temperature()}{48}
+\contentsline {part}{III\hspace {1em}Classes et Objet}{49}
+\contentsline {chapter}{\numberline {8}Les d\IeC {\'e}clarations de Classes}{50}
+\contentsline {section}{\numberline {8.1}G\IeC {\'e}n\IeC {\'e}ralit\IeC {\'e}s}{50}
+\contentsline {section}{\numberline {8.2}La Classe Gene }{50}
+\contentsline {section}{\numberline {8.3}La Classe CoCiX}{50}
+\contentsline {subsection}{\numberline {8.3.1}Les d\IeC {\'e}finitions de la Classe CoCiX}{50}
+\contentsline {subsection}{\numberline {8.3.2}Les fonctions d'alertes}{51}
+\contentsline {subsection}{\numberline {8.3.3}chargement d'une \textbf {C}o\textbf {C}i\textbf {X} }{52}

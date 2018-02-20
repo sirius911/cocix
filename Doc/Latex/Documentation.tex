@@ -92,17 +92,21 @@ Dans cette section, nous allons décrire les différents types de \textit{param�
 
 
 \begin{itemize}
-\item Les Paramètres "\textit{d'identité}": Ce sont des \textit{attributs} simples, comme le nom, date de naissance, positionnement etc...(page \pageref{identite})
-\item L'attribut \textbf{.Gene} est un tableau de tous les gènes de la \CoCiX.( voir chap \ref{genetique} page \pageref{genome})
+\item Les Paramètres "\textit{d'identité}": Ce sont des \textit{attributs} simples, comme le nom, date de naissance, positionnement etc...(page \pageref{identite})\\
 
-\item Les Paramètres "\textit{d'état}", comme la santé, la température etc...Ces paramètres fluctuent tout le long de la vie de la \CoCiX. Ils sont issus d'un patrimoine génétique et influencés par les gènes ainsi que par son activité ou le monde extérieur. Ils sont représentés par des  \textit{Objets}.(chap \ref{param_etat} \pageref{param_etat})
+\item Les Paramètres "\textit{d'état}", comme la santé, la température etc...Ces paramètres fluctuent tout le long de la vie de la \CoCiX. Ils sont issus d'un patrimoine génétique et influencés par les gènes ainsi que par son activité ou le monde extérieur. Ils sont représentés par des  \textit{Objets}.(chap \ref{param_etat} \pageref{param_etat})\\
 
-\item les Paramètres "\textit{génétiques}": comme le sexe, la couleur des yeux, l'agressivité, etc. Les Paramètres génétiques ne sont pas modifiables et sont acquis à la procréation par l'hérédité, ou par l'utilisateur lors de la création d'une \CoCiX. Ils sont représentés par un \textit{vector} d'\textit{Objet} \textbf{Genes}.(page \pageref{genetique}).
+\item les Paramètres "\textit{génétiques}": comme le sexe, la couleur des yeux, l'agressivité, etc. Les Paramètres génétiques ne sont pas modifiables et sont acquis à la procréation par l'hérédité, ou par l'utilisateur lors de la création d'une \CoCiX. Ils sont représentés par un \textit{vector} d'\textit{Objet} \textbf{Genes}.(page \pageref{genetique}).\\
 
+\item Le Paramètre Cortex, est un Objet simulant les décisions que va prendre le \CoCiX. Il y a :
+\begin{itemize}
+	\item Le Cortex Inférieur: qui s'occupe des besoins vitaux.\\
+	\item le Cortex Supérieur: qui va lui s'occuper des désirs du \CoCiX. (Agresser, soigner etc \dots)\\
+\end{itemize}
 
-\item Les Paramètres \textit{secondaires}, qui sont en général des \textit{attributs} lié à des actions ou des états spécifiques du \CoCiX.(partenaire, \textbf{.id\_oeuf}, etc\dots)(page \pageref{param_second})
+\item Les Paramètres \textit{secondaires}, qui sont en général des \textit{attributs} lié à des actions ou des états spécifiques du \CoCiX.(partenaire, \textbf{.id\_oeuf}, etc\dots)(page \pageref{param_second})\\
 
-\item Le Paramètre \textbf{desire} qui est un \textit{Objet} dérivé de la Classe \textbf{Action} représentant le désire de la \CoCiX.Il est déterminé par le \textit{Cortex d'Etat}.
+\item Le Paramètre \textbf{desire} qui est un \textit{Objet} dérivé de la Classe \textbf{Action} représentant le désire de la \CoCiX.Il est déterminé par le \textit{Cortex d'Etat}.\\
 
 \item Les Paramètres \textit{d'Action}, sont des \textit{Objets} dérivés de la Classe \textbf{Actions}.(page \pageref{param_action})\\
 \end{itemize}
@@ -663,7 +667,7 @@ Certaines \CoCiX peuvent un moment de leur vie avoir à récolter des ressources
 Elle vont alors récolter des calorie sur la case où elle se trouve et vont les ramener dans leur nid. Le paramètre \textbf{recolte} est la quantité que porte à l'instant T la \CoCiX.
 
 \subsection{Paramètre \textit{Desire}}
-Le paramètre \textbf{desire} est un \textit{Objet} déterminé par le \textbf{Cortex d'Etat}. (Voir chap \ref{desire} page \pageref{desire})
+Le paramètre \textbf{desire} est un \textit{Objet} déterminé par le \textbf{Cortex}. (Voir chap \ref{desire} page \pageref{desire})
 
 \newpage
 
@@ -689,7 +693,6 @@ Le nom des balises d'alertes est assez explicite :
 	\item \textbf{Soif}
 	\item \textbf{Coma}
 	\item \textbf{malade}
-	\item \textbf{tres\_malade}
 	\item \textbf{fecondee} \\
 \end{itemize}
 
@@ -1794,20 +1797,20 @@ MATURE doit être une constante définie dans un fichier de constantes. Il est �
 \newpage
 \section{Le Système nerveux des \CoCiX}\label{nerveux}
 
-Le système nerveux des \CoCiX est composé de deux cortex :
+Le système nerveux des \CoCiX est composé de quatre cortex :
 \begin{enumerate}
 	\item Le Cortex d'Etat.
+	\item Le Cortex Inférieur.
+	\item Le Cortex Supérieur.
 	\item Le Cortex d'Action. \\
 \end{enumerate}
 
 \subsection{Le Cortex d'État}\label{cortex_etat}
 
 Les \textit{paramètres d'état} vus au chapitre \ref{parametre} sont gérés d'une façon autonome par le \textit{\textbf{Cortex d'Etat}}.\\
-Le Cortex d'état représente  le système nerveux autonome de la \CoCiX.\\
-Il va ajuster les \textbf{paramètres} et les \textbf{balises d'état} et déterminer un désir \textit{naturel} ( manger, boire, se reproduire etc\dots).\\
+Le Cortex d'état représente  le \textit{système nerveux central} du \CoCiX.\\
+Il va ajuster les \textbf{paramètres} et les \textbf{balises d'état}\\
 Le Cortex d'état est une \textit{méthode} au sein de l'\textbf{Objet} \CoCiX et qui doit être déclenché par \textit{Cron}.\footnote{\textbf{cron} est un programme qui permet aux utilisateurs des systèmes Unix  ou Linux d'exécuter automatiquement des scripts, des commandes ou des logiciels à une date et une heure spécifiées à l'avance, ou selon un cycle défini à l'avance.}\\
-Le cycle du Cortex d'Etat est :\\
-
 
 \begin{enumerate}
 	\item Prend la température de son environnement et adapte la température de la \CoCiX, en fonction de son action en cours (\textbf{action}) (voir \ref{temperature} page \pageref{temperature}).\\
@@ -1835,12 +1838,7 @@ Le cycle du Cortex d'Etat est :\\
 		\includegraphics[width=1\linewidth]{images/cortex05}
 	\end{center}
 
-	\item Récupère le marqueur \textbf{cycle\_journalier} (voir chap \ref{jour_nuit} page \pageref{jour_nuit})\\
-	
-	\item Met à jour le paramètre \textbf{desire} en fonction de tous ces paramètres calculés.\\
-
 \end{enumerate}
-L'ordre de décision est capital car c'est ici que va se jouer les actions futures de la \CoCiX : \\
 
 \subsection{Désires}\label{desire}
 \subsubsection{généralités}
