@@ -16,6 +16,13 @@ struct struct_xy
 	short y;
 };
 
+enum
+{
+	// POUR LES INFOS A CHERCHER DANS MONDE
+	EAU  = 1,			// recherche d'eau
+	NOURRITURE = 2,	// recherche nourriture
+};
+
 float temperature(const short );	//revoi la température de la case
 float nourriture(const short );	// renvoi la quantite de nourriture
 float humidite(const short );		// renvoi la quantité d'eau

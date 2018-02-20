@@ -113,49 +113,49 @@ void Cocix::creation_Toto(int x_id, const bool verbal){
 	// creation de son genome
 	//Gene genome[MAX_GEN];
 	nb_genes = 23;
-	genome.insert(genome.end(),Gene("Assimilation Calorique",ASSIMILATION_CALORIQUE,8.0f,3.0f,2.0f,8.0f,4.0f,4.0f,2.0f,m6,false));
-	genome.insert(genome.end(),Gene("Assimilation Hydrique",ASSIMILATION_HYDRIQUE,10.f,10.0f,2.0f,3.0f,3.0f,2.0f,2.0f,m6,false));
-	genome.insert(genome.end(),Gene("Calorie",CALORIE,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,PM,false));
-	genome.insert(genome.end(),Gene("Faim",FAIM,0.5f,0.65f,0.5f,0.65f,0.65f,0.65f,0.65f,m6,true));
-	genome.insert(genome.end(),Gene("Froid",FROID,0.65f,0.65f,0.65f,0.65f,0.65f,0.65f,0.65f,H,true));
-	genome.insert(genome.end(),Gene("Hydro",HYDRO,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,GP,false));
-	genome.insert(genome.end(),Gene("Sante",SANTE,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,H,false));
-	genome.insert(genome.end(),Gene("Satiété",SATIETE,0.58f,0.58f,0.60f,0.65f,0.65f,0.65f,0.65f,m6,true));
-	genome.insert(genome.end(),Gene("Soif",SOIF,0.50f,0.60f,0.50f,0.50f,0.50f,0.50f,0.50f,GP,true));
-	genome.insert(genome.end(),Gene("Temp",TEMP,0.1f,0.1f,0.1f,0.1f,0.1f,0.1f,0.1f,PM,true));
-	genome.insert(genome.end(),Gene("Vieux",VIEUX,20.0f,20.0f,20.0f,20.0f,20.0f,20.0f,20.0f,PM,false));
-	genome.insert(genome.end(),Gene("Souffre_Faim",SOUFFRE_FAIM,0.50f,0.30f,0.5f,0.3f,0.3f,0.3f,0.3f,m6,true));
-	genome.insert(genome.end(),Gene("Souffre_Soif",SOUFFRE_SOIF,0.5f,0.8f,0.4f,0.5f,0.8f,0.4f,0.3f,m6,true));
-	genome.insert(genome.end(),Gene("Recup_Sommeil",RECUP_SOMMEIL,0.0005f,0.0004f,0.0005f,0.0004f,0.0003f,0.0005f,0.0005f,M,true));
-	genome.insert(genome.end(),Gene("Récolte",RECOLTE,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,F,false));
-	genome.insert(genome.end(),Gene("Agressivité",AGRESSIVITE,0.3333f,0.3333f,0.3333f,0.3333f,0.3333f,0.3333f,0.3333f,H,true));
-	genome.insert(genome.end(),Gene("Vivacité",VIVACITE,0.3f,0.3f,0.3f,0.3f,0.3f,0.3f,0.3f,GM,true));
-	genome.insert(genome.end(),Gene("Soins",SOINS,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,GM,false));
-	genome.insert(genome.end(),Gene("Seuil_Malade",SEUIL_MALADE,0.45f,0.45f,0.45f,0.45f,0.45f,0.45f,0.45f,m6,true));
-	genome.insert(genome.end(),Gene("Seuil_Comas",SEUIL_COMA,0.10f,0.10f,0.15f,0.10f,0.10f,0.10f,0.10f,m6,true));
-	genome.insert(genome.end(),Gene("Vieillissement",VIEILLISSEMENT,0.007f,0.007f,0.007f,0.007f,0.007f,0.007f,0.007f,M,true));
-	genome.insert(genome.end(),Gene("Seuil_accel_vieille",SEUIL_ACCEL_VIEILLE,10.0f,10.0f,10.0f,10.0f,10.0f,10.0f,10.0f,pm,false));
-	genome.insert(genome.end(),Gene("Compassion",COMPASSION,0.30f,0.30f,0.30f,0.20f,0.20f,0.20f,0.20f,pm,true));
+	genome.insert(genome.end(),Gene("Assimilation Calorique",Gene::ASSIMILATION_CALORIQUE,8.0f,3.0f,2.0f,8.0f,4.0f,4.0f,2.0f,Gene::m6,false));
+	genome.insert(genome.end(),Gene("Assimilation Hydrique",Gene::ASSIMILATION_HYDRIQUE,10.f,10.0f,2.0f,3.0f,3.0f,2.0f,2.0f,Gene::m6,false));
+	genome.insert(genome.end(),Gene("Calorie",Gene::CALORIE,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,Gene::PM,false));
+	genome.insert(genome.end(),Gene("Faim",Gene::FAIM,0.5f,0.65f,0.5f,0.65f,0.65f,0.65f,0.65f,Gene::m6,true));
+	genome.insert(genome.end(),Gene("Froid",Gene::FROID,0.65f,0.65f,0.65f,0.65f,0.65f,0.65f,0.65f,Gene::H,true));
+	genome.insert(genome.end(),Gene("Hydro",Gene::HYDRO,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,Gene::GP,false));
+	genome.insert(genome.end(),Gene("Sante",Gene::SANTE,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,Gene::H,false));
+	genome.insert(genome.end(),Gene("Satiété",Gene::SATIETE,0.58f,0.58f,0.60f,0.65f,0.65f,0.65f,0.65f,Gene::m6,true));
+	genome.insert(genome.end(),Gene("Soif",Gene::SOIF,0.50f,0.60f,0.50f,0.50f,0.50f,0.50f,0.50f,Gene::GP,true));
+	genome.insert(genome.end(),Gene("Temp",Gene::TEMP,0.1f,0.1f,0.1f,0.1f,0.1f,0.1f,0.1f,Gene::PM,true));
+	genome.insert(genome.end(),Gene("Vieux",Gene::VIEUX,20.0f,20.0f,20.0f,20.0f,20.0f,20.0f,20.0f,Gene::PM,false));
+	genome.insert(genome.end(),Gene("Souffre_Faim",Gene::SOUFFRE_FAIM,0.50f,0.30f,0.5f,0.3f,0.3f,0.3f,0.3f,Gene::m6,true));
+	genome.insert(genome.end(),Gene("Souffre_Soif",Gene::SOUFFRE_SOIF,0.5f,0.8f,0.4f,0.5f,0.8f,0.4f,0.3f,Gene::m6,true));
+	genome.insert(genome.end(),Gene("Recup_Sommeil",Gene::RECUP_SOMMEIL,0.0005f,0.0004f,0.0005f,0.0004f,0.0003f,0.0005f,0.0005f,Gene::M,true));
+	genome.insert(genome.end(),Gene("Récolte",Gene::RECOLTE,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,Gene::F,false));
+	genome.insert(genome.end(),Gene("Agressivité",Gene::AGRESSIVITE,0.3333f,0.3333f,0.3333f,0.3333f,0.3333f,0.3333f,0.3333f,Gene::H,true));
+	genome.insert(genome.end(),Gene("Vivacité",Gene::VIVACITE,0.3f,0.3f,0.3f,0.3f,0.3f,0.3f,0.3f,Gene::GM,true));
+	genome.insert(genome.end(),Gene("Soins",Gene::SOINS,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,Gene::GM,false));
+	genome.insert(genome.end(),Gene("Seuil_Malade",Gene::SEUIL_MALADE,0.45f,0.45f,0.45f,0.45f,0.45f,0.45f,0.45f,Gene::m6,true));
+	genome.insert(genome.end(),Gene("Seuil_Comas",Gene::SEUIL_COMA,0.10f,0.10f,0.15f,0.10f,0.10f,0.10f,0.10f,Gene::m6,true));
+	genome.insert(genome.end(),Gene("Vieillissement",Gene::VIEILLISSEMENT,0.007f,0.007f,0.007f,0.007f,0.007f,0.007f,0.007f,Gene::M,true));
+	genome.insert(genome.end(),Gene("Seuil_accel_vieille",Gene::SEUIL_ACCEL_VIEILLE,10.0f,10.0f,10.0f,10.0f,10.0f,10.0f,10.0f,Gene::pm,false));
+	genome.insert(genome.end(),Gene("Compassion",Gene::COMPASSION,0.30f,0.30f,0.30f,0.20f,0.20f,0.20f,0.20f,Gene::pm,true));
 	
 	//Param_Etat(nom,unite,capacite, valeur, limite_basse_malade,limite_haute_malade,  limite_basse_coma,limite_haute_coma,
 	//			limite_basse_souffrance, limite_haute_souffrance, correction)
 	
 	Sante = Param_Etat("Santé","Pdv",100.0f,100.0f,
-		genome[SEUIL_MALADE].valeur*genome[SANTE].valeur, (float)NULL,
-		genome[SEUIL_COMA].valeur*genome[SANTE].valeur, (float)NULL,
-		genome[SEUIL_MALADE].valeur*genome[SANTE].valeur,(float)NULL,
+		genome[Gene::SEUIL_MALADE].valeur*genome[Gene::SANTE].valeur, (float)NULL,
+		genome[Gene::SEUIL_COMA].valeur*genome[Gene::SANTE].valeur, (float)NULL,
+		genome[Gene::SEUIL_MALADE].valeur*genome[Gene::SANTE].valeur,(float)NULL,
 		(float) SOUFFRANCE_MALADIE, 0.0f,100.0f);
 
 	Calorie = Param_Etat("Calorie","Cal",120.0,80.3578f,
 		(float)NULL,(float) NULL,	
-		genome[CALORIE].valeur * (float) COMA_CALORIE,	(float)NULL,
-		genome[SOUFFRE_FAIM].valeur * genome[CALORIE].valeur,(float)NULL,
+		genome[Gene::CALORIE].valeur * (float) COMA_CALORIE,	(float)NULL,
+		genome[Gene::SOUFFRE_FAIM].valeur * genome[Gene::CALORIE].valeur,(float)NULL,
 		(float) SOUFFRANCE_CALORIQUE, 0.0f, 120.0f);
 
 	Hydro = Param_Etat("Hydro","muL",100.0f,60.222f,
 		(float)NULL,(float) NULL,	
-		genome[HYDRO].valeur * (float)COMA_HYDRO, (float)NULL,	
-		genome[SOUFFRE_SOIF].valeur * genome[HYDRO].valeur, (float)NULL,		
+		genome[Gene::HYDRO].valeur * (float)COMA_HYDRO, (float)NULL,	
+		genome[Gene::SOUFFRE_SOIF].valeur * genome[Gene::HYDRO].valeur, (float)NULL,		
 		(float) SOUFFRANCE_HYDRIQUE, 0.0f, 100.0f);
 	Temperature = Param_Etat("Temp.","°C", (float)NULL ,37.0f,
 		(float)NULL, 40.0f,
@@ -210,52 +210,52 @@ void Cocix::creation_Titi(int x_id, bool verbal){
 	id_oeuf = 0;
 	// creation de son genome
 	
-	//Gene genome[MAX_GEN];
+	//Gene genome[Gene::MAX_GEN];
 	nb_genes = 23;
-	genome.insert(genome.end(),Gene("Assimilation Calorique",ASSIMILATION_CALORIQUE,8.0f,3.0f,2.0f,8.0f,4.0f,4.0f,2.0f,m6,false));
-	genome.insert(genome.end(),Gene("Assimilation Hydrique",ASSIMILATION_HYDRIQUE,10.f,10.0f,2.0f,3.0f,3.0f,2.0f,2.0f,m6,false));
-	genome.insert(genome.end(),Gene("Calorie",CALORIE,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,PM,false));
-	genome.insert(genome.end(),Gene("Faim",FAIM,0.5f,0.65f,0.5f,0.65f,0.65f,0.65f,0.65f,m6,true));
-	genome.insert(genome.end(),Gene("Froid",FROID,0.65f,0.65f,0.65f,0.65f,0.65f,0.65f,0.65f,H,true));
-	genome.insert(genome.end(),Gene("Hydro",HYDRO,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,GP,false));
-	genome.insert(genome.end(),Gene("Sante",SANTE,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,H,false));
-	genome.insert(genome.end(),Gene("Satiété",SATIETE,0.58f,0.58f,0.60f,0.65f,0.65f,0.65f,0.65f,m6,true));
-	genome.insert(genome.end(),Gene("Soif",SOIF,0.50f,0.60f,0.50f,0.50f,0.50f,0.50f,0.50f,GP,true));
-	genome.insert(genome.end(),Gene("Temp",TEMP,0.1f,0.1f,0.1f,0.1f,0.1f,0.1f,0.1f,PM,true));
-	genome.insert(genome.end(),Gene("Vieux",VIEUX,20.0f,20.0f,20.0f,20.0f,20.0f,20.0f,20.0f,PM,false));
-	genome.insert(genome.end(),Gene("Souffre_Faim",SOUFFRE_FAIM,0.50f,0.30f,0.5f,0.3f,0.3f,0.3f,0.3f,m6,true));
-	genome.insert(genome.end(),Gene("Souffre_Soif",SOUFFRE_SOIF,0.5f,0.8f,0.4f,0.5f,0.8f,0.4f,0.3f,m6,true));
-	genome.insert(genome.end(),Gene("Recup_Sommeil",RECUP_SOMMEIL,0.0005f,0.0004f,0.0005f,0.0004f,0.0003f,0.0005f,0.0005f,M,true));
-	genome.insert(genome.end(),Gene("Récolte",RECOLTE,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,F,false));
-	genome.insert(genome.end(),Gene("Agressivité",AGRESSIVITE,0.3333f,0.3333f,0.3333f,0.3333f,0.3333f,0.3333f,0.3333f,H,true));
-	genome.insert(genome.end(),Gene("Vivacité",VIVACITE,0.3f,0.3f,0.3f,0.3f,0.3f,0.3f,0.3f,GM,true));
-	genome.insert(genome.end(),Gene("Soins",SOINS,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,GM,false));
-	genome.insert(genome.end(),Gene("Seuil_Malade",SEUIL_MALADE,0.45f,0.45f,0.45f,0.45f,0.45f,0.45f,0.45f,m6,true));
-	genome.insert(genome.end(),Gene("Seuil_Comas",SEUIL_COMA,0.10f,0.10f,0.15f,0.10f,0.10f,0.10f,0.10f,m6,true));
-	genome.insert(genome.end(),Gene("Vieillissement",VIEILLISSEMENT,0.007f,0.007f,0.007f,0.007f,0.007f,0.007f,0.007f,M,true));
-	genome.insert(genome.end(),Gene("Seuil_accel_vieille",SEUIL_ACCEL_VIEILLE,10.0f,10.0f,10.0f,10.0f,10.0f,10.0f,10.0f,pm,false));
-	genome.insert(genome.end(),Gene("Compassion",COMPASSION,0.50f,0.50f,0.50f,0.50f,0.50f,0.50f,0.50f,pm,true));
+	genome.insert(genome.end(),Gene("Assimilation Calorique",Gene::ASSIMILATION_CALORIQUE,8.0f,3.0f,2.0f,8.0f,4.0f,4.0f,2.0f,Gene::m6,false));
+	genome.insert(genome.end(),Gene("Assimilation Hydrique",Gene::ASSIMILATION_HYDRIQUE,10.f,10.0f,2.0f,3.0f,3.0f,2.0f,2.0f,Gene::m6,false));
+	genome.insert(genome.end(),Gene("Calorie",Gene::CALORIE,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,Gene::PM,false));
+	genome.insert(genome.end(),Gene("Faim",Gene::FAIM,0.5f,0.65f,0.5f,0.65f,0.65f,0.65f,0.65f,Gene::m6,true));
+	genome.insert(genome.end(),Gene("Froid",Gene::FROID,0.65f,0.65f,0.65f,0.65f,0.65f,0.65f,0.65f,Gene::H,true));
+	genome.insert(genome.end(),Gene("Hydro",Gene::HYDRO,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,Gene::GP,false));
+	genome.insert(genome.end(),Gene("Sante",Gene::SANTE,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,Gene::H,false));
+	genome.insert(genome.end(),Gene("Satiété",Gene::SATIETE,0.58f,0.58f,0.60f,0.65f,0.65f,0.65f,0.65f,Gene::m6,true));
+	genome.insert(genome.end(),Gene("Soif",Gene::SOIF,0.50f,0.60f,0.50f,0.50f,0.50f,0.50f,0.50f,Gene::GP,true));
+	genome.insert(genome.end(),Gene("Temp",Gene::TEMP,0.1f,0.1f,0.1f,0.1f,0.1f,0.1f,0.1f,Gene::PM,true));
+	genome.insert(genome.end(),Gene("Vieux",Gene::VIEUX,20.0f,20.0f,20.0f,20.0f,20.0f,20.0f,20.0f,Gene::PM,false));
+	genome.insert(genome.end(),Gene("Souffre_Faim",Gene::SOUFFRE_FAIM,0.50f,0.30f,0.5f,0.3f,0.3f,0.3f,0.3f,Gene::m6,true));
+	genome.insert(genome.end(),Gene("Souffre_Soif",Gene::SOUFFRE_SOIF,0.5f,0.8f,0.4f,0.5f,0.8f,0.4f,0.3f,Gene::m6,true));
+	genome.insert(genome.end(),Gene("Recup_Sommeil",Gene::RECUP_SOMMEIL,0.0005f,0.0004f,0.0005f,0.0004f,0.0003f,0.0005f,0.0005f,Gene::M,true));
+	genome.insert(genome.end(),Gene("Récolte",Gene::RECOLTE,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,100.0f,Gene::F,false));
+	genome.insert(genome.end(),Gene("Agressivité",Gene::AGRESSIVITE,0.3333f,0.3333f,0.3333f,0.3333f,0.3333f,0.3333f,0.3333f,Gene::H,true));
+	genome.insert(genome.end(),Gene("Vivacité",Gene::VIVACITE,0.3f,0.3f,0.3f,0.3f,0.3f,0.3f,0.3f,Gene::GM,true));
+	genome.insert(genome.end(),Gene("Soins",Gene::SOINS,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,Gene::GM,false));
+	genome.insert(genome.end(),Gene("Seuil_Malade",Gene::SEUIL_MALADE,0.45f,0.45f,0.45f,0.45f,0.45f,0.45f,0.45f,Gene::m6,true));
+	genome.insert(genome.end(),Gene("Seuil_Comas",Gene::SEUIL_COMA,0.10f,0.10f,0.15f,0.10f,0.10f,0.10f,0.10f,Gene::m6,true));
+	genome.insert(genome.end(),Gene("Vieillissement",Gene::VIEILLISSEMENT,0.007f,0.007f,0.007f,0.007f,0.007f,0.007f,0.007f,Gene::M,true));
+	genome.insert(genome.end(),Gene("Seuil_accel_vieille",Gene::SEUIL_ACCEL_VIEILLE,10.0f,10.0f,10.0f,10.0f,10.0f,10.0f,10.0f,Gene::pm,false));
+	genome.insert(genome.end(),Gene("Compassion",Gene::COMPASSION,0.50f,0.50f,0.50f,0.50f,0.50f,0.50f,0.50f,Gene::pm,true));
 
 	//Param_Etat(nom,unite,capacite, valeur, limite_basse_malade,limite_haute_malade,  limite_basse_coma,limite_haute_coma,
 	//			limite_basse_souffrance, limite_haute_souffrance, correction, plancher, plafond)
 
 
 	Sante = Param_Etat("Param Santé","Pdv",100.0f,80.0f,
-		genome[SEUIL_MALADE].valeur*genome[SANTE].valeur, (float)NULL,
-		genome[SEUIL_COMA].valeur*genome[SANTE].valeur, (float)NULL,
-		genome[SEUIL_MALADE].valeur*genome[SANTE].valeur,(float)NULL,
+		genome[Gene::SEUIL_MALADE].valeur*genome[Gene::SANTE].valeur, (float)NULL,
+		genome[Gene::SEUIL_COMA].valeur*genome[Gene::SANTE].valeur, (float)NULL,
+		genome[Gene::SEUIL_MALADE].valeur*genome[Gene::SANTE].valeur,(float)NULL,
 		(float) SOUFFRANCE_MALADIE,0.0f,100.0f);	// plafond est Capacite
 
 	Calorie = Param_Etat("Calories","Cal",120.0,80.3578f,
 		(float)NULL,(float) NULL,	
-		genome[CALORIE].valeur * (float) COMA_CALORIE,	(float)NULL,
-		genome[SOUFFRE_FAIM].valeur * genome[CALORIE].valeur,(float)NULL,
+		genome[Gene::CALORIE].valeur * (float) COMA_CALORIE,	(float)NULL,
+		genome[Gene::SOUFFRE_FAIM].valeur * genome[Gene::CALORIE].valeur,(float)NULL,
 		(float) SOUFFRANCE_CALORIQUE,0.0f,120.0f);
 
 	Hydro = Param_Etat("Param Hydro","muL",100.0f,60.222f,
 		(float)NULL,(float) NULL,	
-		genome[HYDRO].valeur * (float)COMA_HYDRO, (float)NULL,	
-		genome[SOUFFRE_SOIF].valeur * genome[HYDRO].valeur, (float)NULL,		
+		genome[Gene::HYDRO].valeur * (float)COMA_HYDRO, (float)NULL,	
+		genome[Gene::SOUFFRE_SOIF].valeur * genome[Gene::HYDRO].valeur, (float)NULL,		
 		(float) SOUFFRANCE_HYDRIQUE,0.0f,100.0f);
 	Temperature = Param_Etat("Température","°C", (float)NULL ,37.0f,
 		(float)NULL, 40.0f,
@@ -565,7 +565,7 @@ bool Cocix::cortex_Action(bool verbal){
 			return(vivant());
 		}
 
-		if(Jour_Nuit.jour_nuit == JOUR){
+		if(Jour_Nuit.jour_nuit == JourNuit::JOUR){
 			// il fait jour
 			if(verbal) {
 					
@@ -655,7 +655,7 @@ bool Cocix::alert_agressive()
 	// calcul l'agresivité
 	float taux_agressivite;
 	int hasard;
-	taux_agressivite = genome[AGRESSIVITE].valeur;	// pourcentage d'agressivite
+	taux_agressivite = genome[Gene::AGRESSIVITE].valeur;	// pourcentage d'agressivite
 	hasard = aleatoire(1,100);
 	return(hasard > (int)(taux_agressivite * 100.0f)); 
 }
@@ -664,7 +664,7 @@ bool Cocix::compassion()
 {		//calcul de la compassion
 	float taux_compassion;
 	int hasard;
-	taux_compassion = genome[COMPASSION].valeur;	// pourcentage de compassion
+	taux_compassion = genome[Gene::COMPASSION].valeur;	// pourcentage de compassion
 	hasard = aleatoire(1,100);
 	return (hasard > (int) (taux_compassion * 100.0f));
 
@@ -672,7 +672,7 @@ bool Cocix::compassion()
 
 bool Cocix::alert_froid(bool verbal){
 		
-		float temp_froid = Temperature.get_valeur() - (Temperature.get_valeur() * genome[FROID].valeur); // à revoir *******************************************
+		float temp_froid = Temperature.get_valeur() - (Temperature.get_valeur() * genome[Gene::FROID].valeur); // à revoir *******************************************
 		
 		if(verbal)
 			cout << "\n - Temp Ext = " << temp_exterieur << "°C, J'ai froid si la temp descend en dessous de " << temp_froid << "°C !\n";
@@ -689,7 +689,7 @@ bool Cocix::alert_froid(bool verbal){
 bool Cocix::alert_faim(bool verbal){
 	// renvoi vrai si le seuil de ressenti de la faim est dépassé
 	bool faim;
-	faim = (Calorie.get_valeur(true) < genome[FAIM].valeur);
+	faim = (Calorie.get_valeur(true) < genome[Gene::FAIM].valeur);
 		
 	// vérifie que le seuil des COMA_CALORIE% n'est pas atteint si oui -> coma
 	if(Calorie.get_valeur(true) < COMA_CALORIE) {
@@ -713,7 +713,7 @@ bool Cocix::alert_soif(bool verbal)
 		return true;
 	}
 
-	soif = (Hydro.get_valeur(true) < genome[SOIF].valeur);
+	soif = (Hydro.get_valeur(true) < genome[Gene::SOIF].valeur);
 	
 	// vérifie que le seuil  COMA_HYDRO% n'est pas atteint si oui -> coma	
 	if(Hydro.get_valeur(true) < COMA_HYDRO)
@@ -728,16 +728,16 @@ bool Cocix::alert_soif(bool verbal)
 }
 
 void Cocix::vieillissement(bool verbal){
-			// Alors on diminue le Capital Santé CS de  genome[VIEILLISSEMENT].valeur % par cycle
-			if(Sante.get_capacite() >= genome[SEUIL_ACCEL_VIEILLE].valeur)
+			// Alors on diminue le Capital Santé CS de  genome[Gene::VIEILLISSEMENT].valeur % par cycle
+			if(Sante.get_capacite() >= genome[Gene::SEUIL_ACCEL_VIEILLE].valeur)
 			{
-				Sante.set_capacite(Sante.get_capacite() - (Sante.get_capacite() * genome[VIEILLISSEMENT].valeur));
-				if(verbal) cout << "VIEILLESSE ===> Capital Santé - " << (genome[VIEILLISSEMENT].valeur * 100) << "% = " << Sante.get_capacite() << "\n";
+				Sante.set_capacite(Sante.get_capacite() - (Sante.get_capacite() * genome[Gene::VIEILLISSEMENT].valeur));
+				if(verbal) cout << "VIEILLESSE ===> Capital Santé - " << (genome[Gene::VIEILLISSEMENT].valeur * 100) << "% = " << Sante.get_capacite() << "\n";
 			}
 			else 
 			{
-				Sante.set_capacite(Sante.get_capacite() - genome[VIEILLISSEMENT].valeur );
-				if(verbal) cout << "VIEILLESSE ===> Capital Santé - "<< genome[VIEILLISSEMENT].valeur << " = " << Sante.get_capacite() << "\n";
+				Sante.set_capacite(Sante.get_capacite() - genome[Gene::VIEILLISSEMENT].valeur );
+				if(verbal) cout << "VIEILLESSE ===> Capital Santé - "<< genome[Gene::VIEILLISSEMENT].valeur << " = " << Sante.get_capacite() << "\n";
 			}
 
 			if(Sante.get_capacite() < 1) Sante.set_capacite(0.0f); // mort
@@ -900,7 +900,7 @@ bool Cocix::froid(){
 bool Cocix::pleine() const{
 	// fonction qui renvoi vrai si la CoCiX ne peut plus récolter
 	// la récolte peut dépasser la quantité maximal sur une prise 
-		return(recolte >= genome[RECOLTE].valeur);
+		return(recolte >= genome[Gene::RECOLTE].valeur);
 }
 
 bool Cocix::male() const
@@ -1137,7 +1137,7 @@ bool Cocix::chargement(bool verbal){
     	// charge Genome
     	// on récupère le nombre de gènes
     	f.read((char*) &nb_genes, sizeof(int));
-    	if(nb_genes<0 || nb_genes > MAX_GEN) nb_genes = MAX_GEN;
+    	if(nb_genes<0 || nb_genes > Gene::MAX_GEN) nb_genes = Gene::MAX_GEN;
     	//f.read ((char*) &genome, (sizeof(Gene) * MAX_GEN ));
     	//cout << "Taille du genome = " << sizeof(genome) << "\n";
     	if(verbal) cout << "Chargement des " << nb_genes << " Gène(s).\n";
@@ -1159,49 +1159,49 @@ bool Cocix::chargement(bool verbal){
 		f.read((char*) &x_action_terminee,1);
 
 		switch(numAction){
-			case DORMIR:
+			case Actions::DORMIR:
 				Action = new Dormir();
 				break;
-			case MANGER:
+			case Actions::MANGER:
 				Action = new Manger();
 				break;
-			case BOIRE:
+			case Actions::BOIRE:
 				Action = new Boire();
 				break;
-			case CHERCHE_EAU:
+			case Actions::CHERCHE_EAU:
 				Action = new Cherche_Eau();
 				break;
-			case RENTRER:
+			case Actions::RENTRER:
 				Action = new Rentrer();
 				break;
-			case SE_SOIGNER:
+			case Actions::SE_SOIGNER:
 				Action = new Se_Soigner();
 				break;
-			case RECOLTER:
+			case Actions::RECOLTER:
 				Action = new Recolter();
 				break;
-			case CHERCHE_RECOLTE:
+			case Actions::CHERCHE_RECOLTE:
 				Action = new Cherche_Recolte();
 				break;
-			case DEPOSER:
+			case Actions::DEPOSER:
 				Action = new Deposer();
 				break;
-			case SE_REPRODUIRE:
+			case Actions::SE_REPRODUIRE:
 				Action = new Se_Reproduire();
 				break;
-			case CHERCHE_PARTENAIRE:
+			case Actions::CHERCHE_PARTENAIRE:
 				Action = new Cherche_Partenaire();
 				break;
-			case PONDRE:
+			case Actions::PONDRE:
 				Action = new Pondre();
 				break;
-			case CHERCHE_CASE_LIBRE:
+			case Actions::CHERCHE_CASE_LIBRE:
 				Action = new Cherche_Case_Libre();
 				break;
-			case SOIGNER:
+			case Actions::SOIGNER:
 				Action = new Soigner();
 				break;
-			case CHERCHE_MALADE:
+			case Actions::CHERCHE_MALADE:
 				Action = new Cherche_Malade();
 				break;
 			default:
@@ -1218,49 +1218,49 @@ bool Cocix::chargement(bool verbal){
 
 		switch(numDesire)
 		{
-			case DORMIR:
+			case Actions::DORMIR:
 				Desire = new Dormir();
 				break;
-			case MANGER:
+			case Actions::MANGER:
 				Desire = new Manger();
 				break;
-			case BOIRE:
+			case Actions::BOIRE:
 				Desire = new Boire();
 				break;
-			case CHERCHE_EAU:
+			case Actions::CHERCHE_EAU:
 				Desire = new Cherche_Eau();
 				break;
-			case RENTRER:
+			case Actions::RENTRER:
 				Desire = new Rentrer();
 				break;
-			case SE_SOIGNER:
+			case Actions::SE_SOIGNER:
 				Desire = new Se_Soigner();
 				break;
-			case RECOLTER:
+			case Actions::RECOLTER:
 				Desire = new Recolter();
 				break;
-			case CHERCHE_RECOLTE:
+			case Actions::CHERCHE_RECOLTE:
 				Desire = new Cherche_Recolte();
 				break;
-			case DEPOSER:
+			case Actions::DEPOSER:
 				Desire = new Deposer();
 				break;
-			case SE_REPRODUIRE:
+			case Actions::SE_REPRODUIRE:
 				Desire = new Se_Reproduire();
 				break;
-			case CHERCHE_PARTENAIRE:
+			case Actions::CHERCHE_PARTENAIRE:
 				Desire = new Cherche_Partenaire();
 				break;
-			case PONDRE:
+			case Actions::PONDRE:
 				Desire = new Pondre();
 				break;
-			case CHERCHE_CASE_LIBRE:
+			case Actions::CHERCHE_CASE_LIBRE:
 				Desire = new Cherche_Case_Libre();
 				break;	
-			case SOIGNER:
+			case Actions::SOIGNER:
 				Desire = new Soigner();
 				break;
-			case CHERCHE_MALADE:
+			case Actions::CHERCHE_MALADE:
 				Desire = new Cherche_Malade();
 				break;
 			default:

@@ -19,6 +19,26 @@ class Actions{
 
 	public:
 
+		enum
+		{
+			BOIRE = 1,
+ 			CHERCHE_EAU = 2,
+			CHERCHE_NOURRITURE = 3,
+			CHERCHE_PARTENAIRE = 4,
+			SOIGNER = 5,
+			DORMIR  = 6,
+			CHERCHE_MALADE = 7,
+			MANGER = 8,
+			PONDRE = 9,
+			CHERCHE_CASE_LIBRE = 10,
+			RENTRER = 11,
+			SE_REPRODUIRE = 12,
+			SE_SOIGNER = 14,
+			RECOLTER = 15,
+			DEPOSER = 16,
+			CHERCHE_RECOLTE = 17
+		};
+
 		char action[30];	// Verbe conjugué
 		char desire[30];	// Désire à l'infinitif
 		

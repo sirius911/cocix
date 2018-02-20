@@ -82,7 +82,7 @@ void Recolter::go(Cocix* cocix,bool verbal)
 	
 	// On met à jour la base de donnée du monde
 	if(verbal) cout << "En case N° " << case_recolte << " (" << xy.x << "," << xy.y << ") Il y a " << nourriture(case_recolte) << " cal avant.\n";
-	quantite_prise = prend_element(case_recolte, cocix->genome[ASSIMILATION_CALORIQUE].valeur / 2 ,NOURRITURE);
+	quantite_prise = prend_element(case_recolte, cocix->genome[Gene::ASSIMILATION_CALORIQUE].valeur / 2 ,NOURRITURE);
 	cocix->set_recolte(cocix->get_recolte() + quantite_prise);
 
 	//On incrémente le temps de l'action

@@ -2,6 +2,7 @@
 #define DEF_IO
 #include "constantes.h"
 #include <vector>
+#include "monde.h"
 
 using namespace std;
 

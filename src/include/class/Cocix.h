@@ -52,7 +52,19 @@ class Cocix
 		
 		short vieux;
 		
-		// reproduction
+		enum
+	{
+		FEMELLE = 0,
+		MALE = 1,
+
+		ETAT_OEUF = 0,
+		ETAT_BEBE = 1,
+		ETAT_ADULTE = 2,
+		ETAT_VIEUX  = 3,
+		MATURITE  = 4,	// Age de la maturité sexuelle en jours
+		IMMATURE  = -1
+
+	};
 
 		
 		// parmetres genetiques

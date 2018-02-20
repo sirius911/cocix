@@ -55,7 +55,7 @@ void Cortex::gestion_Etat(Cocix *cocix , const bool verbal)
 	if(cocix->get_temp_exterieur() > cocix->Temperature.get_valeur() ){
 			// si la température exterieur ext supérieur au augmente la température interne de Genes['temp']->valeur
 			if(verbal) cout << " Temp ext > Temp corporel => \n"; 
-			cocix->Temperature.modif(cocix->genome[TEMP].valeur, &cocix->balises,verbal);
+			cocix->Temperature.modif(cocix->genome[Gene::TEMP].valeur, &cocix->balises,verbal);
 	}
 	else
 	{
@@ -68,7 +68,7 @@ void Cortex::gestion_Etat(Cocix *cocix , const bool verbal)
 	if(cocix->get_temp_exterieur() < 10.0f) {
 			
 		if(verbal) cout << " Temp ext < 10°C<\n";
-		cocix->Temperature.modif(-cocix->genome[TEMP].valeur, &cocix->balises,verbal); // on diminue la température de Genes.temp.valeur
+		cocix->Temperature.modif(-cocix->genome[Gene::TEMP].valeur, &cocix->balises,verbal); // on diminue la température de Genes.temp.valeur
 			
 	}
 
@@ -142,7 +142,7 @@ void Cortex::gestion_Etat(Cocix *cocix , const bool verbal)
                                               ¯    ¯               ¯ 
 		*/
 		// Vieux ?	
-		if(cocix->etape() == ETAT_VIEUX) {
+		if(cocix->etape() == Cocix::ETAT_VIEUX) {
 			cocix->vieillissement(verbal);
 		}
 
@@ -162,8 +162,8 @@ void Cortex::gestion_Etat(Cocix *cocix , const bool verbal)
 	if(cocix->Action->equal(Dormir())) {
 			// La CoCix Dort
 			cout << "Sommeil...";
-			cocix->Sante.modif(cocix->Sante.get_valeur() * cocix->genome[RECUP_SOMMEIL].valeur, &cocix->balises,verbal);	
-			if(verbal) cout << "Action = DORMIR ==> Santé + " << setprecision(3) << ( cocix->Sante.get_valeur() * cocix->genome[RECUP_SOMMEIL].valeur )<< setprecision(2) <<  "% = " << cocix->Sante.get_valeur() << "\n";
+			cocix->Sante.modif(cocix->Sante.get_valeur() * cocix->genome[Gene::RECUP_SOMMEIL].valeur, &cocix->balises,verbal);	
+			if(verbal) cout << "Action = DORMIR ==> Santé + " << setprecision(3) << ( cocix->Sante.get_valeur() * cocix->genome[Gene::RECUP_SOMMEIL].valeur )<< setprecision(2) <<  "% = " << cocix->Sante.get_valeur() << "\n";
 			cout << "ok\n";
 	}
 
@@ -207,18 +207,18 @@ bool Cortex::decide_Desire(Cocix *cocix, const bool verbal)	// renvoi vrai si on
 
 	switch(Jour_Nuit.jour_nuit)
 	{
-		case NUIT:
+		case JourNuit::NUIT:
 			if(verbal) cout << "Il fait nuit donc => ";
 			cocix->Desire = new Dormir();
 			return false;
-		case CREPUSCULE:
+		case JourNuit::CREPUSCULE:
 			if(verbal) cout << "Crépuscule => ";
            	if(cocix->malade()) 	cocix->Desire = new Se_Soigner();
         	else if(cocix->soif())	cocix->Desire = new Boire();
         	else if(cocix->faim())	cocix->Desire = new Manger();
         	else	        		cocix->Desire = new Dormir();
 			return false;
-		case JOUR:
+		case JourNuit::JOUR:
 			if(cocix->malade()) 
         	{
         		cocix->Desire = new Se_Soigner();

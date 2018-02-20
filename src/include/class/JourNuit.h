@@ -9,7 +9,13 @@ class JourNuit
 		int indexCocix;
 
 	public:
-		//string nomFichier;
+		enum
+		{
+			NUIT = -1,
+			CREPUSCULE = 0,
+			JOUR = 1
+		};
+		
 		bool marche;
 		time_t bigbang;
 		short vitesse;

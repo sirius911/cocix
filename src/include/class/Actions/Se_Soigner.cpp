@@ -42,7 +42,7 @@ void Se_Soigner::go(Cocix *cocix,bool verbal)
 	cout <<  "...................................................\n";
 	if(verbal) Actions::index();
 	cout << "ACTION => Se Soigner....\n";
-	quantite_soins = cocix->genome[SOINS].valeur;
+	quantite_soins = cocix->genome[Gene::SOINS].valeur;
 	if(verbal) cout << "Quantité de soins appliquée : " << setprecision(3) << quantite_soins << setprecision(2)<<" pdv\n";
 	cocix->Sante.modif(quantite_soins, &cocix->balises, verbal);
 
@@ -53,13 +53,13 @@ void Se_Soigner::go(Cocix *cocix,bool verbal)
 		if( cocix->Temperature.get_valeur() < 37.5f)
 		{
 			//on rechauffe si temp < capacite 
-			cocix->Temperature.modif(cocix->genome[TEMP].valeur , &cocix->balises, verbal);
-			if(verbal) cout << "\nJe me rechauffe de " << cocix->genome[TEMP].valeur << "°C.\n";
+			cocix->Temperature.modif(cocix->genome[Gene::TEMP].valeur , &cocix->balises, verbal);
+			if(verbal) cout << "\nJe me rechauffe de " << cocix->genome[Gene::TEMP].valeur << "°C.\n";
 		} else if(cocix->Temperature.get_valeur() > 37.5f)
 		{
 			// je refroidi
-			cocix->Temperature.modif(- cocix->genome[TEMP].valeur , &cocix->balises, verbal);
-			if(verbal) cout << "\nJe me refroidi de -" << cocix->genome[TEMP].valeur << "°C.\n";
+			cocix->Temperature.modif(- cocix->genome[Gene::TEMP].valeur , &cocix->balises, verbal);
+			if(verbal) cout << "\nJe me refroidi de -" << cocix->genome[Gene::TEMP].valeur << "°C.\n";
 		} else
 		{
 			// ???

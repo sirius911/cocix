@@ -41,7 +41,7 @@ int partenaire(const short num_case, const Cocix *cocix, const bool verbal)
 				{
 					if(verbal) cout << "\t\tSexuellement compatible.\n";
 
-					if((partenaire_potentiel->sexe == MALE && partenaire_potentiel-> cycle_sexuel() >= 0) || (partenaire_potentiel->sexe == FEMELLE && partenaire_potentiel->cycle_sexuel() < 3 
+					if((partenaire_potentiel->male() && partenaire_potentiel-> cycle_sexuel() >= 0) || ( !partenaire_potentiel->male() && partenaire_potentiel->cycle_sexuel() < 3 
 						&& partenaire_potentiel->cycle_sexuel() >= 0 && !partenaire_potentiel->balises.fecondee))
 					{
 						if(verbal) cout << "\t\t\tDisponible.\n";
@@ -383,16 +383,16 @@ int procreation (Cocix *Male, Cocix *Femelle, bool verbal)
 		switch(mode_transmission)
 		{
 		
-		case P:					// P => transmission par le père
+		case Gene::P:					// P => transmission par le père
 			hazardius = PERE;
 			break;
-		case M:					// M => transmission par la mère
+		case Gene::M:					// M => transmission par la mère
 			hazardius = MERE;
 			break;
-		case PM:				// PM => transmission par le père OU la mère
+		case Gene::PM:				// PM => transmission par le père OU la mère
 			hazardius = aleatoire(MERE,PERE);
 			break;
-		case pm:				// pm => transmission de père en fils ou de mère en fille
+		case Gene::pm:				// pm => transmission de père en fils ou de mère en fille
 			if(Oeuf_Cocix.male())
 				hazardius = aleatoire(PERE,GP_M);	// que les mâles
 			else
@@ -401,20 +401,20 @@ int procreation (Cocix *Male, Cocix *Femelle, bool verbal)
 				if(hazardius == 3 ) hazardius = MERE;
 			}
 			break;
-		case GP:				// GP => transmission par un des deux Grands pères (saute une génération)
+		case Gene::GP:				// GP => transmission par un des deux Grands pères (saute une génération)
 			hazardius = aleatoire(GP_P,GP_M);
 			break;
-		case GM:				// GM => transmission par une des deux grands mères
+		case Gene::GM:				// GM => transmission par une des deux grands mères
 			hazardius = aleatoire(GM_P,GM_M);
 			break;
-		case H:					// H => transmission par les mâles p, gp_m, gp_p
+		case Gene::H:					// H => transmission par les mâles p, gp_m, gp_p
 			hazardius = aleatoire(PERE,GP_M);
 			break;
-		case F:					// F => transmission par les femelles m, gm_m , gm_p
+		case Gene::F:					// F => transmission par les femelles m, gm_m , gm_p
 			hazardius = aleatoire(3,GM_M);
 			if(hazardius == 3) hazardius = MERE;	// => 0, 4 ou 5
 			break;
-		case m6:				// m6 => transmission par les 6 membres
+		case Gene::m6:				// m6 => transmission par les 6 membres
 			hazardius = aleatoire(MERE,GM_M);
 			break;
 		default:
@@ -453,15 +453,15 @@ int procreation (Cocix *Male, Cocix *Femelle, bool verbal)
 
 		switch(id_gene)
 		{
-			case VIEUX:
+			case Gene::VIEUX:
 				if(verbal) cout << "Initialisation du paramètre 'Vieux' \n";
 				Oeuf_Cocix.set_vieux(valeur);
 				break;
-			case VIVACITE:
+			case Gene::VIVACITE:
 				if(verbal) cout << "Initialisation de la vivacite \n";
 				Oeuf_Cocix.set_vivacite(valeur);
 				break;
-			case SANTE:
+			case Gene::Gene::SANTE:
 				if(verbal) cout << "Initialisation de la santé\n";
 				// on suppose le capital Sante des parents > 0 !!
 				float correction;
@@ -488,25 +488,25 @@ int procreation (Cocix *Male, Cocix *Femelle, bool verbal)
 		cout << "**********************************************\n";
 		cout << " paramètres d'états : \n";
 	} 
-	Oeuf_Cocix.Sante = Param_Etat("Param Santé","Pdv",Oeuf_Cocix.genome[SANTE].valeur,Oeuf_Cocix.genome[SANTE].valeur,
-		Oeuf_Cocix.genome[SEUIL_MALADE].valeur * Oeuf_Cocix.genome[SANTE].valeur, (float)NULL,
-		Oeuf_Cocix.genome[SEUIL_COMA].valeur * Oeuf_Cocix.genome[SANTE].valeur, (float)NULL,
-		Oeuf_Cocix.genome[SEUIL_MALADE].valeur * Oeuf_Cocix.genome[SANTE].valeur,(float)NULL,
-		(float) SOUFFRANCE_MALADIE,0.0f,Oeuf_Cocix.genome[SANTE].valeur);	// plafond est Capacite
+	Oeuf_Cocix.Sante = Param_Etat("Param Santé","Pdv",Oeuf_Cocix.genome[Gene::SANTE].valeur,Oeuf_Cocix.genome[Gene::SANTE].valeur,
+		Oeuf_Cocix.genome[Gene::SEUIL_MALADE].valeur * Oeuf_Cocix.genome[Gene::Gene::SANTE].valeur, (float)NULL,
+		Oeuf_Cocix.genome[Gene::SEUIL_COMA].valeur * Oeuf_Cocix.genome[Gene::Gene::SANTE].valeur, (float)NULL,
+		Oeuf_Cocix.genome[Gene::SEUIL_MALADE].valeur * Oeuf_Cocix.genome[Gene::Gene::SANTE].valeur,(float)NULL,
+		(float) SOUFFRANCE_MALADIE,0.0f,Oeuf_Cocix.genome[Gene::Gene::SANTE].valeur);	// plafond est Capacite
 	if(verbal) Oeuf_Cocix.Sante.affiche(true,verbal);
 
-	Oeuf_Cocix.Calorie = Param_Etat("Calories","Cal",Oeuf_Cocix.genome[CALORIE].valeur,Oeuf_Cocix.genome[CALORIE].valeur,
+	Oeuf_Cocix.Calorie = Param_Etat("Calories","Cal",Oeuf_Cocix.genome[Gene::CALORIE].valeur,Oeuf_Cocix.genome[Gene::CALORIE].valeur,
 		(float)NULL,(float) NULL,	
-		Oeuf_Cocix.genome[CALORIE].valeur * (float) COMA_CALORIE,	(float)NULL,
-		Oeuf_Cocix.genome[SOUFFRE_FAIM].valeur * Oeuf_Cocix.genome[CALORIE].valeur,(float)NULL,
-		(float) SOUFFRANCE_CALORIQUE,0.0f,Oeuf_Cocix.genome[CALORIE].valeur);
+		Oeuf_Cocix.genome[Gene::CALORIE].valeur * (float) COMA_CALORIE,	(float)NULL,
+		Oeuf_Cocix.genome[Gene::SOUFFRE_FAIM].valeur * Oeuf_Cocix.genome[Gene::CALORIE].valeur,(float)NULL,
+		(float) SOUFFRANCE_CALORIQUE,0.0f,Oeuf_Cocix.genome[Gene::CALORIE].valeur);
 	if(verbal) Oeuf_Cocix.Calorie.affiche(false,verbal);
 
-	Oeuf_Cocix.Hydro = Param_Etat("Param Hydro","muL",Oeuf_Cocix.genome[HYDRO].valeur,Oeuf_Cocix.genome[HYDRO].valeur,
+	Oeuf_Cocix.Hydro = Param_Etat("Param Hydro","muL",Oeuf_Cocix.genome[Gene::HYDRO].valeur,Oeuf_Cocix.genome[Gene::HYDRO].valeur,
 		(float)NULL,(float) NULL,	
-		Oeuf_Cocix.genome[HYDRO].valeur * (float)COMA_HYDRO, (float)NULL,	
-		Oeuf_Cocix.genome[SOUFFRE_SOIF].valeur * Oeuf_Cocix.genome[HYDRO].valeur, (float)NULL,		
-		(float) SOUFFRANCE_HYDRIQUE,0.0f,Oeuf_Cocix.genome[HYDRO].valeur);
+		Oeuf_Cocix.genome[Gene::HYDRO].valeur * (float)COMA_HYDRO, (float)NULL,	
+		Oeuf_Cocix.genome[Gene::SOUFFRE_SOIF].valeur * Oeuf_Cocix.genome[Gene::HYDRO].valeur, (float)NULL,		
+		(float) SOUFFRANCE_HYDRIQUE,0.0f,Oeuf_Cocix.genome[Gene::HYDRO].valeur);
 	if(verbal) Oeuf_Cocix.Hydro.affiche(false,verbal);
 
 	Oeuf_Cocix.Temperature = Param_Etat("Température","°C",(float)NULL,37.5f,

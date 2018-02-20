@@ -28,12 +28,12 @@ void Cortex_Oeuf::gestion_Etat(Cocix* cocix, const bool verbal)
 	if(cocix->get_temp_exterieur() < 10.0f)
 	{
 		if(verbal) cout << " Temp ext < 10°C\n";
-		cocix->Temperature.modif(-cocix->genome[TEMP].valeur, &cocix->balises,verbal); // on diminue la température de Genes.temp.valeur
+		cocix->Temperature.modif(-cocix->genome[Gene::TEMP].valeur, &cocix->balises,verbal); // on diminue la température de Genes.temp.valeur
 	}
 	else if(cocix->get_temp_exterieur() > 35.0f)
 	{
 		if(verbal) cout << "Temp ext > 35°C";
-		cocix->Temperature.modif(+cocix->genome[TEMP].valeur, &cocix->balises, verbal);	// on augmente la température 
+		cocix->Temperature.modif(+cocix->genome[Gene::TEMP].valeur, &cocix->balises, verbal);	// on augmente la température 
 	}
 }
 

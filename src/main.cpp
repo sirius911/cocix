@@ -497,117 +497,117 @@ int main(int nbArg, char* argv[])
 			{
 				if( ! (CoCiX == (void*) NULL )){
 						cout << "Choisissez : \n";
-						cout << "Boire()\t ->\t " << BOIRE << "\n";
-						cout << "Cherche_Case_Libre()\t ->\t " << CHERCHE_CASE_LIBRE << "\n";
-						cout << "Cherche_Eau()\t ->\t " << CHERCHE_EAU << "\n";
-						cout << "Cherche_Malade()\t ->\t " << CHERCHE_MALADE << "\n";
-						cout << "Cherche_Nourriture()\t ->\t " << CHERCHE_NOURRITURE << "\n";
-						cout << "Cherche_Partenaire()\t ->\t " << CHERCHE_PARTENAIRE << "\n";
-						cout << "Cherche_Recolte()\t ->\t " << CHERCHE_RECOLTE << "\n" ;
-						cout << "Deposer()\t ->\t " << DEPOSER << "\n";
-						cout << "Dormir()\t ->\t " << DORMIR << "\n";
-						cout << "Manger()\t ->\t " << MANGER << "\n";
-						cout << "Pondre()\t ->\t " << PONDRE << "\n";
-						cout << "Recolter()\t ->\t " << RECOLTER << "\n";
-						cout << "Rentrer()\t ->\t " << RENTRER << "\n";
-						cout << "Se_Reproduire()\t ->\t " << SE_REPRODUIRE << "\n";
-						cout << "Se_Soigner()\t ->\t " << SE_SOIGNER << "\n";
-						cout << "Soigner()\t ->\t " << SOIGNER << "\n";
+						cout << "Boire()\t ->\t " << Actions::BOIRE << "\n";
+						cout << "Cherche_Case_Libre()\t ->\t " << Actions::CHERCHE_CASE_LIBRE << "\n";
+						cout << "Cherche_Eau()\t ->\t " << Actions::CHERCHE_EAU << "\n";
+						cout << "Cherche_Malade()\t ->\t " << Actions::CHERCHE_MALADE << "\n";
+						cout << "Cherche_Nourriture()\t ->\t " << Actions::CHERCHE_NOURRITURE << "\n";
+						cout << "Cherche_Partenaire()\t ->\t " << Actions::CHERCHE_PARTENAIRE << "\n";
+						cout << "Cherche_Recolte()\t ->\t " << Actions::CHERCHE_RECOLTE << "\n" ;
+						cout << "Deposer()\t ->\t " << Actions::DEPOSER << "\n";
+						cout << "Dormir()\t ->\t " << Actions::DORMIR << "\n";
+						cout << "Manger()\t ->\t " << Actions::MANGER << "\n";
+						cout << "Pondre()\t ->\t " << Actions::PONDRE << "\n";
+						cout << "Recolter()\t ->\t " << Actions::RECOLTER << "\n";
+						cout << "Rentrer()\t ->\t " << Actions::RENTRER << "\n";
+						cout << "Se_Reproduire()\t ->\t " << Actions::SE_REPRODUIRE << "\n";
+						cout << "Se_Soigner()\t ->\t " << Actions::SE_SOIGNER << "\n";
+						cout << "Soigner()\t ->\t " << Actions::SOIGNER << "\n";
 						cout << "\t votre choix : ";
 						cin >> choix;
 						i = atoi(choix);
 						switch(i){
-							case DORMIR:
+							case Actions::DORMIR:
 								if((strcmp(commande,"forceAction")==0))
 									CoCiX->Action = new Dormir();
 								else
 									CoCiX->Desire = new Dormir();
 								break;
-							case MANGER:
+							case Actions::Actions::MANGER:
 								if((strcmp(commande,"forceAction")==0))
 									CoCiX->Action = new Manger();
 								else
 									CoCiX->Desire = new Manger();
 								break;
-							case BOIRE:
+							case Actions::BOIRE:
 								if((strcmp(commande,"forceAction")==0))
 									CoCiX->Action = new Boire();
 								else
 									CoCiX->Desire = new Boire();
 								break;
-							case CHERCHE_EAU:
+							case Actions::CHERCHE_EAU:
 								if((strcmp(commande,"forceAction")==0))
 									CoCiX->Action = new Cherche_Eau();
 								else
 									CoCiX->Desire = new Cherche_Eau();
 								break;
-							case CHERCHE_NOURRITURE:
+							case Actions::CHERCHE_NOURRITURE:
 								if((strcmp(commande,"forceAction")==0))
 									CoCiX->Action = new Cherche_Nourriture();
 								else
 									CoCiX->Desire = new Cherche_Nourriture();
 								break;
-							case RENTRER:
+							case Actions::RENTRER:
 								if((strcmp(commande,"forceAction")==0))
 									CoCiX->Action = new Rentrer();
 								else
 									CoCiX->Desire = new Rentrer();
 								break;
-							case SE_SOIGNER:
+							case Actions::SE_SOIGNER:
 								if((strcmp(commande,"forceAction")==0))
 									CoCiX->Action = new Se_Soigner();
 								else
 									CoCiX->Desire = new Se_Soigner();
 								break;
-							case RECOLTER:
+							case Actions::RECOLTER:
 								if((strcmp(commande,"forceAction")==0))
 									CoCiX->Action = new Recolter();
 								else
 									CoCiX->Desire = new Recolter();
 								break;
-							case CHERCHE_RECOLTE:
+							case Actions::CHERCHE_RECOLTE:
 								if((strcmp(commande,"forceAction")==0))
 									CoCiX->Action = new Cherche_Recolte();
 								else
 									CoCiX->Desire = new Cherche_Recolte();
 								break;
-							case DEPOSER:
+							case Actions::DEPOSER:
 								if((strcmp(commande,"forceAction")==0))
 									CoCiX->Action = new Deposer();
 								else
 									CoCiX->Desire = new Deposer();
 								break;
-							case SE_REPRODUIRE:
+							case Actions::SE_REPRODUIRE:
 								if((strcmp(commande,"forceAction")==0))
 									CoCiX->Action = new Se_Reproduire();
 								else
 									CoCiX->Desire = new Se_Reproduire();
 								break;
-							case CHERCHE_PARTENAIRE:
+							case Actions::CHERCHE_PARTENAIRE:
 								if((strcmp(commande,"forceAction")==0))
 									CoCiX->Action = new Cherche_Partenaire();
 								else
 									CoCiX->Desire = new Cherche_Partenaire();
 								break;
-							case PONDRE:
+							case Actions::PONDRE:
 								if((strcmp(commande,"forceAction")==0))
 									CoCiX->Action = new Pondre();
 								else
 									CoCiX->Desire = new Pondre();
 								break;
-							case CHERCHE_CASE_LIBRE:
+							case Actions::CHERCHE_CASE_LIBRE:
 								if((strcmp(commande,"forceAction")==0))
 									CoCiX->Action = new Cherche_Case_Libre();
 								else
 									CoCiX->Desire = new Cherche_Case_Libre();
 								break;
-							case SOIGNER:
+							case Actions::SOIGNER:
 								if((strcmp(commande,"forceAction")==0))
 									CoCiX->Action = new Soigner();
 								else
 									CoCiX->Desire = new Soigner();
 								break;
-							case CHERCHE_MALADE:
+							case Actions::CHERCHE_MALADE:
 								if((strcmp(commande,"forceAction")==0))
 									CoCiX->Action = new Cherche_Malade();
 								else
