@@ -1,0 +1,15 @@
+obj/*.*
+Doc/*.aux
+Doc/*.dia
+Doc/*.log
+Doc/*.tex
+Doc/*.gz
+Doc/Latex/*.sty
+Doc/Latex/*.aux
+Doc/Latex/*.log
+Doc/Latex/*.tex
+Doc/Latex/*.gz
+Doc/Latex/*.toc
+Doc/Latex/*.png
+Doc/Latex/images/*.*
+
